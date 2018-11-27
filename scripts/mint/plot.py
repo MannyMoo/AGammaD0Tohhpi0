@@ -3,6 +3,7 @@
 import ROOT
 ROOT.gROOT.SetBatch(True)
 ROOT.TH1.SetDefaultSumw2()
+ROOT.gStyle.SetOptFit()
 from uncertainties import ufloat
 
 mp = '((_1_pi#_E + _3_pi0_E)^2 - (_1_pi#_Px + _3_pi0_Px)^2 - (_1_pi#_Py + _3_pi0_Py)^2 - (_1_pi#_Pz + _3_pi0_Pz)^2)'
@@ -26,7 +27,7 @@ for name, form in {'dalitz' : '{0} : {1} >> h(100, {2}, {3}, 100, {2}, {3})'.for
                    'mplus' : '{0} >> h(100, {1}, {2})'.format(mp, mcmin, mcmax),
                    'mminus' : '{0} >> h(100, {1}, {2})'.format(mm, mcmin, mcmax),
                    'mzero' : '{0} >> h(100, {1}, {2})'.format(m0, mzmin, mzmax),
-                   'time' : 'decaytime * 1000 >> h(100, 0, 4.1)'}.items() :
+                   'time' : 'decaytime >> h(100, 0, 4.1)'}.items() :
     plots[name] = {}
     for tag in '-1', '+1' :
         tree.Draw(form, 'tag == ' + tag, 'colz')
@@ -38,7 +39,7 @@ for name, form in {'dalitz' : '{0} : {1} >> h(100, {2}, {3}, 100, {2}, {3})'.for
         binwidth = 0.1
         #nbins = 2
         #binwidth = 5.
-        nbins = 0
+        #nbins = 0
         for i in xrange(nbins) :
             time = i*binwidth
             tree.Draw(form, 'tag == ' + tag + ' && {0} < decaytime && decaytime <= {1}'.format(time, time+binwidth), 'colz')
