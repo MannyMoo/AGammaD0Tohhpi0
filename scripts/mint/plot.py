@@ -40,6 +40,8 @@ for name, form in {'dalitz' : '{0} : {1} >> h(100, {2}, {3}, 100, {2}, {3})'.for
         #nbins = 2
         #binwidth = 5.
         #nbins = 0
+        if name == 'time' :
+            continue
         for i in xrange(nbins) :
             time = i*binwidth
             tree.Draw(form, 'tag == ' + tag + ' && {0} < decaytime && decaytime <= {1}'.format(time, time+binwidth), 'colz')
