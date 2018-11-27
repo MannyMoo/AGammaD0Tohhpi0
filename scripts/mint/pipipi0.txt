@@ -29,7 +29,7 @@ genTimeDependent	1
 IntegratorSource        "file"
 * Whether to recalculate the integrals or not.
 overwriteIntegrators      0
-integratorsDirectory       integrators
+integratorsDirectory       integrators_3sigma
 
 doScan			0
 
@@ -48,8 +48,12 @@ x 	   0.0039
 * The current world average.
 y 	   0.0065
 
-qoverp	   1.
-phi	   0.
+* No CPV
+*qoverp	   1.
+*phi	   0.
+* CPV at ~3 sigma of current bounds.
+qoverp 	   0.8
+phi        -0.7
 
 tmax		4.1
 nTimePoints 	41

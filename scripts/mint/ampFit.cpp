@@ -78,6 +78,7 @@ private :
   mutable TSpline3 m_spline ; // Cause ROOT is crap at const correctness.
   double m_integral ;
   double m_boxintegral ;
+  double m_mean ;
   vector<BinInfo> m_bins ;
   
 public :
@@ -86,6 +87,7 @@ public :
     m_spline(spline),
     m_integral(0.),
     m_boxintegral(0.),
+    m_mean(0.),
     m_bins(spline.GetNp())
   {
     BinInfo ibin ;
@@ -135,7 +137,10 @@ public :
       // cout << "ymax " << ibin.ymax << " ymin " << ibin.ymin << " boxintegral " << ibin.boxintegral << endl ;
       m_boxintegral += ibin.boxintegral ;
       m_bins[i] = ibin ;
+      m_mean += mean(i, ibin.xmin, ibin.xmax) ;
     }
+    if(m_integral != 0.)
+      m_mean /= m_integral ;
   }
 
   // Total integral between the minimum and maximum knots.
@@ -143,6 +148,11 @@ public :
     return m_integral ;
   }
 
+  // Mean of the PDF.
+  double mean() const {
+    return m_mean ;
+  }
+  
   // Generate a random number from the spline.
   double gen_random() const {
     while(true){
@@ -205,7 +215,19 @@ private :
     return pair<double, double>(xmin + (-b - sqrt(arg))/2./a, xmin + (-b + sqrt(arg))/2./a) ;
   }
 
+  // The partial integral of x * f(x) used for calculating the mean.
+  double mean_part_integral(int i, double x) {
+    double xmin(0.), a(0.), b(0.), c(0.), d(0.) ;
+    m_spline.GetCoeff(i, xmin, a, b, c, d) ;
+    double xshift = x - xmin ;
+    return x * xshift * (a + xshift * (b/2. + xshift * (c/3. + xshift * d/4.)))
+      - xshift * xshift * (a/2. + xshift * (b/6. + xshift * (c/12. + xshift * d/20.))) ;
+  }
 
+  // Get the mean between xmin and xmax for knot i.
+  double mean(int i, double xmin, double xmax) {
+    return mean_part_integral(i, xmax) - mean_part_integral(i, xmin) ;
+  }
 } ;
 
 
@@ -366,15 +388,22 @@ public :
     double integplus = m_timegenerators.find(1)->second.integral() ;
     cout << "Integrated CP asymmetry is " << (integplus - integminus)/(integplus + integminus) << endl ;
     m_tagintegralfrac = integminus/(integminus + integplus) ;
+    double tauminus = m_timegenerators.find(-1)->second.mean() ;
+    double tauplus = m_timegenerators.find(1)->second.mean() ;
+    cout << "Tau minus: " << tauminus << endl ;
+    cout << "Tau plus: " << tauplus << endl ;
+    cout << "AGamma: " << (tauminus - tauplus)/(tauminus + tauplus) << endl ;
   }
 
   // Get the coefficients of the amplitudes for the produced flavour and the mixed flavour
   // given the tag and decay time.
   AmpPair amplitude_coefficients(const int tag, const double decaytime) {
-    // Currently no CPV or mixing implemented, just an exponential decay.
-    double coeff = exp(-decaytime * 0.5 * m_width) ;
-    complex<double> coeffprod(coeff, 0.) ;
-    complex<double> coeffmix(0., 0.) ;
+    double coeff = exp(-decaytime * 0.5 * (m_width + m_deltagamma)) ;
+    complex<double> expterm = exp(complex<double>(m_deltagamma * decaytime, 2. * m_deltam * decaytime)) ;
+    complex<double> plusterm = 1. + expterm ;
+    complex<double> minusterm = 1. - expterm ;
+    complex<double> coeffprod = coeff * plusterm ;
+    complex<double> coeffmix = pow(polar(m_qoverp, m_phi), tag) * coeff * minusterm ;
     return AmpPair(coeffprod, coeffmix) ;
   }
 
@@ -490,7 +519,7 @@ int ampFit(){
   NamedParameter<double> x("x", 0.0039) ;
   double deltam = x * width ;
   NamedParameter<double> y("y", 0.0065) ;
-  double deltagamma = y * width ;
+  double deltagamma = y * width * 2. ;
   NamedParameter<double> qoverp("qoverp", 1.) ;
   NamedParameter<double> phi("phi", 0.) ;
 
