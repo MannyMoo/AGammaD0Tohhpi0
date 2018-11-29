@@ -342,8 +342,9 @@ public :
 	  model->add(antimodel) ;
 	}
 	SignalGenerator* generator = new SignalGenerator(*evtpat, model) ;
-	//auto evt = generator->newEvent() ;
 	//cout << "Time point " << i << endl ;
+	//model->print() ;
+	//auto evt = generator->newEvent() ;
 	//model->printAllAmps(*evt) ;
 	ostringstream fname ;
 	fname << m_name << "/tag_" << tag << "_decaytime_" << decaytime ;
@@ -510,9 +511,7 @@ int ampFit(){
   SignalGenerator genD0(pat);
   SignalGenerator genD0bar(cpPat);
 
-  NamedParameter<int> doNormCheck("doNormCheck", 0);
   NamedParameter<int> saveEvents("SaveEvents", 1);
-  NamedParameter<int> doFinalStats("DoFinalStats", 1);
   NamedParameter<int> genTimeDependent("genTimeDependent", 0);
   NamedParameter<double> lifetime("lifetime", 0.4101) ;
   double width = 1./lifetime ;
@@ -596,8 +595,10 @@ int ampFit(){
 	taus.insert(taus.begin(), tau) ;
       }
     }
-    eventList1.save("pipipi0_1.root");
-    TFile tuplefile("pipipi0_1.root", "update") ;
+    NamedParameter<string> outputfname("outputFileName", string("pipipi0_1.root"), (char*)0) ;
+    eventList1.save(outputfname);
+    string fnamestr(outputfname) ;
+    TFile tuplefile(fnamestr.c_str(), "update") ;
     TNtupleD* ntuple = (TNtupleD*)tuplefile.Get("DalitzEventList") ;
     int tag(0) ;
     double tau(0.) ;
