@@ -399,8 +399,8 @@ public :
   // Get the coefficients of the amplitudes for the produced flavour and the mixed flavour
   // given the tag and decay time.
   AmpPair amplitude_coefficients(const int tag, const double decaytime) {
-    double coeff = exp(-decaytime * 0.5 * (m_width + m_deltagamma)) ;
-    complex<double> expterm = exp(complex<double>(m_deltagamma * decaytime, 2. * m_deltam * decaytime)) ;
+    double coeff = exp(-decaytime * 0.5 * (m_width + 0.5 * m_deltagamma)) ;
+    complex<double> expterm = exp(complex<double>(0.5 * m_deltagamma * decaytime, m_deltam * decaytime)) ;
     complex<double> plusterm = 1. + expterm ;
     complex<double> minusterm = 1. - expterm ;
     complex<double> coeffprod = coeff * plusterm ;

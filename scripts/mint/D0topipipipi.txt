@@ -28,10 +28,10 @@ useAnalyticGradient 1
 "Default3bodyBW"	"PhaseSpace"
 "useZemachTensors"		1
 
-TopHatsLimits			0	1e6
+*TopHatsLimits			0	1e6
 
-genTimeDependent	0
-"Nevents"               100000
+genTimeDependent	1
+"Nevents"               1000
 outputFileName 		D0To4pi.root
 SaveEvents		1
 
@@ -123,3 +123,32 @@ nTimePoints 	41
 "Bugg::b2_sigma10"                     			2 	0.340	0.05	-1.0    1.
 "Bugg::A_sigma10"                     			2 	2.426	0.05	0.5     5.
 "Bugg::g_4pi_sigma10"	                     	        2	0.011	0.001	0.0     0.0    
+
+"GSDbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Re" 2 100.000000 0.1
+"GSDbar0->a(1)(1260)-(->rho(770)0(->pi-,pi+),pi-),pi+_Im" 2   0.000000 0.1
+"BuggDbar0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Re" 0  56.46  0.1
+"BuggDbar0->a(1)(1260)-(->sigma10(->pi-,pi+),pi-),pi+_Im" 0   167.87 0.1
+"BuggDbar0->pi(1300)-(->sigma10(->pi-,pi+),pi-),pi+_Re" 0   -15.11 0.1
+"BuggDbar0->pi(1300)-(->sigma10(->pi-,pi+),pi-),pi+_Im" 0   19.80 0.1
+"BuggDbar0->pi(1300)+(->sigma10(->pi+,pi-),pi+),pi-_Re" 0   -6.48 0.1
+"BuggDbar0->pi(1300)+(->sigma10(->pi+,pi-),pi+),pi-_Im" 0   15.19 0.1
+"GSDbar0->a(1)(1640)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Re" 0   -125.40 0.1
+"GSDbar0->a(1)(1640)-[D](->rho(770)0(->pi-,pi+),pi-),pi+_Im" 0   -10.89 0.1
+"BuggDbar0->a(1)(1640)-(->sigma10(->pi-,pi+),pi-),pi+_Re" 0   77.57 0.1
+"BuggDbar0->a(1)(1640)-(->sigma10(->pi-,pi+),pi-),pi+_Im" 0    -94.98 0.1
+"HistoPS_225Dbar0->pi(2)(1670)-(->f(2)(1270)0(->pi-,pi+),pi-),pi+_Re" 0   -49.93 0.1
+"HistoPS_225Dbar0->pi(2)(1670)-(->f(2)(1270)0(->pi-,pi+),pi-),pi+_Im" 0   348.39 0.1
+"BuggDbar0->pi(2)(1670)-(->sigma10(->pi-,pi+),pi-),pi+_Re" 0   -51.35 0.1
+"BuggDbar0->pi(2)(1670)-(->sigma10(->pi-,pi+),pi-),pi+_Im" 0   -209.98 0.1
+"BuggHistoPS_30221Dbar0->f(0)(1370)0(->pi-,pi+),sigma10(->pi-,pi+)_Re" 0   27.71 0.1
+"BuggHistoPS_30221Dbar0->f(0)(1370)0(->pi-,pi+),sigma10(->pi-,pi+)_Im" 0   71.93 0.1
+"BuggGSDbar0->rho(770)0(->pi-,pi+),sigma10(->pi-,pi+)_Re" 0   41.99 0.1
+"BuggGSDbar0->rho(770)0(->pi-,pi+),sigma10(->pi-,pi+)_Im" 0   -25.42 0.1
+"GSDbar0->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Re" 0   2.37 0.1
+"GSDbar0->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Im" 0   8.89 0.1
+"GSDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Re" 0   -2.51 0.1
+"GSDbar0[P]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Im" 0   -20.80 0.1
+"GSDbar0[D]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Re" 0   -33.99 0.1
+"GSDbar0[D]->rho(770)0(->pi-,pi+),rho(770)0(->pi-,pi+)_Im" 0   -7.64 0.1
+"HistoPS_225Dbar0->f(2)(1270)0(->pi-,pi+),f(2)(1270)0(->pi-,pi+)_Re" 0   -34.47 0.1
+"HistoPS_225Dbar0->f(2)(1270)0(->pi-,pi+),f(2)(1270)0(->pi-,pi+)_Im" 0   -172.87 0.1
