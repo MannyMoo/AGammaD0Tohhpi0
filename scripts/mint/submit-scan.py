@@ -66,4 +66,4 @@ for i in xrange(npoints) :
         os.chmod(jobscript, 0744)
 
         # Submit the job.
-        #subprocess.call(['qsub', '-N', binname, '-q', 'medium6', '-w', jobdir, jobscript])
+        subprocess.call(['qsub', '-N', binname, '-q', 'medium6', '-w', jobdir, jobscript])
