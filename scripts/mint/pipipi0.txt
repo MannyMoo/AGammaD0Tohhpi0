@@ -22,13 +22,13 @@ useAnalyticGradient 1
 "Event Pattern"         421 211 -211 111
 
 genTimeDependent	1
-"Nevents"               100000
+"Nevents"               500000
 
 "IntegPrecision"        1.0e-2
 "IntegMethod"           "efficient"
 IntegratorSource        "file"
 * Whether to recalculate the integrals or not.
-overwriteIntegrators      0
+overwriteIntegrators      1
 integratorsDirectory       integrators
 
 doScan			0
