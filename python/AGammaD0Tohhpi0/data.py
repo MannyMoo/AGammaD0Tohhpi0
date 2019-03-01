@@ -21,13 +21,16 @@ datapaths = {'Data_2015_pipipi0' : ('DecayTree', os.path.join(datadir, 'data/DaV
              }
 
 for mag in 'Up', 'Down' :
-    datapaths['Data_2015_Kpipi0_Mag' + mag] = \
+    datapaths['Data_2015_Kpipi0_Mag' + mag + '_full'] = \
         {'tree' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
-         'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}/*Data.root'.format(mag.lower())))),
-         'friends' : ('Data_2015_Kpipi0_Mag' + mag + '_Weights',)}
-    datapaths['Data_2015_Kpipi0_Mag' + mag + '_Weights'] = \
+         'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}_full/*Data.root'.format(mag.lower())))),
+         'friends' : ('Data_2015_Kpipi0_Mag' + mag + '_full_Weights',)}
+    datapaths['Data_2015_Kpipi0_Mag' + mag + '_full_Weights'] = \
         {'tree' : 'BDTTree',
-         'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}/*Kpipi0_BDT.root'.format(mag.lower()))))}
+         'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}_full/*Kpipi0_BDT.root'.format(mag.lower()))))}
+
+    datapaths['Data_2015_Kpipi0_Mag' + mag] = ('DecayTree',) + tuple(glob.glob(os.path.join(datadir, 'data/2015/mag' + mag.lower() + '/*.root')))
+
     mod2016 = __import__('AGammaD0Tohhpi0.Reco16_Charm_Mag{0}_TupleURLs'.format(mag), fromlist = ['urls'])
     datapaths['Data_2016_Kpipi0_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
                                                          'files' : [url[0] for url in mod2016.urls.values() if url]}

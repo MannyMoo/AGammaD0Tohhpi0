@@ -101,5 +101,18 @@ def filter_2016_tuples(overwrite = False) :
             filter_tuple_mva(tree, weightsfile, 'BDT', outputfile, bdtcut)
         print 'Successfully filtered', str(nok) + '/' + str(len(mod2016.urls)), 'files'
 
+def filter_2015_tuples() :
+    for mag in 'Up', 'Down' :
+        print 'Filter Mag' + mag, 'files'
+        data = datalib.get_data('Data_2015_Kpipi0_Mag' + mag + '_full')
+        outputdir = os.path.join(datadir, 'data', '2015', 'mag' + mag.lower())
+        if not os.path.exists(outputdir) :
+            os.makedirs(outputdir)
+        fout = ROOT.TFile.Open(os.path.join(outputdir, 'Data_2015_Kpipi0_Mag' + mag + '.root'), 'recreate')
+        fitltereddata = data.CopyTree('BDT >= ' + str(bdtcut))
+        fitltereddata.Write()
+        fout.Close()
+
 if __name__ == '__main__' :
-    filter_2016_tuples()
+    #filter_2016_tuples()
+    filter_2015_tuples()
