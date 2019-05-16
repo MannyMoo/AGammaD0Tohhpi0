@@ -4,7 +4,7 @@ import os, ROOT, shutil, glob
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -102,16 +102,37 @@ def filter_2016_tuples(overwrite = False) :
         print 'Successfully filtered', str(nok) + '/' + str(len(mod2016.urls)), 'files'
 
 def filter_2015_tuples() :
-    for mag in 'Up', 'Down' :
+    #for mag in 'Up', 'Down' :
+    for mag in 'Down', : 
         print 'Filter Mag' + mag, 'files'
         data = datalib.get_data('Data_2015_Kpipi0_Mag' + mag + '_full')
         outputdir = os.path.join(datadir, 'data', '2015', 'mag' + mag.lower())
         if not os.path.exists(outputdir) :
             os.makedirs(outputdir)
+        evtlist = ROOT.TEventList('evtlist')
+        data.Draw('>>' + evtlist.GetName(), bdtsel)
+        data.SetEventList(evtlist)
+        data.RemoveFriend(data.GetFriend('BDTTree'))
         fout = ROOT.TFile.Open(os.path.join(outputdir, 'Data_2015_Kpipi0_Mag' + mag + '.root'), 'recreate')
-        fitltereddata = data.CopyTree('BDT >= ' + str(bdtcut))
+        fitltereddata = data.CopyTree('')
         fitltereddata.Write()
         fout.Close()
+
+def remove_bdt_2015() :
+    for mag in 'Up', 'Down' :
+        info = datalib.get_data_info('Data_2015_Kpipi0_Mag' + mag)
+        f = ROOT.TFile.Open(info['files'][0], 'update')
+        t = f.Get(info['tree'])
+        # This doesn't work.
+        # b = t.GetBranch('BDT')
+        # t.GetListOfBranches().Remove(b)
+        # l = t.GetLeaf('BDT')
+        # t.GetListOfLeaves().Remove(l)
+        # This didn't work either? Need to write to a new file?
+        t.SetBranchStatus('BDT', 0)
+        t = t.CopyTree('')
+        t.Write(t.GetName(), ROOT.TObject.kWriteDelete)
+        f.Close()
 
 if __name__ == '__main__' :
     #filter_2016_tuples()
