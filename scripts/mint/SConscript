@@ -1,4 +1,0 @@
-Import('*')
-
-env.Program('ampFit', ['ampFit.cpp'])
-env.Program('basicGen', ['basicGen.cpp'])
