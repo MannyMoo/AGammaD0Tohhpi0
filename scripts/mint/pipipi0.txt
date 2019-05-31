@@ -1,8 +1,20 @@
 
-*FitAmpPairList::HistoOption "fast" 
+* FitAmpPairList::HistoOption can be set to either fast (no
+* histograms will be created or retrieved by the integrator) or slow
+* (histograms will be created or retrieved). The default option is
+* "default" and the default behaviour with FastAmplitudeIntegrator used
+* by DalitzPdfFastInteg is "slow", i.e. with histograms (the behaviour
+* is a bit more complex for the case of the
+* FlexiFastAmplitudeIntegrator, you're better off not using this option
+* there at all). Omitting the histograms saves a bit of time and
+* memory. Note that if you use this option when generating sgIntegrator
+* files (not recommended), you will also need to use it when reading
+* them. Recommended use is to use it with DalitzPdfFastInteg, when
+* reading in pre-saved integrator directories ("sgIntegrator"), in cases
+* where you don't make any plots.
 
-*SaveEvents   0
-*DoFinalStats 0
+*FitAmpPairList::HistoOption "fast" 
+FitAmpPairList::HistoOption "default" 
 
 ** The above option means that no histograms will
 ** be generated. When you create your sgIntegrator files, it's strongly
@@ -21,17 +33,19 @@ useAnalyticGradient 1
 "Phases given in"       "rad"
 "Event Pattern"         421 211 -211 111
 
-genTimeDependent	1
-"Nevents"               500000
+doScan 			0
 
-"IntegPrecision"        1.0e-2
+genTimeDependent	1
+"Nevents"               100000
+outputFileName		pipipi0_1.root
+SaveEvents		1
+
+"IntegPrecision"        3.0e-3
 "IntegMethod"           "efficient"
 IntegratorSource        "file"
 * Whether to recalculate the integrals or not.
 overwriteIntegrators      1
-integratorsDirectory       integrators
-
-doScan			0
+integratorsDirectory       integrators_3sigma
 
 * Mixing & CPV parameters.
 lifetime   0.4101
@@ -48,8 +62,12 @@ x 	   0.0039
 * The current world average.
 y 	   0.0065
 
-qoverp	   1.
-phi	   0.
+* No CPV
+*qoverp	   1.
+*phi	   0.
+* CPV at ~3 sigma of current bounds.
+qoverp 	   0.8
+phi        -0.7
 
 tmax		4.1
 nTimePoints 	41
