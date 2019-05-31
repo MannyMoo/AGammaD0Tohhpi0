@@ -35,4 +35,4 @@ gaudi_install_python_modules()
 
 #gaudi_add_test(QMTest QMTEST)
 
-gaudi_add_executable(ampFit src/ampFit.cpp LINK_LIBRARIES Boost ROOT DaVinciKernelLib Mint2Lib AGammaD0Tohhpi0Lib)
+gaudi_add_executable(ampFit src/bin/ampFit.cpp LINK_LIBRARIES Boost ROOT DaVinciKernelLib Mint2Lib AGammaD0Tohhpi0Lib)
