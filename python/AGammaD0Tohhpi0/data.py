@@ -7,6 +7,9 @@ from AGammaD0Tohhpi0.selection import selection_R
 
 datadir = os.environ.get('AGAMMAD0TOHHPI0DATADIR', 
                          '/nfs/lhcb/d2hh01/hhpi0/data/')
+workingdir = os.path.abspath(os.path.join(datadir, '..', 'workingdir'))
+mintdatadir = os.path.join(datadir, 'mint')
+
 varnames = ('deltam',)
 
 # All the TTree datasets, the tree names and file names (any number of file names can be given).
@@ -35,5 +38,10 @@ for mag in 'Up', 'Down' :
                                                          'files' : datapaths['Data_2016_Kpipi0_Mag' + mag + '_full']['files']}
     datapaths['Data_2016_Kpipi0_Mag' + mag] = {'tree' : 'DecayTree', 
                                                'files' : glob.glob(os.path.join(datadir, 'data', '2016', 'mag' + mag.lower(), '*.root'))}
+
+# MINT data.
+for name in os.listdir(mintdatadir) :
+    datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
+                                 'files' : glob.glob(os.path.join(mintdatadir, name, '*.root'))}
 
 datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R)
