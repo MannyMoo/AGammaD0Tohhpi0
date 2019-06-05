@@ -20,12 +20,12 @@ pattern = DalitzEventPattern(421, 211, -211, 111)
 diffcalc = PhaseDifferenceCalc(pattern, config)
 
 # Plot of the phase differences.
-hphasediffs = ROOT.TH1F('phasediffs', '', 100, -math.pi, math.pi)
+hphasediffs = ROOT.TH1F('phasediffs', '', 100, 0., 2.*math.pi)
 
 # D0 mass minus pi+ mass
 mmax = (1864.8 - 139)**2
 # Plot of the phase differences as a function of Dalitz position.
-hphasedalitz = ROOT.TH3F('phasedalitz', '', 100, 0., mmax, 100, 0., mmax, 100, -math.pi, math.pi)
+hphasedalitz = ROOT.TH3F('phasedalitz', '', 100, 0., mmax, 100, 0., mmax, 100, 0., 2.*math.pi)
 
 # Loop over events.
 for evt in evtlist :
@@ -35,6 +35,9 @@ for evt in evtlist :
     # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
     if s23 < s13 :
         phasediff *= -1
+    # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
+    if phasediff < 0. :
+        phasediff += 2*math.pi
     hphasediffs.Fill(phasediff)
     hphasedalitz.Fill(s13, s23, phasediff)
 
