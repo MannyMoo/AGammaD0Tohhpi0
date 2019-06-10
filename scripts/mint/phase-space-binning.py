@@ -11,7 +11,8 @@ from AGammaD0Tohhpi0.mint import config
 NamedParameterBase.setDefaultInputFile(config)
 
 # Retrieve the dataset as a DalitzEventList
-info = datalib.get_data_info('MINT_data_3SigmaCPV')
+#info = datalib.get_data_info('MINT_data_3SigmaCPV')
+info = datalib.get_data_info('MINT_time-indepedent')
 fdata = TFile.Open(info['files'][0])
 evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
 
@@ -24,8 +25,12 @@ hphasediffs = ROOT.TH1F('phasediffs', '', 100, 0., 2.*math.pi)
 
 # D0 mass minus pi+ mass
 mmax = (1864.8 - 139)**2
+
+hdalitz = ROOT.TH2F('dalitz', '', 100, 0, mmax, 100, 0, mmax)
+
 # Plot of the phase differences as a function of Dalitz position.
 hphasedalitz = ROOT.TH3F('phasedalitz', '', 100, 0., mmax, 100, 0., mmax, 100, 0., 2.*math.pi)
+
 
 # Loop over events.
 for evt in evtlist :
@@ -39,6 +44,7 @@ for evt in evtlist :
     if phasediff < 0. :
         phasediff += 2*math.pi
     hphasediffs.Fill(phasediff)
+    hdalitz.Fill(s13, s23)
     hphasedalitz.Fill(s13, s23, phasediff)
 
 c1 = ROOT.TCanvas()
@@ -48,3 +54,6 @@ c2 = ROOT.TCanvas('c2', '', 600, 600)
 # Make the 2D projection of mean phase difference in each Dalitz bin.
 pphasedalitz = hphasedalitz.Project3DProfile()
 pphasedalitz.Draw('colz')
+
+c3 = ROOT.TCanvas('c3', '', 600, 600)
+hdalitz.Draw()
