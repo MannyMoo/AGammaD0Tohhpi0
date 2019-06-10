@@ -5,6 +5,7 @@ ROOT.gROOT.SetBatch(True)
 ROOT.TH1.SetDefaultSumw2()
 ROOT.gStyle.SetOptFit()
 from uncertainties import ufloat
+from AGammaD0Tohhpi0.data import datalib, workingdir
 
 mp = '((_1_pi#_E + _3_pi0_E)^2 - (_1_pi#_Px + _3_pi0_Px)^2 - (_1_pi#_Py + _3_pi0_Py)^2 - (_1_pi#_Pz + _3_pi0_Pz)^2)'
 mm = mp.replace('1_pi#', '2_pi~')
@@ -18,8 +19,7 @@ mcmax = mdz**2 - mcmin + 100
 mzmin = 2*mpip**2 - 50
 mzmax = mdz**2 - mzmin + 100
 
-tree = ROOT.TChain('DalitzEventList')
-tree.Add("pipipi0_*.root")
+tree = datalib.get_data('MINT_data_NoCPV_x=2.5')
 
 canv = ROOT.TCanvas('canv', '', 600, 600)
 plots = {}
