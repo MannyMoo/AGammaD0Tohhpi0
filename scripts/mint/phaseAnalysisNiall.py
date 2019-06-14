@@ -272,7 +272,7 @@ for fileNo in range(1, 100) :
     opt_zcp, opt_deltaz = getZvals( xFit, yFit, qoverpFit, phiFit )
     optFits = getFit(opt_zcp, opt_deltaz, nbinsTime, nbinsPhase)
     print "Optimisation results:\t x: {}\t y: {}\t qoverp: {}\t phi: {}".format(result.x[0], result.x[1], result.x[2], result.x[3])
-    print "Optimisation Errors: \t errx: {}\t erry: {}\t errqoverp: {}\t errphi: {}".format(result.hess_inv[0][0]**0.5,result.hess_inv[1][1]**0.5,result.hess_inv[2][2]**0.5,result.hess_inv[2][2]**0.5)
+    print "Optimisation Errors: \t errx: {}\t erry: {}\t errqoverp: {}\t errphi: {}".format(result.hess_inv[0][0]**0.5,result.hess_inv[1][1]**0.5,result.hess_inv[2][2]**0.5,result.hess_inv[3][3]**0.5)
     print "Simulation parameters:\t x: {}\t\t y: {}\t\t qoverp: {}\t\t phi: {}".format(x, y, qoverp, phi) 
 
     xHist.Fill( (x - xFit) / x)
