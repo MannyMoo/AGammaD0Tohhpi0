@@ -22,7 +22,7 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
     """
 
     nbinsTime = upperHists[0].GetNbinsX()
-    
+
     tList = [] 
     tSqList = [] 
     for i in range( nbinsTime ) : 
@@ -36,7 +36,8 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
         s13 = evtlist[i].s(1, 3)
         s23 = evtlist[i].s(2, 3)
         tag = evt.tag
-        decayTime = evt.decaytime
+        #expressing here in terms of D0 mean lifetime (all times in ps)
+        decayTime = evt.decaytime / 0.41
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
         if s23 < s13 :
@@ -117,13 +118,13 @@ def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
 
             for j in range(1, nbinsTime+1) :
 
-                num1 = r[b-1]*( 1 + 0.25*tSqAv[j-1] * (zcp**2 - deltaz**2 ).real )
+                num1 = r[b-1]*( 1 + 0.25 * tSqAv[j-1] * ( zcp**2 - deltaz**2 ).real )
                 num2 = 0.25 * tSqAv[j-1] * (abs(zcp + ((-1)**i)*deltaz)**2)
                 num3 = (r[b-1]**0.5) * tAv[j-1] * ( X[0][b-1].conjugate() * (zcp +((-1)**i)*deltaz) ).real
                 numerator = num1 + num2 + num3
 
-                den1 = 1 + 0.25*tSqAv[j-1] * ( zcp**2 - deltaz**2 ).real
-                den2 = r[b-1] * 0.25 * tSqAv[j-1] * (abs(zcp + ((-1)**i)*deltaz))**2
+                den1 = 1 + 0.25 * tSqAv[j-1] * ( zcp**2 - deltaz**2 ).real
+                den2 = r[b-1] * 0.25 * tSqAv[j-1] * (abs(zcp + ((-1)**i)*deltaz)**2)
                 den3 = (r[b-1]**0.5) * tAv[j-1] * ( X[0][b-1] * (zcp + ((-1)**i)*deltaz) ).real
                 denominator = den1 + den2 + den3
 
@@ -139,7 +140,7 @@ def setPlotParameters(plot, tag, plotNo):
     """Simple function to set desired format options for plotting graphs of R(b,j)."""
 
     xAxis = plot.GetXaxis()
-    xAxis.SetTitle("Decay Time (ps)")
+    xAxis.SetTitle("Decay Time / D0 mean lifetime")
     xAxis.SetLabelSize(0.06)
     xAxis.SetTitleSize(0.06)
     xAxis.SetTitleOffset(0.75)
@@ -175,13 +176,13 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
             - nHist: equivalent of pHist, but with negative b
 
          Function returns:
-             - chiSq: chi squared value for fit described by the values input in params.  
+             - chiSq: chi squared value for fit to measured data given by the values input in params.  
     """
     nbinsPhase = pHists[0].GetNbinsY()
     nbinsTime = pHists[0].GetNbinsX()
 
-    #x, y, qoverp, phi  = params
-    #zcp, deltaz = getZvals(x,y,qoverp,phi)
+    # x, y, qoverp, phi  = params
+    # zcp, deltaz = getZvals(x,y,qoverp,phi)
     re_zcp, im_zcp, re_dz, im_dz = params
     zcp = complex(re_zcp, im_zcp)
     deltaz = complex(re_dz, im_dz)    
@@ -248,7 +249,7 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
             #Create plot by ratio of counts in each bin
             ratioPlots[i][b-1] = upperHist
             ratioPlots[i][b-1].Divide(lowerHist)
-  
+
     return ratioPlots
 
 
@@ -317,7 +318,7 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
             #Exclude events outside range of bins
             if (b > 8) or (b < 1):
                 continue
-
+            
             if (s23 < s13) :
                 X[0][b-1] += crossTerm * ds13 * ds23
                 F[0][b-1] += ampSq * ds13 * ds23
@@ -333,6 +334,81 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
 
     r = [0]*nbinsPhase
     for i in range(nbinsPhase) :
-        r[i] = F[1][i] / F[0][i]
-
+         r[i] = F[1][i] / F[0][i]
+    
     return X, F, Fbar, r
+
+
+
+
+def getRatiosAsymm(pHists, nHists) : 
+    ratios = [[],[]]
+    nbinsPhase = pHists[0].GetNbinsY()
+
+    for i in range(2): 
+        
+        for b in range (1, nbinsPhase + 1) :
+              
+            ratios[i].append(ROOT.TGraphAsymmErrors())
+
+            numerator = nHists[i].ProjectionX("numerator b{} i{}".format(b,i), b, b)
+            denominator = pHists[i].ProjectionX("denominator b{} i{}".format(b,i), b, b)
+            ratios[i][b-1].Divide(numerator, denominator, 'pois')
+    
+    return ratios
+
+def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
+    """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
+         deltaz, using Poisson statistics for errors. 
+
+        Inputs are:
+            - params: list containing Re(zcp), Im(zcp), Re(deltaz), Im(deltaz)
+            - tAv, tSqAv: list containing averages of t and t^2 in each decay time bin (i.e. <t> and <t^2>)
+            - r, X: lists containing values of r(b) and X(b) functions required for the fit. X is 2D array where 0 index 
+              refers to list of X(b) for positive b and 1 index refers to list of X(b) for negative b values. 
+            - ratios: 2D array of TGraphAysmmErrors, containing measured values of R(b,j). Can be generated using 
+              the function getRatiosAsymm.
+
+         Function returns:
+             - chiSq: chi squared value for fit to data in ratios given by the values input in params.  
+    """
+
+    nbinsPhase = len(ratios[0])
+
+    # x, y, qoverp, phi  = params
+    # zcp, deltaz = getZvals(x,y,qoverp,phi)
+    re_zcp, im_zcp, re_dz, im_dz = params
+    zcp = complex(re_zcp, im_zcp)
+    deltaz = complex(re_dz, im_dz)    
+ 
+    chiSq = 0
+    fit = getFit(zcp, deltaz, tAv, tSqAv, r, X)
+
+    for i in range(2) :
+
+        for b in range(1,nbinsPhase+1) :
+
+            expVals = fit[i][b-1].GetY()
+
+            for j in range(ratios[i][b-1].GetN()) :
+
+                expected = expVals[j]
+                x = ROOT.Double()
+                measured = ROOT.Double() 
+                ratios[i][b-1].GetPoint(j, x, measured)
+
+                if (expected < measured) :
+                    err_measured = ratios[i][b-1].GetErrorYlow(j)
+                    if ( err_measured != 0) :
+                        chiSq += ( (measured - expected) / err_measured )**2 
+                    else :
+                        print "WARNING : Data point ignored (zero error)"
+                else :
+                    err_measured = ratios[i][b-1].GetErrorYhigh(j)
+                    if ( err_measured != 0) :
+                        chiSq += ( (measured - expected) / err_measured )**2
+                    else :
+                        print "WARNING : Data point ignored (zero error)"
+
+
+    return chiSq
