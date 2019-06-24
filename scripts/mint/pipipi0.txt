@@ -45,6 +45,8 @@ SaveEvents		1
 IntegratorSource        "file"
 * Whether to recalculate the integrals or not.
 overwriteIntegrators      1
+* Whether to save the events generated for the intergals.
+saveIntegEvents 	  0
 integratorsDirectory      /nfs/lhcb/malexander01/charm/hhpi0/integrators/integrators_3sigma
 
 * Mixing & CPV parameters.
