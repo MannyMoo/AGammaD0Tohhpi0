@@ -46,7 +46,8 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
         if phasediff < 0. :
             phasediff += 2*math.pi
 
-        #Split events into either above/below y=x for D0 and D0bar
+        #Split events into either above/below y=x for D0 and D0bar. 
+        #(upperHists represents negative index b, lowerHists positive b)
         if (tag == 1) :
             if (s23 < s13) :
                 lowerHists[0].Fill(decayTime, phasediff)
@@ -342,6 +343,18 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
 
 
 def getRatiosAsymm(pHists, nHists) : 
+    """Function to produce array of plots of ratio of counts given in pHists and nHists, as a ROOT TGraphAsymmErrors 
+        object.
+
+        Inputs are:
+            - pHists: list containing two 2D histograms (one for D0, one for D0bar) binned by decay time and strong phase
+              difference. Contains events with positive bin index b.
+            - nHists: same as pHists, but for events binned with negative index b.    
+
+        Function returns:
+            - ratios: 2D array of plots separated by D0/D0bar tag and strong phase difference binning. Plots are of type 
+              TGraphAsymmErrors, in order to allow for Poisson error propogation on division.
+    """
     ratios = [[],[]]
     nbinsPhase = pHists[0].GetNbinsY()
 
@@ -356,6 +369,9 @@ def getRatiosAsymm(pHists, nHists) :
             ratios[i][b-1].Divide(numerator, denominator, "pois")
     
     return ratios
+
+
+
 
 def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
     """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
