@@ -353,7 +353,7 @@ def getRatiosAsymm(pHists, nHists) :
 
             numerator = nHists[i].ProjectionX("numerator b{} i{}".format(b,i), b, b)
             denominator = pHists[i].ProjectionX("denominator b{} i{}".format(b,i), b, b)
-            ratios[i][b-1].Divide(numerator, denominator, 'pois')
+            ratios[i][b-1].Divide(numerator, denominator, "pois")
     
     return ratios
 
