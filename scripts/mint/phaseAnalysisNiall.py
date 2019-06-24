@@ -3,21 +3,12 @@
 # Load Mint2 libraries.
 import Mint2, ROOT, math
 from AGammaD0Tohhpi0.data import datalib
-from ROOT import PhaseDifferenceCalc, DalitzEventList, TFile, DalitzEventPattern
+from ROOT import DalitzEventList, TFile
 from ROOT.MINT import NamedParameterBase
-from AGammaD0Tohhpi0.mint import config
-from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from scipy.optimize import minimize
 from AGammaD0Tohhpi0.binflip import *
 
-# Set the config file.
-set_default_config()
-
 ROOT.TH1.SetDefaultSumw2(True)
-
-# Get the phase difference calculator.
-pattern = pattern_D0Topipipi0
-diffcalc = PhaseDifferenceCalc(pattern, config)
 
 #Output to screen flags
 drawRatioPlots = True
@@ -77,19 +68,19 @@ for fileNo in range(1,2) :
     #Processing data 
 
     #Calling function to perform phase binning and store all (binned) decay times
-    tList, tSqList = binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax)
+    tList, tSqList = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax)
 
     #Calculating parameters required for fit to data
     for i in range( nbinsTime ) : 
         tAv[i] = sum(tList[i]) / len(tList[i])
         tSqAv[i] = sum(tSqList[i]) / len(tSqList[i])
 
-    X, F, Fbar, r = computeIntegrals(pattern, diffcalc, nbinsPhase)
+    X, F, Fbar, r = computeIntegrals(nbinsPhase)
 
     zcp, deltaz = getZvals(x,y,qoverp,phi)
 
     #Initialising variables for fits and errors
-    zcpFit, deltazFit, err_ReZcpFit, err_ImZcpFit, err_ReDzFit, err_ImDzFit = [[],[],[],[],[],[]] 
+    zcpFit, deltazFit, err_ReZcpFit, err_ImZcpFit, err_ReDzFit, err_ImDzFit = [],[],[],[],[],[]
 
     #Loop over output files to store optimisation fit based on both implementations of chi2 function
     for i in range(2) :
@@ -99,7 +90,7 @@ for fileNo in range(1,2) :
             result = minimize(getChiSquared, [zcp.real, zcp.imag, deltaz.real, deltaz.imag], (tAv, tSqAv, r, X, lowerHists, upperHists))
         else:
             ratios = getRatiosAsymm(lowerHists, upperHists)
-            result = minimize(getChiSquared_Test, [zcp.real, zcp.imag, deltaz.real, deltaz.imag], (tAv, tSqAv, r, X, ratios, nbinsTime))
+            result = minimize(getChiSquaredPoisson, [zcp.real, zcp.imag, deltaz.real, deltaz.imag], (tAv, tSqAv, r, X, ratios, nbinsTime))
 
         #Extract fitted values and errors
         zcpFit.append( complex(result.x[0], result.x[1]) )
@@ -118,6 +109,7 @@ for fileNo in range(1,2) :
 
 
 
+
     #Output to screen (set flags at top of file before running)
 
     if (verbose == 2) :
@@ -132,12 +124,11 @@ for fileNo in range(1,2) :
         print "\nSimulation parameters: \t\t zcp: {} \t\t deltaz: {}\n".format(zcp, deltaz)
         print "Fit parameters ('old' chi2): \t zcp (fit): {} \t deltaz (fit): {}".format(zcpFit[0], deltazFit[0])
         print "Fit errors ('old' chi2): \t zcp (error): {} \t deltaz (error): {}\n".format(complex(err_ReZcpFit[0], err_ImZcpFit[0]), complex(err_ReDzFit[0], err_ImDzFit[0]))
-        print "Fit parameters ('new' chi2): \t zcp (fit): {} \t deltaz (fit): {}".format(zcpFit[0], deltazFit[1])
+        print "Fit parameters ('new' chi2): \t zcp (fit): {} \t deltaz (fit): {}".format(zcpFit[1], deltazFit[1])
         print "Fit errors ('new' chi2): \t zcp (error): {} \t deltaz (error): {}\n".format(complex(err_ReZcpFit[1], err_ImZcpFit[1]), complex(err_ReDzFit[1], err_ImDzFit[1]))
 
 
     # Drawing ratio plots and fits - only really useful when testing on a single file
-    #NOTE: Fit is drawn here only for 'old' getChiSquared fit, not getChiSquared_Test 
     if (drawRatioPlots) :
         ratioPlots = createRatioPlots(upperHists, lowerHists, tMax, fileNo)
 
@@ -145,7 +136,7 @@ for fileNo in range(1,2) :
         RPlots = getFit(zcp, deltaz, tAv, tSqAv, r, X)
 
         #Calculate fit function values from fitted parameters
-        RFits = getFit(zcpFit[0], deltazFit[0], tAv, tSqAv, r, X)
+        RFits = [getFit(zcpFit[0], deltazFit[0], tAv, tSqAv, r, X), getFit(zcpFit[1], deltazFit[1], tAv, tSqAv, r, X)]
 
         canvas = []
         canvas.append( ROOT.TCanvas("c1 f{}".format(fileNo), "D0 ratios by bin") )
@@ -162,12 +153,18 @@ for fileNo in range(1,2) :
 
                 #Drawing fit with simulation parameters
                 RPlots[i][b-1].SetMarkerStyle(5)
+                RPlots[i][b-1].SetMarkerColor(ROOT.kBlack)
                 RPlots[i][b-1].Draw('Same P')
 
-                #Drawing fit with fitted parameters
-                RFits[i][b-1].SetMarkerStyle(4)
-                RFits[i][b-1].SetMarkerColor(2)
-                RFits[i][b-1].Draw('Same P')
+                #Drawing fit with fitted parameters, 'old' chi2 optimisation
+                RFits[0][i][b-1].SetMarkerStyle(4)
+                RFits[0][i][b-1].SetMarkerColor(ROOT.kRed)
+                RFits[0][i][b-1].Draw('Same P')
+
+                #Drawing fit with fitted parameters, Poisson errors chi2 optimisation
+                RFits[1][i][b-1].SetMarkerStyle(26)
+                RFits[1][i][b-1].SetMarkerColor(ROOT.kGreen+2)
+                RFits[1][i][b-1].Draw('Same P')
 
     print "File number {} processed.\n".format(fileNo) 
 

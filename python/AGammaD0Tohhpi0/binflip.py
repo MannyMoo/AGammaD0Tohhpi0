@@ -2,9 +2,19 @@
 
 import math, ROOT
 from Mint2.utils import three_body_event
+from ROOT import PhaseDifferenceCalc
+from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
+from AGammaD0Tohhpi0.mint import config
+
+# Set the config file.
+set_default_config()
+
+# Get the phase difference calculator.
+pattern = pattern_D0Topipipi0
+diffcalc = PhaseDifferenceCalc(pattern, config)
 
 
-def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -47,13 +57,12 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
             phasediff += 2*math.pi
 
         #Split events into either above/below y=x for D0 and D0bar. 
-        #(upperHists represents negative index b, lowerHists positive b)
+        #(upperHists stores events with negative phase bin index b, lowerHists stores events with positive b)
         if (tag == 1) :
             if (s23 < s13) :
                 lowerHists[0].Fill(decayTime, phasediff)
             else: 
                 upperHists[0].Fill(decayTime, phasediff)
-
         elif (tag == -1) :
             if (s23 < s13) :
                 upperHists[1].Fill(decayTime, phasediff)
@@ -75,7 +84,14 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
 
 
 def getZvals(x, y, qoverp, phi) :
-    """Function which will calculate and return zcp and deltaz, given x, y, q/p, phi as inputs."""
+    """Function which will calculate and return zcp and deltaz, given x, y, q/p, phi as inputs.
+
+         Inputs are:
+             -x,y,qoverp,phi: float/doubles containing mixing parameters
+
+         Function returns:
+             -zcp, deltaz: complex numbers calculated from the input mixing parameters.
+    """
 
     poverq = 1/qoverp
 
@@ -138,7 +154,13 @@ def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
 
 
 def setPlotParameters(plot, tag, plotNo):
-    """Simple function to set desired format options for plotting graphs of R(b,j)."""
+    """Simple function to set desired format options for plotting graphs of R(b,j).
+
+         Inputs are:
+             -plot: TH1 for which plotting options are to be set.
+             -tag: integer (either 0 or 1) describing whether the plot refers to D0 or D0bar events.
+             -plotNo: number describing which phase bin plot represents.
+    """
 
     xAxis = plot.GetXaxis()
     xAxis.SetTitle("Decay Time / D0 mean lifetime")
@@ -182,8 +204,6 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
     nbinsPhase = pHists[0].GetNbinsY()
     nbinsTime = pHists[0].GetNbinsX()
 
-    # x, y, qoverp, phi  = params
-    # zcp, deltaz = getZvals(x,y,qoverp,phi)
     re_zcp, im_zcp, re_dz, im_dz = params
     zcp = complex(re_zcp, im_zcp)
     deltaz = complex(re_dz, im_dz)    
@@ -256,7 +276,7 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
 
 
 
-def computeIntegrals(pattern, diffcalc, nbinsPhase) :
+def computeIntegrals(nbinsPhase) :
     """Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
         
          Inputs are:
@@ -297,7 +317,7 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
             if (evt == None):
                 continue
 
-            #crossTerm is A*(s13,s23) Abar(s13,s23)
+            #crossTerm is A*(s13,s23)Abar(s13,s23)
             cpp_crossTerm = diffcalc.cross_term(evt)
             crossTerm = complex( cpp_crossTerm.real(), cpp_crossTerm.imag() )      
 
@@ -315,7 +335,8 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
             if phasediff < 0. :
                 phasediff += 2*math.pi
 
-            b = int( phasediff*(nbinsPhase/(2*math.pi)) + 0.5 ) + 1
+            #Calculating phase bin number of event
+            b = int( phasediff*( nbinsPhase/(2*math.pi)) + 0.5 ) + 1
             #Exclude events outside range of bins
             if (b > 8) or (b < 1):
                 continue
@@ -373,7 +394,7 @@ def getRatiosAsymm(pHists, nHists) :
 
 
 
-def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
+def getChiSquaredPoisson(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
     """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
          deltaz, using Poisson statistics for errors. 
 
@@ -391,8 +412,6 @@ def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
 
     nbinsPhase = len(ratios[0])
 
-    # x, y, qoverp, phi  = params
-    # zcp, deltaz = getZvals(x,y,qoverp,phi)
     re_zcp, im_zcp, re_dz, im_dz = params
     zcp = complex(re_zcp, im_zcp)
     deltaz = complex(re_dz, im_dz)    
