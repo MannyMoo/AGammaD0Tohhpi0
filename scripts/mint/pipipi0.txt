@@ -45,6 +45,8 @@ SaveEvents		1
 IntegratorSource        "file"
 * Whether to recalculate the integrals or not.
 overwriteIntegrators      1
+* Whether to save the events generated for the intergals.
+saveIntegEvents 	  0
 integratorsDirectory      /nfs/lhcb/malexander01/charm/hhpi0/integrators/integrators_3sigma
 
 * Mixing & CPV parameters.
@@ -70,7 +72,8 @@ qoverp 	   0.8
 phi        -0.7
 
 tmax		4.1
-nTimePoints 	41
+* tmax = (sample interval) * (nTimePoints - 1), so this gives 0.1 ps intervals
+nTimePoints 	42
 
 ** name									Fix?	init	step	min	max
 *
