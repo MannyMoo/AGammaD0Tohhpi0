@@ -50,7 +50,10 @@ saveIntegEvents 	  0
 integratorsDirectory      /nfs/lhcb/malexander01/charm/hhpi0/integrators/integrators_3sigma
 
 *File containing efficiency TH1
-/home/ppe/n/nmchugh/SummerProject/DaVinciDev_v44r10p1/AGammaD0Tohhpi0/scripts/mint/h_efficiency.root
+efficiencyFile    /home/ppe/n/nmchugh/SummerProject/DaVinciDev_v44r10p1/AGammaD0Tohhpi0/scripts/mint/h_efficiency.root
+*Name of histogram
+h_efficiencyName     h_efficiency
+
 
 * Mixing & CPV parameters.
 lifetime   0.4101
