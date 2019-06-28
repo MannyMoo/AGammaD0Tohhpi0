@@ -14,7 +14,7 @@ varnames = ('deltam',)
 
 # All the TTree datasets, the tree names and file names (any number of file names can be given).
 datapaths = {'MC_2016_pipipi0' : {'tree' : 'DecayTree', 
-                                  'files' : os.path.join(datadir, 'mc/2016/DaVinciTuples_MC_S28_Matched_pipipi0.root')},
+                                  'files' : [os.path.join(datadir, 'mc/2016/DaVinciTuples_MC_S28_Matched_pipipi0.root')]},
              'MiniBias_2015' : {'tree' : 'pions_tuple_sel/DecayTree',
                                 'files' : glob.glob(os.path.join(datadir, 'minibias/2015/DVTuples*.root'))},
              }
