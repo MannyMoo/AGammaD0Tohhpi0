@@ -49,10 +49,15 @@ overwriteIntegrators      1
 saveIntegEvents 	  0
 integratorsDirectory      /nfs/lhcb/malexander01/charm/hhpi0/integrators/integrators_3sigma
 
-*File containing efficiency TH1
+*File containing efficiency histogram
 efficiencyFile    /home/ppe/n/nmchugh/SummerProject/DaVinciDev_v44r10p1/AGammaD0Tohhpi0/scripts/mint/h_efficiency.root
-*Name of histogram
+*Name of efficiency histogram
 h_efficiencyName     h_efficiency
+
+*Width of decay time smearing guassian
+resWidth     0.05
+*Flag for adding smearing and efficiency effects
+addExpEffects     1
 
 
 * Mixing & CPV parameters.
@@ -91,28 +96,28 @@ SignalFraction								2      0.75    0.05      0        1
 "D0->rho(770)0(->pi+,pi-),pi0_Im"					0	0.152	0.05
 "D0->rho(770)-(->pi-,pi0),pi+_Re"					0 	0.730	0.05
 "D0->rho(770)-(->pi-,pi0),pi+_Im"					0	-0.02	0.05
-"D0->rho(1450)+(->pi+,pi0),pi-_Re"					0 	0.545	0.05
-"D0->rho(1450)+(->pi+,pi0),pi-_Im"					0	-0.074	0.05
-"D0->rho(1450)0(->pi+,pi-),pi0_Re"					0 	0.064	0.05
-"D0->rho(1450)0(->pi+,pi-),pi0_Im"					0	-0.179	0.05
-"D0->rho(1450)-(->pi-,pi0),pi+_Re"					0 	0.525	0.05
-"D0->rho(1450)-(->pi-,pi0),pi+_Im"					0	0.076	0.05
-"D0->rho(1700)+(->pi+,pi0),pi-_Re"					0 	0.836	0.05
-"D0->rho(1700)+(->pi+,pi0),pi-_Im"					0	-0.360	0.05
-"D0->rho(1700)0(->pi+,pi-),pi0_Re"					0 	0.333	0.05
-"D0->rho(1700)0(->pi+,pi-),pi0_Im"					0	-0.500	0.05
-"D0->rho(1700)-(->pi-,pi0),pi+_Re"					0 	0.189	0.05
-"D0->rho(1700)-(->pi-,pi0),pi+_Im"					0	0.962	0.05
-"D0->f(0)(980)0(->pi+,pi-),pi0_Re"					0 	0.031	0.05
-"D0->f(0)(980)0(->pi+,pi-),pi0_Im"					0	-0.051	0.05
-"D0->f(0)(1370)0(->pi+,pi-),pi0_Re"					0 	0.188	0.05
-"D0->f(0)(1370)0(->pi+,pi-),pi0_Im"					0	-0.067	0.05
-"D0->f(0)(1500)0(->pi+,pi-),pi0_Re"					0 	0.179	0.05
-"D0->f(0)(1500)0(->pi+,pi-),pi0_Im"					0	0.023	0.05
-"D0->f(0)(1710)0(->pi+,pi-),pi0_Re"					0 	0.293	0.05
-"D0->f(0)(1710)0(->pi+,pi-),pi0_Im"					0	0.272	0.05
-"D0->f(2)(1270)0(->pi+,pi-),pi0_Re"					0 	0.247	0.05
-"D0->f(2)(1270)0(->pi+,pi-),pi0_Im"					0	0.038	0.05
+* "D0->rho(1450)+(->pi+,pi0),pi-_Re"					0 	0.545	0.05
+* "D0->rho(1450)+(->pi+,pi0),pi-_Im"					0	-0.074	0.05
+* "D0->rho(1450)0(->pi+,pi-),pi0_Re"					0 	0.064	0.05
+* "D0->rho(1450)0(->pi+,pi-),pi0_Im"					0	-0.179	0.05
+* "D0->rho(1450)-(->pi-,pi0),pi+_Re"					0 	0.525	0.05
+* "D0->rho(1450)-(->pi-,pi0),pi+_Im"					0	0.076	0.05
+* "D0->rho(1700)+(->pi+,pi0),pi-_Re"					0 	0.836	0.05
+* "D0->rho(1700)+(->pi+,pi0),pi-_Im"					0	-0.360	0.05
+* "D0->rho(1700)0(->pi+,pi-),pi0_Re"					0 	0.333	0.05
+* "D0->rho(1700)0(->pi+,pi-),pi0_Im"					0	-0.500	0.05
+* "D0->rho(1700)-(->pi-,pi0),pi+_Re"					0 	0.189	0.05
+* "D0->rho(1700)-(->pi-,pi0),pi+_Im"					0	0.962	0.05
+* "D0->f(0)(980)0(->pi+,pi-),pi0_Re"					0 	0.031	0.05
+* "D0->f(0)(980)0(->pi+,pi-),pi0_Im"					0	-0.051	0.05
+* "D0->f(0)(1370)0(->pi+,pi-),pi0_Re"					0 	0.188	0.05
+* "D0->f(0)(1370)0(->pi+,pi-),pi0_Im"					0	-0.067	0.05
+* "D0->f(0)(1500)0(->pi+,pi-),pi0_Re"					0 	0.179	0.05
+* "D0->f(0)(1500)0(->pi+,pi-),pi0_Im"					0	0.023	0.05
+* "D0->f(0)(1710)0(->pi+,pi-),pi0_Re"					0 	0.293	0.05
+* "D0->f(0)(1710)0(->pi+,pi-),pi0_Im"					0	0.272	0.05
+* "D0->f(2)(1270)0(->pi+,pi-),pi0_Re"					0 	0.247	0.05
+* "D0->f(2)(1270)0(->pi+,pi-),pi0_Im"					0	0.038	0.05
 
 "Dbar0->rho(770)-(->pi-,pi0),pi+_Re"					1	1.000	0.1
 "Dbar0->rho(770)-(->pi-,pi0),pi+_Im"					1	0.000	0.1
@@ -120,25 +125,25 @@ SignalFraction								2      0.75    0.05      0        1
 "Dbar0->rho(770)0(->pi-,pi+),pi0_Im"					0	0.152	0.05
 "Dbar0->rho(770)+(->pi+,pi0),pi-_Re"					0 	0.730	0.05
 "Dbar0->rho(770)+(->pi+,pi0),pi-_Im"					0	-0.02	0.05
-"Dbar0->rho(1450)-(->pi-,pi0),pi+_Re"					0 	0.545	0.05
-"Dbar0->rho(1450)-(->pi-,pi0),pi+_Im"					0	-0.074	0.05
-"Dbar0->rho(1450)0(->pi-,pi+),pi0_Re"					0 	0.064	0.05
-"Dbar0->rho(1450)0(->pi-,pi+),pi0_Im"					0	-0.179	0.05
-"Dbar0->rho(1450)+(->pi+,pi0),pi-_Re"					0 	0.525	0.05
-"Dbar0->rho(1450)+(->pi+,pi0),pi-_Im"					0	0.076	0.05
-"Dbar0->rho(1700)-(->pi-,pi0),pi+_Re"					0 	0.836	0.05
-"Dbar0->rho(1700)-(->pi-,pi0),pi+_Im"					0	-0.360	0.05
-"Dbar0->rho(1700)0(->pi-,pi+),pi0_Re"					0 	0.333	0.05
-"Dbar0->rho(1700)0(->pi-,pi+),pi0_Im"					0	-0.500	0.05
-"Dbar0->rho(1700)+(->pi+,pi0),pi-_Re"					0 	0.189	0.05
-"Dbar0->rho(1700)+(->pi+,pi0),pi-_Im"					0	0.962	0.05
-"Dbar0->f(0)(980)0(->pi-,pi+),pi0_Re"					0 	0.031	0.05
-"Dbar0->f(0)(980)0(->pi-,pi+),pi0_Im"					0	-0.051	0.05
-"Dbar0->f(0)(1370)0(->pi-,pi+),pi0_Re"					0 	0.188	0.05
-"Dbar0->f(0)(1370)0(->pi-,pi+),pi0_Im"					0	-0.067	0.05
-"Dbar0->f(0)(1500)0(->pi-,pi+),pi0_Re"					0 	0.179	0.05
-"Dbar0->f(0)(1500)0(->pi-,pi+),pi0_Im"					0	0.023	0.05
-"Dbar0->f(0)(1710)0(->pi-,pi+),pi0_Re"					0 	0.293	0.05
-"Dbar0->f(0)(1710)0(->pi-,pi+),pi0_Im"					0	0.272	0.05
-"Dbar0->f(2)(1270)0(->pi-,pi+),pi0_Re"					0 	0.247	0.05
-"Dbar0->f(2)(1270)0(->pi-,pi+),pi0_Im"					0	0.038	0.05
+* "Dbar0->rho(1450)-(->pi-,pi0),pi+_Re"					0 	0.545	0.05
+* "Dbar0->rho(1450)-(->pi-,pi0),pi+_Im"					0	-0.074	0.05
+* "Dbar0->rho(1450)0(->pi-,pi+),pi0_Re"					0 	0.064	0.05
+* "Dbar0->rho(1450)0(->pi-,pi+),pi0_Im"					0	-0.179	0.05
+* "Dbar0->rho(1450)+(->pi+,pi0),pi-_Re"					0 	0.525	0.05
+* "Dbar0->rho(1450)+(->pi+,pi0),pi-_Im"					0	0.076	0.05
+* "Dbar0->rho(1700)-(->pi-,pi0),pi+_Re"					0 	0.836	0.05
+* "Dbar0->rho(1700)-(->pi-,pi0),pi+_Im"					0	-0.360	0.05
+* "Dbar0->rho(1700)0(->pi-,pi+),pi0_Re"					0 	0.333	0.05
+* "Dbar0->rho(1700)0(->pi-,pi+),pi0_Im"					0	-0.500	0.05
+* "Dbar0->rho(1700)+(->pi+,pi0),pi-_Re"					0 	0.189	0.05
+* "Dbar0->rho(1700)+(->pi+,pi0),pi-_Im"					0	0.962	0.05
+* "Dbar0->f(0)(980)0(->pi-,pi+),pi0_Re"					0 	0.031	0.05
+* "Dbar0->f(0)(980)0(->pi-,pi+),pi0_Im"					0	-0.051	0.05
+* "Dbar0->f(0)(1370)0(->pi-,pi+),pi0_Re"					0 	0.188	0.05
+* "Dbar0->f(0)(1370)0(->pi-,pi+),pi0_Im"					0	-0.067	0.05
+* "Dbar0->f(0)(1500)0(->pi-,pi+),pi0_Re"					0 	0.179	0.05
+* "Dbar0->f(0)(1500)0(->pi-,pi+),pi0_Im"					0	0.023	0.05
+* "Dbar0->f(0)(1710)0(->pi-,pi+),pi0_Re"					0 	0.293	0.05
+* "Dbar0->f(0)(1710)0(->pi-,pi+),pi0_Im"					0	0.272	0.05
+* "Dbar0->f(2)(1270)0(->pi-,pi+),pi0_Re"					0 	0.247	0.05
+* "Dbar0->f(2)(1270)0(->pi-,pi+),pi0_Im"					0	0.038	0.05
