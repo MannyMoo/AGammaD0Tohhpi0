@@ -2,9 +2,20 @@
 
 import math, ROOT
 from Mint2.utils import three_body_event
+from ROOT import PhaseDifferenceCalc
+from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
+from AGammaD0Tohhpi0.mint import config
+import cmath
+
+# Set the config file.
+set_default_config()
+
+# Get the phase difference calculator.
+pattern = pattern_D0Topipipi0
+diffcalc = PhaseDifferenceCalc(pattern, config)
 
 
-def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -23,6 +34,7 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
 
     nbinsTime = upperHists[0].GetNbinsX()
 
+    #Initialise variables for binned lists of decay times and decay times squared
     tList = [] 
     tSqList = [] 
     for i in range( nbinsTime ) : 
@@ -46,13 +58,13 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
         if phasediff < 0. :
             phasediff += 2*math.pi
 
-        #Split events into either above/below y=x for D0 and D0bar
+        #Split events into either above/below y=x for D0 and D0bar. 
+        #(upperHists stores events with negative phase bin index b, lowerHists stores events with positive b)
         if (tag == 1) :
             if (s23 < s13) :
                 lowerHists[0].Fill(decayTime, phasediff)
             else: 
                 upperHists[0].Fill(decayTime, phasediff)
-
         elif (tag == -1) :
             if (s23 < s13) :
                 upperHists[1].Fill(decayTime, phasediff)
@@ -74,7 +86,14 @@ def binByPhase(evtData, evtlist, diffcalc, lowerHists, upperHists, tMax) :
 
 
 def getZvals(x, y, qoverp, phi) :
-    """Function which will calculate and return zcp and deltaz, given x, y, q/p, phi as inputs."""
+    """Function which will calculate and return zcp and deltaz, given x, y, q/p, phi as inputs.
+
+         Inputs are:
+             -x,y,qoverp,phi: float/doubles containing mixing parameters
+
+         Function returns:
+             -zcp, deltaz: complex numbers calculated from the input mixing parameters.
+    """
 
     poverq = 1/qoverp
 
@@ -92,7 +111,7 @@ def getZvals(x, y, qoverp, phi) :
 
 
 
-def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
+def getFit(zcp, deltaz, tAv, tSqAv, r, X, F) :
     """Function to evaluate fit formula at discrete time steps for given zcp and deltaz.
 
          Inputs are:
@@ -137,7 +156,13 @@ def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
 
 
 def setPlotParameters(plot, tag, plotNo):
-    """Simple function to set desired format options for plotting graphs of R(b,j)."""
+    """Simple function to set desired format options for plotting graphs of R(b,j).
+
+         Inputs are:
+             -plot: TH1 for which plotting options are to be set.
+             -tag: integer (either 0 or 1) describing whether the plot refers to D0 or D0bar events.
+             -plotNo: number describing which phase bin plot represents.
+    """
 
     xAxis = plot.GetXaxis()
     xAxis.SetTitle("Decay Time / D0 mean lifetime")
@@ -178,11 +203,11 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
          Function returns:
              - chiSq: chi squared value for fit to measured data given by the values input in params.  
     """
+
     nbinsPhase = pHists[0].GetNbinsY()
     nbinsTime = pHists[0].GetNbinsX()
 
-    # x, y, qoverp, phi  = params
-    # zcp, deltaz = getZvals(x,y,qoverp,phi)
+    #Input is setup this way with a list to allow minimisation with scipy.minimize on listed parameters
     re_zcp, im_zcp, re_dz, im_dz = params
     zcp = complex(re_zcp, im_zcp)
     deltaz = complex(re_dz, im_dz)    
@@ -191,6 +216,7 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
     fit = getFit(zcp, deltaz, tAv, tSqAv, r, X)
 
     for b in range(1,nbinsPhase+1) :
+        #pl (plus) refers to D0 data, mi (minus) to D0bar
         Rvals_pl = fit[0][b-1].GetY()            
         Rvals_mi = fit[1][b-1].GetY()
 
@@ -220,7 +246,7 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
 
 
 def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
-    """Function to take histograms in lower/upper region for D0/D0bar and produce plots of measured R(b,j) with fits.
+    """Function to take histograms in lower/upper region for D0/D0bar and produce plots of measured R(b,j).
 
          Inputs are:
              - upperHists, lowerHists: lists of two 2D histograms (four total) to contain binned events seperated by D0/D0bar 
@@ -255,7 +281,7 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
 
 
 
-def computeIntegrals(pattern, diffcalc, nbinsPhase) :
+def computeIntegrals(nbinsPhase, normaliseF=False) :
     """Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
         
          Inputs are:
@@ -284,11 +310,14 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
     F = [[0]*nbinsPhase,[0]*nbinsPhase]
     Fbar = [[0]*nbinsPhase,[0]*nbinsPhase]
 
+    sumF = 0
+    sumFbar = 0
+
     #Looping over grid points to numerically evaluate X(b), F(b) and Fbar(b)
     for i in range( npoints ) : 
-        s13 = s13min + i * ds13
+        s13 = s13min + (i+0.5) * ds13
         for j in range( npoints ) : 
-            s23 = s23min + j * ds23
+            s23 = s23min + (j+0.5) * ds23
 
             evt = three_body_event(pattern, s13, s23)
 
@@ -296,7 +325,7 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
             if (evt == None):
                 continue
 
-            #crossTerm is A*(s13,s23) Abar(s13,s23)
+            #crossTerm is A*(s13,s23)Abar(s13,s23)
             cpp_crossTerm = diffcalc.cross_term(evt)
             crossTerm = complex( cpp_crossTerm.real(), cpp_crossTerm.imag() )      
 
@@ -314,7 +343,8 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
             if phasediff < 0. :
                 phasediff += 2*math.pi
 
-            b = int( phasediff*(nbinsPhase/(2*math.pi)) + 0.5 ) + 1
+            #Calculating phase bin number of event
+            b = int( phasediff*( nbinsPhase/(2*math.pi)) + 0.5 ) + 1
             #Exclude events outside range of bins
             if (b > 8) or (b < 1):
                 continue
@@ -323,14 +353,23 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
                 X[0][b-1] += crossTerm * ds13 * ds23
                 F[0][b-1] += ampSq * ds13 * ds23
                 Fbar[1][b-1] += cp_ampSq * ds13 * ds23
-            elif (s23 > s13):
+            else:
                 X[1][b-1] += crossTerm * ds13 * ds23
                 F[1][b-1] += ampSq * ds13 * ds23
                 Fbar[0][b-1] += cp_ampSq * ds13 * ds23  
 
+            sumF += ampSq * ds13 * ds23
+            sumFbar += cp_ampSq * ds13 * ds23 
+
     for i in range( len(X[0]) ) :
         X[0][i] /= ( F[0][i] * Fbar[1][i] )**0.5
         X[1][i] /= ( F[1][i] * Fbar[0][i] )**0.5
+
+    if (normaliseF) :
+        for i in range( len(F[0]) ) :
+            for k in range(2) :
+                F[k][i] /= sumF
+                Fbar[k][i] /= sumFbar
 
     r = [0]*nbinsPhase
     for i in range(nbinsPhase) :
@@ -342,6 +381,19 @@ def computeIntegrals(pattern, diffcalc, nbinsPhase) :
 
 
 def getRatiosAsymm(pHists, nHists) : 
+    """Function to produce array of plots of ratio of counts given in pHists and nHists, as a ROOT TGraphAsymmErrors 
+        object.
+
+        Inputs are:
+            - pHists: list containing two 2D histograms (one for D0, one for D0bar) binned by decay time and strong phase
+              difference. Contains events with positive bin index b.
+            - nHists: same as pHists, but for events binned with negative index b.    
+
+        Function returns:
+            - ratios: 2D array of plots separated by D0/D0bar tag and strong phase difference binning. Plots are of type 
+              TGraphAsymmErrors, in order to allow for Poisson error propogation on division.
+    """
+
     ratios = [[],[]]
     nbinsPhase = pHists[0].GetNbinsY()
 
@@ -357,7 +409,10 @@ def getRatiosAsymm(pHists, nHists) :
     
     return ratios
 
-def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
+
+
+
+def getChiSquaredPoisson(params, tAv, tSqAv, r, X, ratios) :
     """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
          deltaz, using Poisson statistics for errors. 
 
@@ -374,9 +429,10 @@ def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
     """
 
     nbinsPhase = len(ratios[0])
+    nbinsTime = len(tAv)
+    count = 0
 
-    # x, y, qoverp, phi  = params
-    # zcp, deltaz = getZvals(x,y,qoverp,phi)
+    #Input is setup this way with a list to allow minimisation with scipy.minimize on listed parameters
     re_zcp, im_zcp, re_dz, im_dz = params
     zcp = complex(re_zcp, im_zcp)
     deltaz = complex(re_dz, im_dz)    
@@ -388,6 +444,7 @@ def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
 
         for b in range(1,nbinsPhase+1) :
 
+            #pl (plus) refers to D0 data, mi (minus) to D0bar
             expVals = fit[i][b-1].GetY()
 
             for j in range(ratios[i][b-1].GetN()) :
@@ -402,13 +459,17 @@ def getChiSquared_Test(params, tAv, tSqAv, r, X, ratios, nbinsTime) :
                     if ( err_measured != 0) :
                         chiSq += ( (measured - expected) / err_measured )**2 
                     else :
-                        print "WARNING : Data point ignored (zero error)"
+                        print "WARNING : Data point ignored (zero error below)"
+                        count += 1
                 else :
                     err_measured = ratios[i][b-1].GetErrorYhigh(j)
                     if ( err_measured != 0) :
                         chiSq += ( (measured - expected) / err_measured )**2
                     else :
-                        print "WARNING : Data point ignored (zero error)"
+                        print "WARNING : Data point ignored (zero error above)"
+                        count += 1
 
+    if(count != 0) :
+        print "\nWARNING : {} data points skipped this call (getChiSquaredPoisson).\n".format(count)
 
     return chiSq
