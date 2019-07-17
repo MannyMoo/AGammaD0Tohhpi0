@@ -481,19 +481,19 @@ def getcppVecs(X, r, F, tAv, tSqAv, nD0) :
     nbinsPhase = len(F[0])
     nbinsTime = len(tAv)
 
-    X_cpp = ROOT.vector("complex<float>")()
-    r_cpp = ROOT.vector("float")()
-    Fm_cpp = ROOT.vector("float")()
-    Fp_cpp = ROOT.vector("float")()
+    X_cpp = ROOT.vector("complex<double>")()
+    r_cpp = ROOT.vector("double")()
+    Fm_cpp = ROOT.vector("double")()
+    Fp_cpp = ROOT.vector("double")()
     for b in range(nbinsPhase) :
-        Xval = ROOT.complex("float")(X[0][b].real, X[0][b].imag)
+        Xval = ROOT.complex("double")(X[0][b].real, X[0][b].imag)
         X_cpp.push_back(Xval)        
         r_cpp.push_back(r[b])
         Fm_cpp.push_back(F[1][b]*nD0)
         Fp_cpp.push_back(F[0][b]*nD0)
 
-    tAv_cpp = ROOT.vector("float")()
-    tSqAv_cpp = ROOT.vector("float")() 
+    tAv_cpp = ROOT.vector("double")()
+    tSqAv_cpp = ROOT.vector("double")() 
     for j in range(nbinsTime) :
         tAv_cpp.push_back(tAv[j])
         tSqAv_cpp.push_back(tSqAv[j])

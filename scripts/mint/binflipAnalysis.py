@@ -71,8 +71,8 @@ for fileNo in range(1, lim+1) :
     X_cpp, r_cpp, Fm_cpp, Fp_cpp, tAv_cpp, tSqAv_cpp = getcppVecs(X, r, F, tAv, tSqAv, nD0)
     binflipfitter = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], zcp.real, zcp.imag, deltaz.real, deltaz.imag, 0.0001, fileNo, Fm_cpp, Fp_cpp)
     parset = binflipfitter.getParSet()
-    #for i in xrange(1, 4) :
-    #    parset.getParPtr(i).fixAndHide()
+    for i in [0,2,3] :
+        parset.getParPtr(i).fixAndHide()
 
     minimiser = Minimiser(binflipfitter, 1.)
     minimiser.doFit()
