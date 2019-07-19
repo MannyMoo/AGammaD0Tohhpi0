@@ -1593,5 +1593,3 @@ except ImportError:
 #          "DATAFILE='LFN:/lhcb/MC/2016/ALLSTREAMS.DST/00066265/0000/00066265_00000033_7.AllStreams.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 #          "DATAFILE='LFN:/lhcb/MC/2016/ALLSTREAMS.DST/00066265/0000/00066265_00000246_7.AllStreams.dst' TYP='POOL_ROOTTREE' OPT='READ'"
     ]
-from Gaudi.Configuration import FileCatalog
-FileCatalog().Catalogs += ['xmlcatalog_file:/nfs/lhcb/d2hh01/hhpi0/pipipi0-MagDown-MCFlagged-1File.xml']

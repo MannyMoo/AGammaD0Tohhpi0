@@ -19,7 +19,11 @@ mcmax = mdz**2 - mcmin + 100
 mzmin = 2*mpip**2 - 50
 mzmax = mdz**2 - mzmin + 100
 
-tree = datalib.get_data('MINT_data_NoCPV_x=2.5')
+#tree = datalib.get_data('MINT_data_NoCPV_x=2.5')
+tree = datalib.get_data('MINT_test-new')
+#tree = datalib.get_data('MINT_test-new-2')
+#datalib.datapaths['MINT_data_3SigmaCPV']['files'] = datalib.datapaths['MINT_data_3SigmaCPV']['files'][:10]
+#tree = datalib.get_data('MINT_data_3SigmaCPV')
 
 canv = ROOT.TCanvas('canv', '', 600, 600)
 plots = {}
@@ -42,10 +46,10 @@ for name, form in {'dalitz' : '{0} : {1} >> h(100, {2}, {3}, 100, {2}, {3})'.for
         #nbins = 0
         if name == 'time' :
             continue
-        for i in xrange(nbins) :
-            time = i*binwidth
-            tree.Draw(form, 'tag == ' + tag + ' && {0} < decaytime && decaytime <= {1}'.format(time, time+binwidth), 'colz')
-            canv.SaveAs('timebins/' + name + '_tag_' + tag + '_timebin_' + str(i).zfill(2) + '.pdf')
+        # for i in xrange(nbins) :
+        #     time = i*binwidth
+        #     tree.Draw(form, 'tag == ' + tag + ' && {0} < decaytime && decaytime <= {1}'.format(time, time+binwidth), 'colz')
+        #     canv.SaveAs('timebins/' + name + '_tag_' + tag + '_timebin_' + str(i).zfill(2) + '.pdf')
 
 for name, hp, hm in (('mplus', plots['mplus']['+1'], plots['mminus']['-1']),
                      ('mminus', plots['mminus']['+1'], plots['mplus']['-1']),
@@ -77,7 +81,7 @@ print 'AGamma from asym. fit: ({0:.2f} +/- {1:.2f}) x 1e-3 - {2:.2f} sigma'.form
 taup = ufloat(plots['time']['+1'].GetMean(), plots['time']['+1'].GetMeanError())
 taum = ufloat(plots['time']['-1'].GetMean(), plots['time']['-1'].GetMeanError())
 ag = (taum - taup)/(taum + taup)
-
+print 'taup', taup, 'taum', taum
 print 'AGamma from taus: ({0:.2f} +/- {1:.2f}) x 1e-3 - {2:.2f} sigma'.format(ag.nominal_value*1000.,
                                                                               ag.std_dev*1000.,
                                                                               ag.nominal_value/ag.std_dev)
