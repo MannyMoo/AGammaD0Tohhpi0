@@ -5,7 +5,6 @@ import Mint2, ROOT, math
 from AGammaD0Tohhpi0.data import datalib
 from ROOT import DalitzEventList, TFile, binflipChi2
 from ROOT.MINT import NamedParameterBase, Minimiser
-from scipy.optimize import minimize
 from AGammaD0Tohhpi0.binflip import *
 
 ROOT.TH1.SetDefaultSumw2(True)
@@ -20,31 +19,28 @@ phi = -0.7
 nbinsPhase = 8
 phaseMin = 2*math.pi*(-0.5) / nbinsPhase
 phaseMax = 2*math.pi*(nbinsPhase - 0.5) / nbinsPhase
-nbinsTime = 50
-tMax = 7.5
+nbinsTime = 10#Previously 50
+tMax = 6#Previously 7.5
 
 #These don't change with the data file, so just calculate once here
 X, F, Fbar, r = computeIntegrals(nbinsPhase, True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
-lim = 1
+lim = 100
 failed = []
 
 for fileNo in range(1, lim+1) :
- 
+
     print "Processing file number {}... \n".format(fileNo)
 
     #Setting up variables and reading in events 
 
-    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_prec=3e-4_simpleModel/pipipi0_{}.root'.format(fileNo)) 
+    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_fullModel/pipipi0_{}.root'.format(fileNo)) 
 
     #Retrieve the dataset as a DalitzEventList and nTuple
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
     evtData = fdata.Get('DalitzEventList')
-
-    tAv = [0]*nbinsTime
-    tSqAv = [0]*nbinsTime
 
     upperHists = []
     lowerHists = []
@@ -64,15 +60,15 @@ for fileNo in range(1, lim+1) :
     tList, tSqList = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax)
 
     #Calculating parameters required for fit to data
+    tAv = [0]*nbinsTime
+    tSqAv = [0]*nbinsTime
     for i in range( nbinsTime ) : 
         tAv[i] = sum(tList[i]) / len(tList[i])
         tSqAv[i] = sum(tSqList[i]) / len(tSqList[i])
 
     X_cpp, r_cpp, Fm_cpp, Fp_cpp, tAv_cpp, tSqAv_cpp = getcppVecs(X, r, F, tAv, tSqAv, nD0)
-    binflipfitter = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], zcp.real, zcp.imag, deltaz.real, deltaz.imag, 0.0001, fileNo, Fm_cpp, Fp_cpp)
+    binflipfitter = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], zcp.real, zcp.imag, deltaz.real, deltaz.imag, 0.0001)#, fileNo, Fm_cpp, Fp_cpp)
     parset = binflipfitter.getParSet()
-    for i in [0,2,3] :
-        parset.getParPtr(i).fixAndHide()
 
     minimiser = Minimiser(binflipfitter, 1.)
     minimiser.doFit()
@@ -81,18 +77,23 @@ for fileNo in range(1, lim+1) :
         success += 1
     else :
         failed.append(fileNo)
+        print "\nWARNING: FAILED FIT\n"
 
-    resultsfile = TFile("rootOut/fit_{}.root".format(fileNo), "recreate")
+    resultsfile = TFile("rootOut_D0Only/fit_{}.root".format(fileNo), "recreate")
 
     resultstree = parset.makeNewNtpForOwner(resultsfile)
     parset.fillNtp(resultsfile, resultstree)
     resultstree.Write()
     resultsfile.Close()
 
+    fdata.Close()
     print "File number {} processed. ".format(fileNo)
     print "\nActual values are : \t Zcp : %e + %ei \t\t deltaZ : %e + %ei\n" % (zcp.real, zcp.imag, deltaz.real, deltaz.imag)
 
 
-if ( success != lim ):
-    print "\n\nWARNING : {} out of {} fits converged successfully.\n".format(success,lim)
+if ( success != lim ) :
+    print "\nWARNING : {} out of {} fits converged successfully.\n".format(success,lim)
     print failed
+else :
+    print "\nSuccess! All fits completed without error flags.\n"
+   

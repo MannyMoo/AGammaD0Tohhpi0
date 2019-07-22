@@ -52,7 +52,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
         decayTime = evt.decaytime / 0.41
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if s23 < s13 :
+        if s23 > s13 :
             phasediff *= -1
         # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
         if phasediff < 0. :
@@ -337,7 +337,7 @@ def computeIntegrals(nbinsPhase, normaliseF=False) :
 
             phasediff = diffcalc.phase_difference(evt)
             # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-            if s23 < s13 :
+            if s23 > s13 :
                 phasediff *= -1
             # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
             if phasediff < 0. :
