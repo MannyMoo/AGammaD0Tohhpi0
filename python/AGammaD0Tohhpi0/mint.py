@@ -26,3 +26,12 @@ def gen_pipipi0_main() :
 def set_default_config(config = config) :
     '''Set the default MINT config file.'''
     NamedParameterBase.setDefaultInputFile(config)
+
+def get_config_file_name(name, number = 0, zfill = 3) :
+    '''Get the config file name for a generator job.'''
+    return os.path.join(integratorsdir, name, str(number).zfill(zfill), 'config.txt')
+
+def get_config(name, number = 0, zfill = 3) :
+    '''Get the config file for a generator job.'''
+    fname = get_config_file_name(name, number, zfill)
+    return ConfigFile(fname)

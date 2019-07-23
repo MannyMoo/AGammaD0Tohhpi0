@@ -18,6 +18,19 @@ datapaths = {'MC_2016_pipipi0' : {'tree' : 'DecayTree',
              'MiniBias_2015' : {'tree' : 'pions_tuple_sel/DecayTree',
                                 'files' : glob.glob(os.path.join(datadir, 'minibias/2015/DVTuples*.root'))},
              }
+for mag in 'Up', 'Down' :
+    datapaths['MC_2016_Unbiased_pipipi0_Dalitz_Mag' + mag] = \
+        {'tree' : 'Dstar_2010_plusTo_D0Topiminuspipluspi0_piplus_MCUnbiasedTuple/DecayTree',
+         'files' : glob.glob(os.path.join(datadir, 'mc', '2016', 'pipipi0_Dalitz_Mag' + mag, '*.root'))}
+    datapaths['MC_2016_S28_Resloved_pipipi0_Dalitz_Mag' + mag] = \
+        {'tree' : 'DstarD0ToHHPi0_pipipi0_R_LineTuple/DecayTree',
+         'files' : datapaths['MC_2016_Unbiased_pipipi0_Dalitz_Mag' + mag]['files']}
+    datapaths['MC_2016_S28_Merged_pipipi0_Dalitz_Mag' + mag] = \
+        {'tree' : 'DstarD0ToHHPi0_pipipi0_M_LineTuple/DecayTree',
+         'files' : datapaths['MC_2016_Unbiased_pipipi0_Dalitz_Mag' + mag]['files']}
+    datapaths['MC_2016_Generator_pipipi0_Dalitz_Mag' + mag] = \
+        {'tree' : 'Dstar_2010_plusTo_D0Topiminuspipluspi0_piplus_MCDecayTreeTuple/MCDecayTree',
+         'files' : datapaths['MC_2016_Unbiased_pipipi0_Dalitz_Mag' + mag]['files']}
 
 for mag in 'Up', 'Down' :
     datapaths['Data_2015_Kpipi0_Mag' + mag + '_full'] = \
@@ -45,3 +58,4 @@ for name in os.listdir(mintdatadir) :
                                  'files' : glob.glob(os.path.join(mintdatadir, name, '*.root'))}
 
 datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R)
+datalib.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')

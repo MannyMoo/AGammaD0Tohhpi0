@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import ROOT
+import ROOT, sys
 ROOT.gROOT.SetBatch(True)
 ROOT.TH1.SetDefaultSumw2()
 ROOT.gStyle.SetOptFit()
@@ -19,11 +19,15 @@ mcmax = mdz**2 - mcmin + 100
 mzmin = 2*mpip**2 - 50
 mzmax = mdz**2 - mzmin + 100
 
+name = sys.argv[1]
+if not name.startswith('MINT_') :
+    name = 'MINT_' + name
 #tree = datalib.get_data('MINT_data_NoCPV_x=2.5')
-tree = datalib.get_data('MINT_test-new')
+#tree = datalib.get_data('MINT_test-new')
 #tree = datalib.get_data('MINT_test-new-2')
 #datalib.datapaths['MINT_data_3SigmaCPV']['files'] = datalib.datapaths['MINT_data_3SigmaCPV']['files'][:10]
 #tree = datalib.get_data('MINT_data_3SigmaCPV')
+tree = datalib.get_data(name)
 
 canv = ROOT.TCanvas('canv', '', 600, 600)
 plots = {}

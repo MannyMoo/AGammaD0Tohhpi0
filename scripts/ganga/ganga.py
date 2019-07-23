@@ -114,3 +114,15 @@ def get_output_lfns(jobs, outputfile) :
     print 'Got LFNs for {0}/{1} subjobs'.format(len(lfns), sum(len(j.subjobs.select(status = 'completed')) for j in jobs))
     return lfns, failures
     
+def make_mc_jobs() :
+    data = os.path.join(os.environ['AGAMMAD0TOHHPI0ROOT'],
+                        'options/data/mc/',
+                        'pipipi0_DecProdCut_Dalitz_2016_MC_2016_Beam6500GeV-2016-Mag{mag}-Nu1.6-25ns-Pythia8_Sim09c_'
+                        'Trig0x6138160F_Reco16_Turbo03_Stripping28r1NoPrescalingFlagged_27163404_ALLSTREAMS.DST.py')
+    js = []
+    for mag in 'Up', 'Down' :
+        path = data.format(mag = mag)
+        j = make_job(os.path.split(path)[1][:50],
+                     path, 10, restrip = False, latesttags = False)
+        js.append(j)
+    return js

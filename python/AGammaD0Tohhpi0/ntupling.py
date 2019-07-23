@@ -98,10 +98,26 @@ def add_tools(dtt) :
                         'DTF_vtx' : {'constrainToOriginVertex' : True,
                                      'daughtersToConstrain' : ['pi0']},
                         'DTF_vtx_D0Mass' : {'constrainToOriginVertex' : True,
-                                            'daughtersToConstrain' : ['pi0', 'D0']}}.items() :
-        ttdtf = TupleToolDecayTreeFitter(dtt.name() + '_' + name, **attrs)
+                                            'daughtersToConstrain' : ['pi0', 'D0']},
+                        'DTF_D0Mass' : {'constrainToOriginVertex' : False,
+                                        'daughtersToConstrain' : ['pi0', 'D0']}}.items() :
+        ttdtf = TupleToolDecayTreeFitter(name, **attrs)
         ttdtf.Verbose = True
         dtt.lab0.addTupleTool(ttdtf)
+
+    hybrid = dtt.lab0.addTupleTool('LoKi__Hybrid__TupleTool')
+    if 'K*' in dtt.Decay :
+        for i in 1, 2 :
+            form = ' - '.join(['(CHILD(E, 1, 1, {0}) + CHILD(E, 1, 2))**2'.format(i)]
+                              + ['(CHILD(P{1}, 1, 1, {0}) + CHILD(P{1}, 1, 2))**2'.format(i, p) for p in 'XYZ'])
+            form = 'DTF_FUN({0}, False, "D0", "pi0", -1., LoKi.Constants.NegativeInfinity)'.format(form)
+            hybrid.Variables['S{0}3'.format(i)] = form
+    else :
+        for i in 1, 2 :
+            form = ' - '.join(['(CHILD(E, 1, {0}) + CHILD(E, 1, 3))**2'.format(i)]
+                              + ['(CHILD(P{1}, 1, {0}) + CHILD(P{1}, 1, 3))**2'.format(i, p) for p in 'XYZ'])
+            form = 'DTF_FUN({0}, False, "D0", "pi0", -1., LoKi.Constants.NegativeInfinity)'.format(form)
+            hybrid.Variables['S{0}3'.format(i)] = form
 
 def mc_descriptors() :
     '''Get the MC decay descriptors.'''
@@ -132,7 +148,9 @@ def add_mc_tuples(desc = None) :
             add_mc_tuples(desc)
         return
 
-    mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo', 'MCTupleToolPrompt'],
+    mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo',
+                                              'MCTupleToolPrompt', 'MCTupleToolPID',
+                                              'MCTupleToolReconstructed'],
                             UseLabXSyntax = True, RevertToPositiveID = False)
     DaVinci().UserAlgorithms.append(mctuple)
     
