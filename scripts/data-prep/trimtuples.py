@@ -4,7 +4,7 @@ import os, ROOT, shutil, glob
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut, bdtsel
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -101,9 +101,17 @@ def filter_2016_tuples(overwrite = False) :
             filter_tuple_mva(tree, weightsfile, 'BDT', outputfile, bdtcut)
         print 'Successfully filtered', str(nok) + '/' + str(len(mod2016.urls)), 'files'
 
+def add_mvas_2015() :
+    for finalstate in 'pipi', : # 'Kpi' :
+        # Merged doesn't work currently cause the BDT expects lab6&7 to be the photons.
+        for pi0 in 'Resolved', : # 'Merged' :
+            for mag in 'Up', 'Down' :
+                dataset = 'Data_2015_{finalstate}pi0_{pi0}_Mag{mag}_full'.format(**locals())
+                print dataset
+                add_bdt_kinematic(datalib, dataset)
+
 def filter_2015_tuples() :
-    #for mag in 'Up', 'Down' :
-    for mag in 'Down', : 
+    for mag in 'Up', 'Down' :
         print 'Filter Mag' + mag, 'files'
         data = datalib.get_data('Data_2015_Kpipi0_Mag' + mag + '_full')
         outputdir = os.path.join(datadir, 'data', '2015', 'mag' + mag.lower())
@@ -136,4 +144,5 @@ def remove_bdt_2015() :
 
 if __name__ == '__main__' :
     #filter_2016_tuples()
-    filter_2015_tuples()
+    #filter_2015_tuples()
+    add_mvas_2015()

@@ -33,24 +33,49 @@ for mag in 'Up', 'Down' :
          'files' : datapaths['MC_2016_Unbiased_pipipi0_Dalitz_Mag' + mag]['files']}
 
 for mag in 'Up', 'Down' :
-    datapaths['Data_2015_Kpipi0_Mag' + mag + '_full'] = \
+    # 2015
+    files2015 = sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}_full/*Data.root'.format(mag.lower()))))
+    # Kpipi0
+    datapaths['Data_2015_Kpipi0_Resolved_Mag' + mag + '_full'] = \
         {'tree' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
-         'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}_full/*Data.root'.format(mag.lower())))),
-         'friends' : ('Data_2015_Kpipi0_Mag' + mag + '_full_Weights',)}
-    datapaths['Data_2015_Kpipi0_Mag' + mag + '_full_Weights'] = \
+         'files' : files2015,
+         'friends' : ('Data_2015_Kpipi0_Resolved_Mag' + mag + '_full_Weights',)}
+    datapaths['Data_2015_Kpipi0_Resolved_Mag' + mag + '_full_Weights'] = \
         {'tree' : 'BDTTree',
          'files' : sorted(glob.glob(os.path.join(datadir, 'data/2015/mag{0}_full/*Kpipi0_BDT.root'.format(mag.lower()))))}
+    datapaths['Data_2015_Kpipi0_Resolved_Mag' + mag] = {'tree' : 'DecayTree',
+                                                        'files' : glob.glob(os.path.join(datadir, 'data/2015/mag' + mag.lower() + '/*.root'))}
+    datapaths['Data_2015_Kpipi0_Merged_Mag' + mag + '_full'] = \
+        {'tree' : 'DstarD0ToHHPi0_Kpipi0_M_LineTuple/DecayTree',
+         'files' : files2015}
 
-    datapaths['Data_2015_Kpipi0_Mag' + mag] = {'tree' : 'DecayTree',
-                                               'files' : glob.glob(os.path.join(datadir, 'data/2015/mag' + mag.lower() + '/*.root'))}
+    # pipipi0
+    datapaths['Data_2015_pipipi0_Resolved_Mag' + mag + '_full'] = \
+        {'tree' : 'DstarD0ToHHPi0_pipipi0_R_LineTuple/DecayTree',
+         'files' : files2015}
+    datapaths['Data_2015_pipipi0_Merged_Mag' + mag + '_full'] = \
+        {'tree' : 'DstarD0ToHHPi0_pipipi0_M_LineTuple/DecayTree',
+         'files' : files2015}
 
+
+    # 2016
     mod2016 = __import__('AGammaD0Tohhpi0.Reco16_Charm_Mag{0}_TupleURLs'.format(mag), fromlist = ['urls'])
-    datapaths['Data_2016_Kpipi0_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
-                                                         'files' : [url[0] for url in mod2016.urls.values() if url]}
+    # Kpipi0
+    urls2016 = [url[0] for url in mod2016.urls.values() if url]
+    datapaths['Data_2016_Kpipi0_Resolved_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
+                                                                  'files' : urls2016}
+    datapaths['Data_2016_Kpipi0_Merged_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_Kpipi0_M_LineTuple/DecayTree',
+                                                                'files' : urls2016}
     datapaths['Data_2016_Mag' + mag + '_lumi'] = {'tree' : 'GetIntegratedLuminosity/LumiTuple',
-                                                         'files' : datapaths['Data_2016_Kpipi0_Mag' + mag + '_full']['files']}
-    datapaths['Data_2016_Kpipi0_Mag' + mag] = {'tree' : 'DecayTree', 
-                                               'files' : glob.glob(os.path.join(datadir, 'data', '2016', 'mag' + mag.lower(), '*.root'))}
+                                                  'files' : urls2016}
+    datapaths['Data_2016_Kpipi0_Resolved_Mag' + mag] = {'tree' : 'DecayTree', 
+                                                        'files' : glob.glob(os.path.join(datadir, 'data', '2016', 'mag' + mag.lower(), '*.root'))}
+
+    # pipipi0
+    datapaths['Data_2016_pipipi0_Resolved_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_pipipi0_R_LineTuple/DecayTree',
+                                                                   'files' : urls2016}
+    datapaths['Data_2016_pipipi0_Merged_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_pipipi0_M_LineTuple/DecayTree',
+                                                                 'files' : urls2016}
 
 # MINT data.
 for name in os.listdir(mintdatadir) :
