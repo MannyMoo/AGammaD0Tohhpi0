@@ -11,7 +11,7 @@ ROOT.TH1.SetDefaultSumw2(True)
 
 #Simulation variables
 x = 0.0039
-y = 0.0065
+y = 0.0195########REMEMBER TO CHANGE######
 qoverp = 0.8
 phi = -0.7
 
@@ -36,7 +36,7 @@ for fileNo in range(1, lim+1) :
 
     #Setting up variables and reading in events 
 
-    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_fullModel/pipipi0_{}.root'.format(fileNo)) 
+    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/test_y=0.0195/pipipi0_{}.root'.format(fileNo)) 
 
     #Retrieve the dataset as a DalitzEventList and nTuple
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
@@ -57,7 +57,8 @@ for fileNo in range(1, lim+1) :
     #Processing data 
 
     #Calling function to perform phase binning and store all (binned) decay times
-    tList, tSqList = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax)
+    lifetime = 0.4101
+    tList, tSqList = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime)
 
     #Calculating parameters required for fit to data
     tAv = [0]*nbinsTime
@@ -73,13 +74,21 @@ for fileNo in range(1, lim+1) :
     minimiser = Minimiser(binflipfitter, 1.)
     minimiser.doFit()
 
+    # reZ = parset.getParPtr(0).getCurrentFitVal()
+    # imZ = parset.getParPtr(1).getCurrentFitVal()
+    # reD = parset.getParPtr(2).getCurrentFitVal()
+    # imD = parset.getParPtr(3).getCurrentFitVal()
+    # chi2tester = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], reZ, imZ, reD, imD, 0.0001)
+    # print chi2tester.getVal()
+    # print getChiSquared([reZ, imZ, reD, imD], tAv, tSqAv, r, X, lowerHists, upperHists)
+
     if minimiser.isConverged() :
         success += 1
     else :
         failed.append(fileNo)
         print "\nWARNING: FAILED FIT\n"
 
-    resultsfile = TFile("rootOut_D0Only/fit_{}.root".format(fileNo), "recreate")
+    resultsfile = TFile("rootOutTest/fit_{}.root".format(fileNo), "recreate")
 
     resultstree = parset.makeNewNtpForOwner(resultsfile)
     parset.fillNtp(resultsfile, resultstree)

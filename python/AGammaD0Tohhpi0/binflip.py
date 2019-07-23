@@ -15,7 +15,7 @@ pattern = pattern_D0Topipipi0
 diffcalc = PhaseDifferenceCalc(pattern, config)
 
 
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -49,7 +49,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
         s23 = evtlist[i].s(2, 3)
         tag = evt.tag
         #expressing here in terms of D0 mean lifetime (all times in ps)
-        decayTime = evt.decaytime / 0.41
+        decayTime = evt.decaytime / lifetime
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
         if s23 > s13 :
@@ -111,7 +111,7 @@ def getZvals(x, y, qoverp, phi) :
 
 
 
-def getFit(zcp, deltaz, tAv, tSqAv, r, X, F) :
+def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
     """Function to evaluate fit formula at discrete time steps for given zcp and deltaz.
 
          Inputs are:
