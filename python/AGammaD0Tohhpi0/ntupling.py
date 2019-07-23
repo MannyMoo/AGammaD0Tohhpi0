@@ -148,7 +148,9 @@ def add_mc_tuples(desc = None) :
             add_mc_tuples(desc)
         return
 
-    mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo', 'MCTupleToolPrompt'],
+    mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo',
+                                              'MCTupleToolPrompt', 'MCTupleToolPID',
+                                              'MCTupleToolReconstructed'],
                             UseLabXSyntax = True, RevertToPositiveID = False)
     DaVinci().UserAlgorithms.append(mctuple)
     

@@ -1,20 +1,26 @@
 #!/usr/bin/env python
 
 # Load Mint2 libraries.
-import Mint2, ROOT, math
+import Mint2, ROOT, math, sys
 from AGammaD0Tohhpi0.data import datalib
 from ROOT import DalitzEventList, TFile, binflipChi2
 from ROOT.MINT import NamedParameterBase, Minimiser
 from scipy.optimize import minimize
 from AGammaD0Tohhpi0.binflip import *
+from AGammaD0Tohhpi0.mint import get_config, set_default_config
 
 ROOT.TH1.SetDefaultSumw2(True)
 
 #Simulation variables
-x = 0.0039
-y = 0.0065
-qoverp = 0.8
-phi = -0.7
+name = sys.argv[1]
+config = get_config(name)
+set_default_config(config.fnames[0])
+
+x = float(config['x'][0])
+y = float(config['y'][0])
+
+qoverp = float(config['qoverp'][0])
+phi = float(config['phi'][0])
 
 #Parameters for time/phase histogram setup
 nbinsPhase = 8
@@ -31,13 +37,17 @@ success = 0
 lim = 1
 failed = []
 
-for fileNo in range(1, lim+1) :
+if not name.startswith('MINT_') :
+    name = 'MINT_' + name
+datainfo = datalib.get_data_info(name)
+
+for fileNo in range(0, lim) :
  
     print "Processing file number {}... \n".format(fileNo)
 
     #Setting up variables and reading in events 
 
-    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_prec=3e-4_simpleModel/pipipi0_{}.root'.format(fileNo)) 
+    fdata = TFile.Open(datainfo['files'][fileNo])
 
     #Retrieve the dataset as a DalitzEventList and nTuple
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
