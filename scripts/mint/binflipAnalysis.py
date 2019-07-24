@@ -104,7 +104,6 @@ for fileNo in range(1, lim+1) :
     print "File number {} processed. ".format(fileNo)
     print "\nActual values are : \t Zcp : %e + %ei \t\t deltaZ : %e + %ei\n" % (zcp.real, zcp.imag, deltaz.real, deltaz.imag)
 
-
    #Draw plots
     if(drawRatioPlots) :
         dataPlots = createRatioPlots(upperHists, lowerHists, tMax, fileNo)
