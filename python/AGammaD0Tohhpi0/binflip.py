@@ -10,10 +10,7 @@ import cmath
 # Set the config file.
 set_default_config()
 
-# Get the phase difference calculator.
-pattern = pattern_D0Topipipi0
-
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcalc) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -30,8 +27,6 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config)
              - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
              - nD0: number of D0 events in the file  
   """
-
-    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     nbinsTime = upperHists[0].GetNbinsX()
     nD0 = 0
@@ -56,10 +51,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config)
         decayTime = evt.decaytime / lifetime
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if tag == 1 :
-            if s23 > s13 :
-                phasediff *= -1
-        elif s23 < s13 :
+        if s23 > s13 :
             phasediff *= -1
 
         # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
@@ -524,7 +516,7 @@ def getcppVecs(X, r, F, tAv, tSqAv, nD0) :
 
 
 
-def setupPlots(nbinsPhase, binflipfitter, dataPlots) :
+def setupPlots(nbinsPhase, binflipfitter, dataPlots, fileNo) :
     """
         Simple function to retrieve fits from an instance of binflipChi2, and setup canvases/plot
         parameters.

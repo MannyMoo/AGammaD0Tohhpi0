@@ -6,7 +6,7 @@ from AGammaD0Tohhpi0.data import datalib
 from ROOT import DalitzEventList, TFile, binflipChi2
 from ROOT.MINT import NamedParameterBase, Minimiser
 from AGammaD0Tohhpi0.binflip import *
-from AGammaD0Tohhpi0.mint import get_config, set_default_config
+from AGammaD0Tohhpi0.mint import get_config, set_default_config, pattern_D0Topipipi0
 
 ROOT.TH1.SetDefaultSumw2(True)
 
@@ -16,6 +16,10 @@ else :
     name = 'data_3SigmaCPV_fullModel'
 config = get_config(name)
 set_default_config(config.fnames[0])
+
+# Get the phase difference calculator.
+pattern = pattern_D0Topipipi0
+diffcalc = PhaseDifferenceCalc(pattern, config.fnames[0])
 
 #Simulation variables
 x = config.float('x')
@@ -29,18 +33,18 @@ nbinsPhase = 8
 phaseMin = 2*math.pi*(-0.5) / nbinsPhase
 phaseMax = 2*math.pi*(nbinsPhase - 0.5) / nbinsPhase
 #nbinsTime = 10#Previously 50
-nbinsTime = 50
+nbinsTime = 10
 #tMax = 6#Previously 7.5
-tMax = 7.5
+tMax = 6
 
 #These don't change with the data file, so just calculate once here
 X, F, Fbar, r = computeIntegrals(nbinsPhase, config.fnames[0], True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
-lim = 1
+lim = 100
 failed = []
-drawRatioPlots = True
+drawRatioPlots = False
 
 if not name.startswith('MINT_') :
     name = 'MINT_' + name
@@ -65,7 +69,7 @@ for fileNo in range(1, lim+1) :
 
     #Calling function to perform phase binning and store all (binned) decay times
     lifetime = 0.4101
-    tList, tSqList, nD0  = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config.fnames[0])
+    tList, tSqList, nD0  = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcalc)
 
     #Averaging all values of tSq and t to get <t^2> and <t>
     tAv = averageElements(tList)
@@ -96,7 +100,6 @@ for fileNo in range(1, lim+1) :
     parset.fillNtp(resultsfile, resultstree)
     resultstree.Write()
     resultsfile.Close()
-    fdata.Close()
 
     print "File number {} processed. ".format(fileNo)
     print "\nActual values are : \t Zcp : %e + %ei \t\t deltaZ : %e + %ei\n" % (zcp.real, zcp.imag, deltaz.real, deltaz.imag)
@@ -105,13 +108,15 @@ for fileNo in range(1, lim+1) :
    #Draw plots
     if(drawRatioPlots) :
         dataPlots = createRatioPlots(upperHists, lowerHists, tMax, fileNo)
-        canvas, fits, RPlots = setupPlots(nbinsPhase, binflipfitter, dataPlots)
+        canvas, fits, RPlots = setupPlots(nbinsPhase, binflipfitter, dataPlots, fileNo)
         for i in range(2) :
             for b in range(1, nbinsPhase + 1) :
                 canvas[i].cd(b)
                 dataPlots[i][b-1].Draw()
                 RPlots[i][b-1].Draw('Same P')
                 fits[i][b-1].Draw('Same P')
+
+    fdata.Close()
 
 
 
