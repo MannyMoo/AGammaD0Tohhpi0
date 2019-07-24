@@ -1,29 +1,40 @@
 #!/usr/bin/env python
 
 # Load Mint2 libraries.
-import Mint2, ROOT, math
+import Mint2, ROOT, math, sys
 from AGammaD0Tohhpi0.data import datalib
 from ROOT import DalitzEventList, TFile, binflipChi2
 from ROOT.MINT import NamedParameterBase, Minimiser
 from AGammaD0Tohhpi0.binflip import *
+from AGammaD0Tohhpi0.mint import get_config, set_default_config
 
 ROOT.TH1.SetDefaultSumw2(True)
 
+if len(sys.argv) > 1 :
+    name = sys.argv[1]
+else :
+    name = 'data_3SigmaCPV_fullModel'
+config = get_config(name)
+set_default_config(config.fnames[0])
+
 #Simulation variables
-x = 0.0039
-y = 0.0065
-qoverp = 0.8
-phi = -0.7
+x = config.float('x')
+y = config.float('y')
+
+qoverp = config.float('qoverp')
+phi = config.float('phi')
 
 #Parameters for time/phase histogram setup
 nbinsPhase = 8
 phaseMin = 2*math.pi*(-0.5) / nbinsPhase
 phaseMax = 2*math.pi*(nbinsPhase - 0.5) / nbinsPhase
-nbinsTime = 10#Previously 50
-tMax = 6#Previously 7.5
+#nbinsTime = 10#Previously 50
+nbinsTime = 50
+#tMax = 6#Previously 7.5
+tMax = 7.5
 
 #These don't change with the data file, so just calculate once here
-X, F, Fbar, r = computeIntegrals(nbinsPhase, True)
+X, F, Fbar, r = computeIntegrals(nbinsPhase, config.fnames[0], True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
@@ -31,13 +42,17 @@ lim = 1
 failed = []
 drawRatioPlots = True
 
+if not name.startswith('MINT_') :
+    name = 'MINT_' + name
+datainfo = datalib.get_data_info(name)
+
 for fileNo in range(1, lim+1) :
 
     #Setting up variables and reading in events 
 
     #Retrieve the dataset as a DalitzEventList and nTuple
     print "Processing file number {}... \n".format(fileNo)
-    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_fullModel/pipipi0_{}.root'.format(fileNo)) 
+    fdata = TFile.Open(datainfo['files'][fileNo-1])
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
     evtData = fdata.Get('DalitzEventList')
 
@@ -50,7 +65,7 @@ for fileNo in range(1, lim+1) :
 
     #Calling function to perform phase binning and store all (binned) decay times
     lifetime = 0.4101
-    tList, tSqList, nD0  = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime)
+    tList, tSqList, nD0  = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config.fnames[0])
 
     #Averaging all values of tSq and t to get <t^2> and <t>
     tAv = averageElements(tList)

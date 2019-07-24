@@ -31,7 +31,14 @@ def get_config_file_name(name, number = 0, zfill = 3) :
     '''Get the config file name for a generator job.'''
     return os.path.join(integratorsdir, name, str(number).zfill(zfill), 'config.txt')
 
-def get_config(name, number = 0, zfill = 3) :
+def get_config(name, number = None, zfill = 3) :
     '''Get the config file for a generator job.'''
+    if None == number :
+        for number in xrange(100) :
+            fname = get_config_file_name(name, number, zfill)
+            if os.path.exists(fname) :
+                return ConfigFile(fname)
+        raise OSError("Couldn't find any configs for {0} {1}-{3}!".format(name, '0'.zfill(zfill), 
+                                                                          str(number).zfill(zfill)))
     fname = get_config_file_name(name, number, zfill)
     return ConfigFile(fname)

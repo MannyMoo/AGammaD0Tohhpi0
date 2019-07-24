@@ -12,10 +12,8 @@ set_default_config()
 
 # Get the phase difference calculator.
 pattern = pattern_D0Topipipi0
-diffcalc = PhaseDifferenceCalc(pattern, config)
 
-
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -32,6 +30,8 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
              - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
              - nD0: number of D0 events in the file  
   """
+
+    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     nbinsTime = upperHists[0].GetNbinsX()
     nD0 = 0
@@ -56,8 +56,12 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
         decayTime = evt.decaytime / lifetime
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if s23 > s13 :
+        if tag == 1 :
+            if s23 > s13 :
+                phasediff *= -1
+        elif s23 < s13 :
             phasediff *= -1
+
         # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
         if phasediff < 0. :
             phasediff += 2*math.pi
@@ -285,7 +289,7 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
 
 
 
-def computeIntegrals(nbinsPhase, normaliseF=False) :
+def computeIntegrals(nbinsPhase, config, normaliseF=False) :
     """Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
         
          Inputs are:
@@ -298,6 +302,8 @@ def computeIntegrals(nbinsPhase, normaliseF=False) :
                 for positive b and 1 for negative b. Second index goes over b.
               - r: list containing values of r(b), for positive b, defined as: r(b) = F(-b)/F(b).
     """
+
+    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     s13min = pattern.sijMin(1, 3)
     s13max = pattern.sijMax(1, 3)
