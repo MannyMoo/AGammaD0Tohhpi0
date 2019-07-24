@@ -11,7 +11,7 @@ ROOT.TH1.SetDefaultSumw2(True)
 
 #Simulation variables
 x = 0.0039
-y = 0.0195########REMEMBER TO CHANGE######
+y = 0.0065
 qoverp = 0.8
 phi = -0.7
 
@@ -27,18 +27,17 @@ X, F, Fbar, r = computeIntegrals(nbinsPhase, True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
-lim = 100
+lim = 1
 failed = []
+drawRatioPlots = True
 
 for fileNo in range(1, lim+1) :
 
-    print "Processing file number {}... \n".format(fileNo)
-
     #Setting up variables and reading in events 
 
-    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/test_y=0.0195/pipipi0_{}.root'.format(fileNo)) 
-
     #Retrieve the dataset as a DalitzEventList and nTuple
+    print "Processing file number {}... \n".format(fileNo)
+    fdata = TFile.Open('/nfs/lhcb/d2hh01/hhpi0/data/mint/data_3SigmaCPV_fullModel/pipipi0_{}.root'.format(fileNo)) 
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
     evtData = fdata.Get('DalitzEventList')
 
@@ -48,39 +47,25 @@ for fileNo in range(1, lim+1) :
     for i in range(2) :
         upperHists.append( ROOT.TH2F("upper hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, phaseMin, phaseMax ) )
         lowerHists.append( ROOT.TH2F("lower hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, phaseMin, phaseMax ) )
- 
-    nD0 = 0
-    for evt in evtData :
-        if (evt.tag == 1) :
-            nD0 += 1
-
-    #Processing data 
 
     #Calling function to perform phase binning and store all (binned) decay times
     lifetime = 0.4101
-    tList, tSqList = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime)
+    tList, tSqList, nD0  = binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime)
 
-    #Calculating parameters required for fit to data
-    tAv = [0]*nbinsTime
-    tSqAv = [0]*nbinsTime
-    for i in range( nbinsTime ) : 
-        tAv[i] = sum(tList[i]) / len(tList[i])
-        tSqAv[i] = sum(tSqList[i]) / len(tSqList[i])
+    #Averaging all values of tSq and t to get <t^2> and <t>
+    tAv = averageElements(tList)
+    tSqAv = averageElements(tSqList)
 
+    #Processing data
+
+    #Initialise binflipChi2 instance to perform fitting. Need to first setup variables suitable for passing to c++
     X_cpp, r_cpp, Fm_cpp, Fp_cpp, tAv_cpp, tSqAv_cpp = getcppVecs(X, r, F, tAv, tSqAv, nD0)
     binflipfitter = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], zcp.real, zcp.imag, deltaz.real, deltaz.imag, 0.0001)#, fileNo, Fm_cpp, Fp_cpp)
     parset = binflipfitter.getParSet()
 
+    #Initialise Minimiser and perform fit 
     minimiser = Minimiser(binflipfitter, 1.)
     minimiser.doFit()
-
-    # reZ = parset.getParPtr(0).getCurrentFitVal()
-    # imZ = parset.getParPtr(1).getCurrentFitVal()
-    # reD = parset.getParPtr(2).getCurrentFitVal()
-    # imD = parset.getParPtr(3).getCurrentFitVal()
-    # chi2tester = binflipChi2(X_cpp, r_cpp, tAv_cpp, tSqAv_cpp, lowerHists[0], lowerHists[1], upperHists[0], upperHists[1], reZ, imZ, reD, imD, 0.0001)
-    # print chi2tester.getVal()
-    # print getChiSquared([reZ, imZ, reD, imD], tAv, tSqAv, r, X, lowerHists, upperHists)
 
     if minimiser.isConverged() :
         success += 1
@@ -88,21 +73,37 @@ for fileNo in range(1, lim+1) :
         failed.append(fileNo)
         print "\nWARNING: FAILED FIT\n"
 
+    #Open output file and setup tree to write 
     resultsfile = TFile("rootOutTest/fit_{}.root".format(fileNo), "recreate")
-
     resultstree = parset.makeNewNtpForOwner(resultsfile)
+
+    #Write to file and cleanup
     parset.fillNtp(resultsfile, resultstree)
     resultstree.Write()
     resultsfile.Close()
-
     fdata.Close()
+
     print "File number {} processed. ".format(fileNo)
     print "\nActual values are : \t Zcp : %e + %ei \t\t deltaZ : %e + %ei\n" % (zcp.real, zcp.imag, deltaz.real, deltaz.imag)
 
 
+   #Draw plots
+    if(drawRatioPlots) :
+        dataPlots = createRatioPlots(upperHists, lowerHists, tMax, fileNo)
+        canvas, fits, RPlots = setupPlots(nbinsPhase, binflipfitter, dataPlots)
+        for i in range(2) :
+            for b in range(1, nbinsPhase + 1) :
+                canvas[i].cd(b)
+                dataPlots[i][b-1].Draw()
+                RPlots[i][b-1].Draw('Same P')
+                fits[i][b-1].Draw('Same P')
+
+
+
+
 if ( success != lim ) :
     print "\nWARNING : {} out of {} fits converged successfully.\n".format(success,lim)
-    print failed
+    print "Fits which failed were: ", failed, "\n"
 else :
     print "\nSuccess! All fits completed without error flags.\n"
    
