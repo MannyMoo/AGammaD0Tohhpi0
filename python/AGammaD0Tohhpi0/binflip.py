@@ -15,7 +15,7 @@ pattern = pattern_D0Topipipi0
 diffcalc = PhaseDifferenceCalc(pattern, config)
 
 
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -30,9 +30,11 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
          Function returns:
              - tList: list of all decay times, binned the same as lowerHists and upperHists
              - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
-    """
+             - nD0: number of D0 events in the file  
+  """
 
     nbinsTime = upperHists[0].GetNbinsX()
+    nD0 = 0
 
     #Initialise variables for binned lists of decay times and decay times squared
     tList = [] 
@@ -48,11 +50,13 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
         s13 = evtlist[i].s(1, 3)
         s23 = evtlist[i].s(2, 3)
         tag = evt.tag
+        if( tag == 1 ) :
+            nD0 += 1
         #expressing here in terms of D0 mean lifetime (all times in ps)
-        decayTime = evt.decaytime / 0.41
+        decayTime = evt.decaytime / lifetime
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if s23 < s13 :
+        if s23 > s13 :
             phasediff *= -1
         # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
         if phasediff < 0. :
@@ -79,7 +83,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax) :
 
         i += 1
 
-    return tList, tSqList
+    return tList, tSqList, nD0
 
 
 
@@ -111,7 +115,7 @@ def getZvals(x, y, qoverp, phi) :
 
 
 
-def getFit(zcp, deltaz, tAv, tSqAv, r, X, F) :
+def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
     """Function to evaluate fit formula at discrete time steps for given zcp and deltaz.
 
          Inputs are:
@@ -337,7 +341,7 @@ def computeIntegrals(nbinsPhase, normaliseF=False) :
 
             phasediff = diffcalc.phase_difference(evt)
             # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-            if s23 < s13 :
+            if s23 > s13 :
                 phasediff *= -1
             # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
             if phasediff < 0. :
@@ -477,25 +481,108 @@ def getChiSquaredPoisson(params, tAv, tSqAv, r, X, ratios) :
 
 
 def getcppVecs(X, r, F, tAv, tSqAv, nD0) :
+    """
+        Function to create vectors from lists, suitable for passing to c++.
+           
+        Inputs are:
+            - X, r, F, tAv, tSqAv : Lists/Nested lists which are to be converted to vectors
+            - nD0: scale factor for F
+
+        Function returns:
+            - X_cpp, r_cpp, Fm_cpp, Fp_cpp, tAv_cpp, tSqAv_cpp: Vectors suitable for passing
+               to c++ functions which contain the values passed in the lists X, r, F, tAv, tSqAv
+
+    """
 
     nbinsPhase = len(F[0])
     nbinsTime = len(tAv)
 
-    X_cpp = ROOT.vector("complex<float>")()
-    r_cpp = ROOT.vector("float")()
-    Fm_cpp = ROOT.vector("float")()
-    Fp_cpp = ROOT.vector("float")()
+    X_cpp = ROOT.vector("complex<double>")()
+    r_cpp = ROOT.vector("double")()
+    Fm_cpp = ROOT.vector("double")()
+    Fp_cpp = ROOT.vector("double")()
     for b in range(nbinsPhase) :
-        Xval = ROOT.complex("float")(X[0][b].real, X[0][b].imag)
+        Xval = ROOT.complex("double")(X[0][b].real, X[0][b].imag)
         X_cpp.push_back(Xval)        
         r_cpp.push_back(r[b])
         Fm_cpp.push_back(F[1][b]*nD0)
         Fp_cpp.push_back(F[0][b]*nD0)
 
-    tAv_cpp = ROOT.vector("float")()
-    tSqAv_cpp = ROOT.vector("float")() 
+    tAv_cpp = ROOT.vector("double")()
+    tSqAv_cpp = ROOT.vector("double")() 
     for j in range(nbinsTime) :
         tAv_cpp.push_back(tAv[j])
         tSqAv_cpp.push_back(tSqAv[j])
 
     return X_cpp, r_cpp, Fm_cpp, Fp_cpp, tAv_cpp, tSqAv_cpp
+
+
+
+def setupPlots(nbinsPhase, binflipfitter, dataPlots) :
+    """
+        Simple function to retrieve fits from an instance of binflipChi2, and setup canvases/plot
+        parameters.
+
+        Inputs are:
+            - nbinsPhase: number of phase bins
+            - binflipfitter: instance of binflipChi2 class from which fits will be obtained. Should have 
+              already been minimised using an instance of Minimiser before passing here.
+            - dataPlots: list of TH1Fs containing phase binned ratio plots from data
+
+        Function returns:
+            - canvas: List of two subdivided canvases for D0/D0bar, divided into one area for each phase bin
+            - fits: list of TGraphs containing fit values from fitted parameters
+            - RPlots: list of TGraphs containing fit values from known simulation parameters
+    """
+
+    #Fits are calculated with fitted Zcp, deltaZ
+    fits = [[],[]]
+    for i in range(2) :
+        for b in range(nbinsPhase) :
+            fits[i].append( binflipfitter.getFit(i,b) )
+
+    #RPlots are calculated using known Zcp, deltaZ used for simulation, hence reset paramaters here
+    parset = binflipfitter.getParSet()
+    for i in range(4) :
+        par = parset.getParPtr(i)
+        par.resetToInit()
+
+    RPlots = [[],[]]
+    for i in range(2) :
+        for b in range(nbinsPhase) :
+            RPlots[i].append( binflipfitter.getFit(i,b) )
+
+    canvas = []
+    canvas.append( ROOT.TCanvas("c1 f{}".format(fileNo), "D0 ratios by bin") )
+    canvas[0].Divide(2,4)
+    canvas.append( ROOT.TCanvas("c2 f{}".format(fileNo), "D0bar ratios by bin") )
+    canvas[1].Divide(2,4)
+
+    for i in range(2) :
+        for b in range(1, nbinsPhase + 1) :
+            #Data plot
+            setPlotParameters(dataPlots[i][b-1], i, b)
+
+            #Fit with simulation parameters
+            RPlots[i][b-1].SetMarkerStyle(5)
+            RPlots[i][b-1].SetMarkerColor(ROOT.kBlack)
+
+            #Fit with fitted parameters
+            fits[i][b-1].SetMarkerStyle(4)
+            fits[i][b-1].SetMarkerColor(ROOT.kGreen+3)
+
+    return canvas, fits, RPlots
+
+
+
+def averageElements(nestList) :
+    """
+        Simple function to take a nested(2d) list and return a list containing the average values 
+        of each element in the input list.
+    """
+    avList = []
+    for i in range(len(nestList)) :
+        avList.append( sum(nestList[i])/len(nestList[i]) )
+        
+    return avList
+
