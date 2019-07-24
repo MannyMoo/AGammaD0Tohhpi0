@@ -23,7 +23,7 @@ nbinsTime = 10#Previously 50
 tMax = 6#Previously 7.5
 
 #These don't change with the data file, so just calculate once here
-X, F, Fbar, r = computeIntegrals(nbinsPhase, True)
+X, F, Fbar, r = computeIntegrals(nbinsPhase, False)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
@@ -81,22 +81,22 @@ for fileNo in range(1, lim+1) :
     parset.fillNtp(resultsfile, resultstree)
     resultstree.Write()
     resultsfile.Close()
-    fdata.Close()
 
     print "File number {} processed. ".format(fileNo)
     print "\nActual values are : \t Zcp : %e + %ei \t\t deltaZ : %e + %ei\n" % (zcp.real, zcp.imag, deltaz.real, deltaz.imag)
 
-
    #Draw plots
     if(drawRatioPlots) :
         dataPlots = createRatioPlots(upperHists, lowerHists, tMax, fileNo)
-        canvas, fits, RPlots = setupPlots(nbinsPhase, binflipfitter, dataPlots)
+        canvas, fits, RPlots = setupPlots(nbinsPhase, binflipfitter, dataPlots, fileNo)
         for i in range(2) :
             for b in range(1, nbinsPhase + 1) :
                 canvas[i].cd(b)
                 dataPlots[i][b-1].Draw()
                 RPlots[i][b-1].Draw('Same P')
                 fits[i][b-1].Draw('Same P')
+
+    fdata.Close()
 
 
 

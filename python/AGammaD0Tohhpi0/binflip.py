@@ -56,7 +56,10 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime) :
         decayTime = evt.decaytime / lifetime
 
         # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if s23 > s13 :
+        if( tag == 1 ) :        
+            if( s23 > s13 ) :
+                phasediff *= -1
+        elif( s23 > s13 ) :
             phasediff *= -1
         # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
         if phasediff < 0. :
@@ -518,7 +521,7 @@ def getcppVecs(X, r, F, tAv, tSqAv, nD0) :
 
 
 
-def setupPlots(nbinsPhase, binflipfitter, dataPlots) :
+def setupPlots(nbinsPhase, binflipfitter, dataPlots, fileNo) :
     """
         Simple function to retrieve fits from an instance of binflipChi2, and setup canvases/plot
         parameters.
