@@ -20,7 +20,7 @@ def getPhaseDifference(evt, s13, s23, diffcalc, tag = 1) :
     phasediff = diffcalc.phase_difference(evt)
     # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
     #if tag == 1 :
-    if s23 > s13 :
+    if s23 < s13 :
         phasediff *= -1
     #elif s23 < s13 :
     #    phasediff *= -1
@@ -334,7 +334,7 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
 
 
 
-def computeIntegrals(nbinsPhase, config, normaliseF=False) :
+def computeIntegrals(nbinsPhase, diffcalc, normaliseF=False) :
     """Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
         
          Inputs are:
@@ -347,8 +347,6 @@ def computeIntegrals(nbinsPhase, config, normaliseF=False) :
                 for positive b and 1 for negative b. Second index goes over b.
               - r: list containing values of r(b), for positive b, defined as: r(b) = F(-b)/F(b).
     """
-
-    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     s13min = pattern.sijMin(1, 3)
     s13max = pattern.sijMax(1, 3)
@@ -407,6 +405,11 @@ def computeIntegrals(nbinsPhase, config, normaliseF=False) :
                 X[1][b-1] += crossTerm * ds13 * ds23
                 F[1][b-1] += ampSq * ds13 * ds23
                 Fbar[0][b-1] += cp_ampSq * ds13 * ds23  
+            else :
+                for k in range(2) :
+                    X[k][b-1] += 0.5 * crossTerm * ds13 * ds23
+                    F[k][b-1] += 0.5 * ampSq * ds13 * ds23
+                    Fbar[k][b-1] += 0.5 * cp_ampSq * ds13 * ds23  
 
             sumF += ampSq * ds13 * ds23
             sumFbar += cp_ampSq * ds13 * ds23 

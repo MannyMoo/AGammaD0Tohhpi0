@@ -20,8 +20,8 @@ set_default_config(config.fnames[0])
 print 'Config file:', config.fnames[0]
 
 model = FitAmpSum(pattern_D0Topipipi0)
-print 'Amplitudes:'
-model.printAllAmps()
+#print 'Amplitudes:'
+#model.printAllAmps()
 
 # Get the phase difference calculator.
 pattern = pattern_D0Topipipi0
@@ -46,7 +46,7 @@ nbinsTime = 10
 tMax = 6
 
 #These don't change with the data file, so just calculate once here
-X, F, Fbar, r = computeIntegrals(nbinsPhase, config.fnames[0], True)
+X, F, Fbar, r = computeIntegrals(nbinsPhase, diffcalc, True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
 
 success = 0
@@ -135,4 +135,5 @@ if ( success != lim ) :
     print "Fits which failed were: ", failed, "\n"
 else :
     print "\nSuccess! All fits completed without error flags.\n"
-   
+
+
