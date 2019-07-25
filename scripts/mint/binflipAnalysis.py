@@ -3,7 +3,7 @@
 # Load Mint2 libraries.
 import Mint2, ROOT, math, sys
 from AGammaD0Tohhpi0.data import datalib
-from ROOT import DalitzEventList, TFile, binflipChi2
+from ROOT import DalitzEventList, TFile, binflipChi2, FitAmpSum
 from ROOT.MINT import NamedParameterBase, Minimiser
 from AGammaD0Tohhpi0.binflip import *
 from AGammaD0Tohhpi0.mint import get_config, set_default_config, pattern_D0Topipipi0
@@ -14,8 +14,14 @@ if len(sys.argv) > 1 :
     name = sys.argv[1]
 else :
     name = 'data_3SigmaCPV_fullModel'
+print 'Dataset:', name
 config = get_config(name)
 set_default_config(config.fnames[0])
+print 'Config file:', config.fnames[0]
+
+model = FitAmpSum(pattern_D0Topipipi0)
+print 'Amplitudes:'
+model.printAllAmps()
 
 # Get the phase difference calculator.
 pattern = pattern_D0Topipipi0
@@ -27,6 +33,8 @@ y = config.float('y')
 
 qoverp = config.float('qoverp')
 phi = config.float('phi')
+
+lifetime = config.float('lifetime')
 
 #Parameters for time/phase histogram setup
 nbinsPhase = 8
@@ -56,7 +64,9 @@ for fileNo in range(1, lim+1) :
 
     #Retrieve the dataset as a DalitzEventList and nTuple
     print "Processing file number {}... \n".format(fileNo)
-    fdata = TFile.Open(datainfo['files'][fileNo-1])
+    fname = datainfo['files'][fileNo-1]
+    print fname
+    fdata = TFile.Open(fname)
     evtlist = DalitzEventList(fdata.Get('DalitzEventList'))
     evtData = fdata.Get('DalitzEventList')
 

@@ -5,12 +5,72 @@ from Mint2.utils import three_body_event
 from ROOT import PhaseDifferenceCalc
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
+from AGammaD0Tohhpi0.variables import variables
 import cmath
 
 # Set the config file.
 set_default_config()
 
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcalc) :
+# Get the phase difference calculator.
+pattern = pattern_D0Topipipi0
+
+def getPhaseDifference(evt, s13, s23, diffcalc, tag = 1) :
+    '''Get the D0/D0bar amplitude phase difference for the given event. The binning is inverted
+    in the lower half of the Dalitz plot, so the phase difference is inverted.'''
+    phasediff = diffcalc.phase_difference(evt)
+    # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
+    #if tag == 1 :
+    if s23 > s13 :
+        phasediff *= -1
+    #elif s23 < s13 :
+    #    phasediff *= -1
+        
+    # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
+    if phasediff < 0. :
+        phasediff += 2*math.pi
+    return phasediff
+
+def getPhaseBin(phasediff, nbinsPhase) :
+    '''Get the bin number for the given phase difference.'''
+    return int( phasediff*( nbinsPhase/(2*math.pi)) + 0.5 ) + 1
+
+def scanDalitzPlot(npoints,  pattern = pattern) :
+    '''Iterate over the Dalitz plot in npoints in steps of size ds13 and ds23.'''
+    s13min = pattern.sijMin(1, 3)
+    s13max = pattern.sijMax(1, 3)
+    s23min = pattern.sijMin(2, 3)
+    s23max = pattern.sijMax(2, 3)
+    ds13 = ( s13max - s13min ) / npoints
+    ds23 = ( s23max - s23min ) / npoints
+    for i in range( npoints ) : 
+        s13 = s13min + (i+0.5) * ds13
+        for j in range( npoints ) : 
+            s23 = s23min + (j+0.5) * ds23
+            evt = three_body_event(pattern, s13, s23)
+            if evt :
+                yield evt
+
+def plotBinNumbers(config, nbinsPhase, npoints, pattern = pattern) :
+    '''Make a plot of the bin numbers across the Dalitz plot.'''
+    diffcalc = PhaseDifferenceCalc(pattern, config)
+    s13min = pattern.sijMin(1, 3)
+    s13max = pattern.sijMax(1, 3)
+    s23min = pattern.sijMin(2, 3)
+    s23max = pattern.sijMax(2, 3)
+    histo = ROOT.TH2F('binnumbers', '', npoints, s13min, s13max, npoints, s23min, s23max)
+    for evt in scanDalitzPlot(npoints, pattern) :
+        s13 = evt.s(1, 3)
+        s23 = evt.s(2, 3)
+        phasediff = getPhaseDifference(evt, s13, s23, diffcalc)
+        phasebin = getPhaseBin(phasediff, nbinsPhase)
+        histo.Fill(s13, s23, phasebin)
+    histo.SetStats(False)
+    histo.GetZaxis().SetRangeUser(0.5, nbinsPhase + 0.5)
+    histo.GetXaxis().SetTitle('{0} [{1}]'.format(variables['S13']['title'], variables['S13']['unit']))
+    histo.GetYaxis().SetTitle('{0} [{1}]'.format(variables['S23']['title'], variables['S23']['unit']))
+    return histo
+
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -27,6 +87,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
              - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
              - nD0: number of D0 events in the file  
   """
+    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     nbinsTime = upperHists[0].GetNbinsX()
     nD0 = 0
@@ -41,7 +102,6 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
     # Loop over events.
     i = 0
     for evt in evtData :
-        phasediff = diffcalc.phase_difference(evtlist[i])
         s13 = evtlist[i].s(1, 3)
         s23 = evtlist[i].s(2, 3)
         tag = evt.tag
@@ -50,13 +110,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
         #expressing here in terms of D0 mean lifetime (all times in ps)
         decayTime = evt.decaytime / lifetime
 
-        # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-        if( s23 > s13 ) :
-            phasediff *= -1
-
-        # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
-        if phasediff < 0. :
-            phasediff += 2*math.pi
+        phasediff = getPhaseDifference(evtlist[i], s13, s23, diffcalc, tag)
 
         #Split events into either above/below y=x for D0 and D0bar. 
         #(upperHists stores events with negative phase bin index b, lowerHists stores events with positive b)
@@ -337,16 +391,11 @@ def computeIntegrals(nbinsPhase, config, normaliseF=False) :
             ampSq = model.RealVal(evt)
             cp_ampSq = cp_model.RealVal(evt)
 
-            phasediff = diffcalc.phase_difference(evt)
-            # The binning is inverted in the lower half of the Dalitz plot, so invert the phase difference.
-            if s23 > s13 :
-                phasediff *= -1
-            # Use the convention that phases run from 0 to 2pi rather than -pi to +pi.
-            if phasediff < 0. :
-                phasediff += 2*math.pi
+            phasediff = getPhaseDifference(evt, s13, s23, diffcalc)
 
             #Calculating phase bin number of event
-            b = int( phasediff*( nbinsPhase/(2*math.pi)) + 0.5 ) + 1
+            b = getPhaseBin(phasediff, nbinsPhase)
+
             #Exclude events outside range of bins
             if (b > 8) or (b < 1):
                 continue
