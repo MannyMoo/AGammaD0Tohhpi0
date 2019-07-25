@@ -70,7 +70,7 @@ def plotBinNumbers(config, nbinsPhase, npoints, pattern = pattern) :
     histo.GetYaxis().SetTitle('{0} [{1}]'.format(variables['S23']['title'], variables['S23']['unit']))
     return histo
 
-def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config) :
+def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcalc) :
     """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
          D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
          squared. 
@@ -87,7 +87,6 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, config)
              - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
              - nD0: number of D0 events in the file  
   """
-    diffcalc = PhaseDifferenceCalc(pattern, config)
 
     nbinsTime = upperHists[0].GetNbinsX()
     nD0 = 0
@@ -404,7 +403,7 @@ def computeIntegrals(nbinsPhase, config, normaliseF=False) :
                 X[0][b-1] += crossTerm * ds13 * ds23
                 F[0][b-1] += ampSq * ds13 * ds23
                 Fbar[1][b-1] += cp_ampSq * ds13 * ds23
-            else:
+            elif(s23 > s13) :
                 X[1][b-1] += crossTerm * ds13 * ds23
                 F[1][b-1] += ampSq * ds13 * ds23
                 Fbar[0][b-1] += cp_ampSq * ds13 * ds23  
