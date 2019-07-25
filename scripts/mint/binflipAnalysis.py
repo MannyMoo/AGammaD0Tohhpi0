@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Load Mint2 libraries.
-import Mint2, ROOT, math, sys
+import Mint2, ROOT, math, sys, pprint
 from AGammaD0Tohhpi0.data import datalib
 from ROOT import DalitzEventList, TFile, binflipChi2, FitAmpSum
 from ROOT.MINT import NamedParameterBase, Minimiser
@@ -48,6 +48,9 @@ tMax = 6
 #These don't change with the data file, so just calculate once here
 X, F, Fbar, r = computeIntegrals(nbinsPhase, diffcalc, True)
 zcp, deltaz = getZvals(x,y,qoverp,phi)
+for _name in 'X', 'F', 'Fbar', 'r' :
+    print _name
+    pprint.pprint(locals()[_name])
 
 success = 0
 lim = 100
@@ -74,8 +77,8 @@ for fileNo in range(1, lim+1) :
     lowerHists = []
     #Here 0 index is D0 histogram, 1 is D0bar
     for i in range(2) :
-        upperHists.append( ROOT.TH2F("upper hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, phaseMin, phaseMax ) )
-        lowerHists.append( ROOT.TH2F("lower hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, phaseMin, phaseMax ) )
+        upperHists.append( ROOT.TH2F("upper hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, 0.5, nbinsPhase+0.5 ) )
+        lowerHists.append( ROOT.TH2F("lower hist i{} f{}".format(i, fileNo), "", nbinsTime, 0, tMax, nbinsPhase, 0.5, nbinsPhase+0.5 ) )
 
     #Calling function to perform phase binning and store all (binned) decay times
     lifetime = 0.4101

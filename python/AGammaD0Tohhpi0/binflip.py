@@ -32,7 +32,7 @@ def getPhaseDifference(evt, s13, s23, diffcalc, tag = 1) :
 
 def getPhaseBin(phasediff, nbinsPhase) :
     '''Get the bin number for the given phase difference.'''
-    return int( phasediff*( nbinsPhase/(2*math.pi)) + 0.5 ) + 1
+    return (int(phasediff*nbinsPhase/(2*math.pi) + 0.5) % nbinsPhase) + 1
 
 def scanDalitzPlot(npoints,  pattern = pattern) :
     '''Iterate over the Dalitz plot in npoints in steps of size ds13 and ds23.'''
@@ -89,6 +89,7 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
   """
 
     nbinsTime = upperHists[0].GetNbinsX()
+    nbinsPhase = upperHists[0].GetNbinsY()
     nD0 = 0
 
     #Initialise variables for binned lists of decay times and decay times squared
@@ -110,19 +111,19 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
         decayTime = evt.decaytime / lifetime
 
         phasediff = getPhaseDifference(evtlist[i], s13, s23, diffcalc, tag)
-
+        b = getPhaseBin(phasediff, nbinsPhase)
         #Split events into either above/below y=x for D0 and D0bar. 
         #(upperHists stores events with negative phase bin index b, lowerHists stores events with positive b)
         if (tag == 1) :
             if (s23 < s13) :
-                lowerHists[0].Fill(decayTime, phasediff)
+                lowerHists[0].Fill(decayTime, b)
             else: 
-                upperHists[0].Fill(decayTime, phasediff)
+                upperHists[0].Fill(decayTime, b)
         elif (tag == -1) :
             if (s23 < s13) :
-                upperHists[1].Fill(decayTime, phasediff)
+                upperHists[1].Fill(decayTime, b)
             else: 
-                lowerHists[1].Fill(decayTime, phasediff)
+                lowerHists[1].Fill(decayTime, b)
 
         #Storing times to find <t>, <t^2>, with same time binning as histograms but no phase binning
         tBinNo = int( ( nbinsTime * decayTime ) / float(tMax) )
@@ -394,8 +395,8 @@ def computeIntegrals(nbinsPhase, diffcalc, normaliseF=False) :
             b = getPhaseBin(phasediff, nbinsPhase)
 
             #Exclude events outside range of bins
-            if (b > 8) or (b < 1):
-                continue
+            if (b > nbinsPhase) or (b < 1):
+                raise ValueError('Impossible phase difference: {0}, bin {1}'.format(phasediff, b))
             
             if (s23 < s13) :
                 X[0][b-1] += crossTerm * ds13 * ds23
