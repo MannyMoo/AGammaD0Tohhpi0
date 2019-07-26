@@ -71,22 +71,23 @@ def plotBinNumbers(config, nbinsPhase, npoints, pattern = pattern) :
     return histo
 
 def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcalc) :
-    """Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
-         D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
-         squared. 
+    """
+        Function which takes set of events and bins according to strong phase difference, position on Dalitz plot, 
+        D0/D0bar tag and phase difference. Also stores all decay times for later calculations of average time/time 
+        squared. 
 
-         Inputs are:
-             - evtData, evtlist: nTuple and DalitzEventList, respectively, containing information about a set of events
-             - diffcalc: PhaseDifferenceCalc instance with desired pattern
-             - lowerHists, upperHists: lists of two 2D histograms (four total) to contain binned events seperated by D0/D0bar 
-               and by above/below s13 = s23 line 
-             - tMax: maximum time value in upperHists and lowerHists
-  
-         Function returns:
-             - tList: list of all decay times, binned the same as lowerHists and upperHists
-             - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
-             - nD0: number of D0 events in the file  
-  """
+        Inputs are:
+            - evtData, evtlist: nTuple and DalitzEventList, respectively, containing information about a set of events
+            - lowerHists, upperHists: lists of two 2D histograms (four total) to contain binned events seperated by D0/D0bar 
+              and by above/below s13 = s23 line 
+            - tMax, lifetime: maximum time value in upperHists and lowerHists and D0 lifetime for scaling
+            - diffcalc: PhaseDifferenceCalc instance with desired pattern
+
+        Function returns:
+            - tList: list of all decay times, binned the same as lowerHists and upperHists
+            - tSqList: list of all decay times squared, binned the same as lowerHists and upperHists 
+            - nD0: number of D0 events in the file  
+    """
 
     nbinsTime = upperHists[0].GetNbinsX()
     nbinsPhase = upperHists[0].GetNbinsY()
@@ -140,13 +141,14 @@ def binByPhase(evtData, evtlist, lowerHists, upperHists, tMax, lifetime, diffcal
 
 
 def getZvals(x, y, qoverp, phi) :
-    """Function which will calculate and return zcp and deltaz, given x, y, q/p, phi as inputs.
+    """
+        Function which will calculate and return zcp and deltaz, given x, y, |q/p|, phi as inputs.
 
-         Inputs are:
-             -x,y,qoverp,phi: float/doubles containing mixing parameters
+        Inputs are:
+            -x,y,qoverp,phi: float/doubles containing mixing parameters
 
-         Function returns:
-             -zcp, deltaz: complex numbers calculated from the input mixing parameters.
+        Function returns:
+            -zcp, deltaz: complex numbers calculated from the input mixing parameters.
     """
 
     poverq = 1/qoverp
@@ -166,18 +168,19 @@ def getZvals(x, y, qoverp, phi) :
 
 
 def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
-    """Function to evaluate fit formula at discrete time steps for given zcp and deltaz.
+    """
+        Function to evaluate fit formula at discrete time steps for given zcp and deltaz.
 
-         Inputs are:
-             - zcp, deltaz: complex mixing parameters defined as (q/p)^(+-1) = zcp +- deltaz
-             - tAv, tSqAv: list containing averages of t and t^2 in each decay time bin (i.e. <t> and <t^2>)
-             - r, X: lists containing values of r(b) and X(b) functions required for the fit. X is 2D array where 0 index 
-               refers to list of X(b) for positive b and 1 index refers to list of X(b) for negative b values. 
+        Inputs are:
+            - zcp, deltaz: complex mixing parameters defined as (q/p)^(+-1) = zcp +- deltaz
+            - tAv, tSqAv: list containing averages of t and t^2 in each decay time bin (i.e. <t> and <t^2>)
+            - r, X: lists containing values of r(b) and X(b) functions required for the fit. X is 2D array where 0 index 
+              refers to list of X(b) for positive b and 1 index refers to list of X(b) for negative b values. 
 
-         Function returns:
-             -RPlots: 2D array of TGraphs where first index is 0 for D0 and 1 for D0bar, with second index
-               running over phase bins. Graphs contain plots of expected results for R(b, j) at time values
-               given in tAv.
+        Function returns:
+            -RPlots: 2D array of TGraphs where first index is 0 for D0 and 1 for D0bar, with second index
+              running over phase bins. Graphs contain plots of expected results for R(b, j) at time values
+              given in tAv.
     """
 
     RPlots =[[],[]]
@@ -210,12 +213,13 @@ def getFit(zcp, deltaz, tAv, tSqAv, r, X) :
 
 
 def setPlotParameters(plot, tag, plotNo):
-    """Simple function to set desired format options for plotting graphs of R(b,j).
+    """
+        Simple function to set desired format options for plotting graphs of R(b,j).
 
-         Inputs are:
-             -plot: TH1 for which plotting options are to be set.
-             -tag: integer (either 0 or 1) describing whether the plot refers to D0 or D0bar events.
-             -plotNo: number describing which phase bin plot represents.
+        Inputs are:
+            -plot: TH1 for which plotting options are to be set.
+            -tag: integer (either 0 or 1) describing whether the plot refers to D0 or D0bar events.
+            -plotNo: number describing which phase bin plot represents.
     """
 
     xAxis = plot.GetXaxis()
@@ -242,8 +246,9 @@ def setPlotParameters(plot, tag, plotNo):
 
 
 def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
-    """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
-         deltaz. 
+    """
+        Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
+        deltaz. 
 
         Inputs are:
             - params: list containing Re(zcp), Im(zcp), Re(deltaz), Im(deltaz)
@@ -254,8 +259,8 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
               positive b indexes.
             - nHist: equivalent of pHist, but with negative b
 
-         Function returns:
-             - chiSq: chi squared value for fit to measured data given by the values input in params.  
+        Function returns:
+            - chiSq: chi squared value for fit to measured data given by the values input in params.  
     """
 
     nbinsPhase = pHists[0].GetNbinsY()
@@ -300,17 +305,18 @@ def getChiSquared(params, tAv, tSqAv, r, X, pHists, nHists) :
 
 
 def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
-    """Function to take histograms in lower/upper region for D0/D0bar and produce plots of measured R(b,j).
+    """
+        Function to take histograms in lower/upper region for D0/D0bar and produce plots of measured R(b,j).
 
-         Inputs are:
-             - upperHists, lowerHists: lists of two 2D histograms (four total) to contain binned events seperated by D0/D0bar 
-               and by above/below s13 = s23 line 
-             - tMax: maximum time value in upperHists and lowerHists
-             - fileNo: number of current file being processed
+        Inputs are:
+            - upperHists, lowerHists: lists of two 2D histograms (four total) to contain binned events seperated by D0/D0bar 
+              and by above/below s13 = s23 line 
+            - tMax: maximum time value in upperHists and lowerHists
+            - fileNo: number of current file being processed
 
-         Function returns:
-             - ratioPlots: a list of TH1Fs containing measured values of R(b,j), with the first index given by 0 for D0 and 1 for 
-               D0bar. Second index goes over the phase difference bins. Bins within each histogram refer to different decay times.
+        Function returns:
+            - ratioPlots: a list of TH1Fs containing measured values of R(b,j), with the first index given by 0 for D0 and 1 for 
+              D0bar. Second index goes over the phase difference bins. Bins within each histogram refer to different decay times.
     """
 
     ratioPlots = [[],[]]
@@ -336,17 +342,18 @@ def createRatioPlots(upperHists, lowerHists, tMax, fileNo) :
 
 
 def computeIntegrals(nbinsPhase, diffcalc, normaliseF=False) :
-    """Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
+    """
+        Function to compute integrals F(b), Fbar(b) and X(b) and then calculate r(b), to be used for fit of R(b,j).
         
-         Inputs are:
-             - pattern: relevant pattern for event type being considered (here D0 -> 3pi)
-             - diffcalc: PhaseDifferenceCalc instance with desired pattern
-             - nbinsPhase: number of phase bins used to divide measured data
+        Inputs are:
+            - diffcalc: PhaseDifferenceCalc instance with desired pattern
+            - nbinsPhase: number of phase bins used to divide measured data
+            - normaliseF: boolean flag for whether to normalise values of F(b), Fbar(b)
 
-          Function returns:
-              - X, F, Fbar: 2D lists containing values for functions X(b), F(b) and Fbar(b), respectively, with first index 0 
-                for positive b and 1 for negative b. Second index goes over b.
-              - r: list containing values of r(b), for positive b, defined as: r(b) = F(-b)/F(b).
+         Function returns:
+             - X, F, Fbar: 2D lists containing values for functions X(b), F(b) and Fbar(b), respectively, with first index 0 
+               for positive b and 1 for negative b. Second index goes over b.
+             - r: list containing values of r(b), for positive b, defined as: r(b) = F(-b)/F(b).
     """
 
     s13min = pattern.sijMin(1, 3)
@@ -435,7 +442,8 @@ def computeIntegrals(nbinsPhase, diffcalc, normaliseF=False) :
 
 
 def getRatiosAsymm(pHists, nHists) : 
-    """Function to produce array of plots of ratio of counts given in pHists and nHists, as a ROOT TGraphAsymmErrors 
+    """
+        Function to produce array of plots of ratio of counts given in pHists and nHists, as a ROOT TGraphAsymmErrors 
         object.
 
         Inputs are:
@@ -467,8 +475,9 @@ def getRatiosAsymm(pHists, nHists) :
 
 
 def getChiSquaredPoisson(params, tAv, tSqAv, r, X, ratios) :
-    """Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
-         deltaz, using Poisson statistics for errors. 
+    """
+        Function to calculate chi squared value for R(b,j) fit to data for given real and imaginary parts of zcp and 
+        deltaz, using Poisson statistics for errors. 
 
         Inputs are:
             - params: list containing Re(zcp), Im(zcp), Re(deltaz), Im(deltaz)
