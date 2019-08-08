@@ -80,7 +80,7 @@ for mag in 'Up', 'Down' :
 # MINT data.
 for name in os.listdir(mintdatadir) :
     datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
-                                 'files' : glob.glob(os.path.join(mintdatadir, name, '*.root'))}
+                                 'files' : glob.glob(os.path.join(mintdatadir, name, 'pipipi0*.root'))}
 
 datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R)
 datalib.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')
