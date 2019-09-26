@@ -10,7 +10,9 @@ datadir = os.environ.get('AGAMMAD0TOHHPI0DATADIR',
 workingdir = os.path.abspath(os.path.join(datadir, '..', 'workingdir'))
 mintdatadir = os.path.join(datadir, 'mint')
 
-varnames = ('deltam',)
+filtereddatadir = os.path.join(datadir, 'data', 'filtered')
+
+varnames = ('deltam', 'D0_mass')
 
 # All the TTree datasets, the tree names and file names (any number of file names can be given).
 datapaths = {'MC_2016_pipipi0' : {'tree' : 'DecayTree', 
@@ -76,6 +78,12 @@ for mag in 'Up', 'Down' :
                                                                    'files' : urls2016}
     datapaths['Data_2016_pipipi0_Merged_Mag' + mag + '_full'] = {'tree' : 'DstarD0ToHHPi0_pipipi0_M_LineTuple/DecayTree',
                                                                  'files' : urls2016}
+
+# Filtered data.
+for dataset in os.listdir(filtereddatadir) :
+    files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
+    datapaths[dataset] = {'files' : files,
+                          'tree' : 'DecayTree'}
 
 # MINT data.
 for name in os.listdir(mintdatadir) :
