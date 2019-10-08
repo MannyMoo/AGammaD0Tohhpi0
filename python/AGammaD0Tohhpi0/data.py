@@ -82,13 +82,17 @@ for mag in 'Up', 'Down' :
 # Filtered data.
 for dataset in os.listdir(filtereddatadir) :
     files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
+    files = filter(lambda f : not f.endswith('_Dataset.root'), files)
     datapaths[dataset] = {'files' : files,
                           'tree' : 'DecayTree'}
+    if dataset.endswith('WrongPi'):
+        datapaths[dataset]['variables'] = {'deltam' : dict(variables['deltam'], formula = 'deltam')}
+        datapaths[dataset]['tree'] = 'wrongmasstree'
 
 # MINT data.
 for name in os.listdir(mintdatadir) :
     datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
                                  'files' : glob.glob(os.path.join(mintdatadir, name, 'pipipi0*.root'))}
 
-datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R)
+datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R, ignorecompilefails = True)
 datalib.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')
