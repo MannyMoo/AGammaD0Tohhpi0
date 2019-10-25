@@ -17,11 +17,27 @@ MC_sel_Kpi_M = AND(MC_sel_M, 'lab0_MCMatch_Kpi')
 
 masswindow_R = (1825, 1905)
 masswindow_R_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R)
+masswindow_R_low = (masswindow_R[0]-50, masswindow_R[0])
+masswindow_R_low_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R_low)
+masswindow_R_high = (masswindow_R[1], masswindow_R[1]+50)
+masswindow_R_high_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R_high)
+
+masswindow_sels = {'Merged' : {},
+                   'Resolved' : {'' : masswindow_R_sel,
+                                 'LowMass' : masswindow_R_low_sel,
+                                 'HighMass' : masswindow_R_high_sel}}
 
 bdtcut = -0.1
 bdtsel = 'BDT >= ' + str(bdtcut)
 
 selection_R = AND(masswindow_R_sel, bdtsel)
+selection_R_low = AND(masswindow_R_low_sel, bdtsel)
+selection_R_high = AND(masswindow_R_high_sel, bdtsel)
+
+selections = {'Merged' : {},
+              'Resolved' : {'' : selection_R,
+                            'LowMass' : selection_R_low,
+                            'HighMass' : selection_R_high}}
 
 kin_allowed_sel = 'S13 != {0!r} && S23 != {0!r}'.format(-3.4028234663852886e+38)
 
