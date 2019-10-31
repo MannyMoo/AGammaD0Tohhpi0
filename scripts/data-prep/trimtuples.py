@@ -4,7 +4,7 @@ import os, ROOT, shutil, glob
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib, filtereddatadir
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selection_R
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selection_R, selection_R_low, selection_R_high
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -111,6 +111,10 @@ def add_mvas_2015() :
                 add_bdt_kinematic(datalib, dataset)
 
 def filter_2015_pipi() :
+    sels = {'Resolved' : {'' : selection_R,
+                          '_LowMass' : selection_R_low,
+                          '_HighMass' : selection_R_high},
+            'Merged' : {}}
     for finalstate in 'pipi', : # 'Kpi' :
         # Merged doesn't work currently cause the BDT expects lab6&7 to be the photons.
         for pi0 in 'Resolved', : # 'Merged' :
@@ -119,18 +123,16 @@ def filter_2015_pipi() :
                 print dataset
                 info = datalib.get_data_info(dataset)
                 tree = datalib.get_data(dataset)
-                outputname = dataset.replace('_full', '')
-                outputdir = os.path.join(filtereddatadir, outputname)
-                if not os.path.exists(outputdir) :
-                    os.makedirs(outputdir)
-                outputfile = os.path.join(outputdir, outputname + '.root')
-                fout = ROOT.TFile.Open(outputfile, 'recreate')
-                if pi0 == 'Resolved' :
-                    sel = selection_R
-                else :
-                    sel = selection_M
-                treeout = copy_tree(tree, sel, write = True)
-                fout.Close()
+                for suff, sel in sels[pi0].items():
+                    outputname = dataset.replace('_full', suff)
+                    print outputname
+                    outputdir = os.path.join(filtereddatadir, outputname)
+                    if not os.path.exists(outputdir) :
+                        os.makedirs(outputdir)
+                    outputfile = os.path.join(outputdir, outputname + '.root')
+                    fout = ROOT.TFile.Open(outputfile, 'recreate')
+                    treeout = copy_tree(tree, sel, write = True)
+                    fout.Close()
 
 def filter_2015_tuples() :
     for mag in 'Up', 'Down' :

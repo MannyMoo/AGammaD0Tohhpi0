@@ -28,5 +28,6 @@ def gen_background(datalib, dataset, nbins = 100):
                                                           'xmin' : variables['deltam']['xmin'],
                                                           'xmax' : variables['deltam']['xmax']}},
                               requireall = False, 
-                              targetstats = tree.GetEntries()
+                              targetstats = tree.GetEntries(),
+                              selection = 'deltam > 150',
                               )

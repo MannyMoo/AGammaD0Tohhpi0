@@ -3,7 +3,7 @@
 import os, ROOT, pprint, glob
 from AnalysisUtils.data import DataLibrary
 from AGammaD0Tohhpi0.variables import variables
-from AGammaD0Tohhpi0.selection import selection_R
+from AGammaD0Tohhpi0.selection import selection_R, selections
 
 datadir = os.environ.get('AGAMMAD0TOHHPI0DATADIR', 
                          '/nfs/lhcb/d2hh01/hhpi0/data/')
@@ -88,6 +88,11 @@ for dataset in os.listdir(filtereddatadir) :
     if dataset.endswith('WrongPi'):
         datapaths[dataset]['variables'] = {'deltam' : dict(variables['deltam'], formula = 'deltam')}
         datapaths[dataset]['tree'] = 'wrongmasstree'
+    elif dataset.endswith('HighMass') or dataset.endswith('LowMass'):
+        if 'Resolved' in dataset:
+            datapaths[dataset]['selection'] = selections['Resolved'][dataset.split('_')[-1]]
+        else:
+            datapaths[dataset]['selection'] = selections['Merged'][dataset.split('_')[-1]]
 
 # MINT data.
 for name in os.listdir(mintdatadir) :
