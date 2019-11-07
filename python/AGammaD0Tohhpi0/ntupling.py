@@ -10,16 +10,23 @@ from AnalysisUtils.ntupling import make_mc_tuple, make_tuple
 from AnalysisUtils.DecayDescriptors.DecayDescriptors import parse_decay_descriptor
 from collections import defaultdict
 
+linedocs = None
 def get_line_docs() :
     '''Get the doc for the relevant stripping lines.'''
+    
+    # Make sure this is only called once.
+    global linedocs
+    if linedocs:
+        return linedocs
+
     doc = StrippingDoc('stripping28')
-    docs = doc.filter_lines(lambda line : (line.name.startswith('DstarD0ToHHPi0') 
+    linedocs = doc.filter_lines(lambda line : (line.name.startswith('DstarD0ToHHPi0') 
                                            and not 'KK' in line.name 
                                            and not 'WIDEMASS' in line.name))
     aliases = {False : ['Dst', 'D0', 'Kst', 'h1', 'h2', 'pi0', 'piTag'],
                True : ['Dst', 'D0', 'Kst', 'h1', 'h2', 'pi0', 'gamma1', 'gamma2', 'piTag']}
 
-    for linedoc in docs:
+    for linedoc in linedocs:
         branches = defaultdict(list)
         resolved = ('_R_' in linedoc.name)
         if resolved:
@@ -34,7 +41,7 @@ def get_line_docs() :
             parseddescs.append(parseddesc)
         linedoc.parseddecaydescriptors = parseddescs
         linedoc.branches = {alias : '( ' + ' ) || ( '.join(descs) + ' )' for alias, descs in branches.items()}
-    return docs
+    return linedocs
 
 def add_tuples() :
     '''Make ntuples for the D0->hhpi0 stripping lines. Assumes the data settings have already
