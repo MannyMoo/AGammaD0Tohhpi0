@@ -9,6 +9,7 @@ from AnalysisUtils.Selections.mcselections import make_mc_unbiased_seq
 from AnalysisUtils.ntupling import make_mc_tuple, make_tuple
 from AnalysisUtils.DecayDescriptors.DecayDescriptors import parse_decay_descriptor
 from collections import defaultdict
+from PhysSelPython.Wrappers import StrippingData, TupleSelection, SelectionSequence
 
 linedocs = None
 def get_line_docs() :
@@ -59,13 +60,14 @@ def add_tuples() :
     tuples = []
     seqs = []
     for line in get_line_docs() :
-        seq = stripping_tuple_sequence_from_doc(line, stream = stream)
-        seqs.append(seq)
-        dtt = seq.Members[-1]
+        stripdata = StrippingData(line.name)
+        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **line.tuple_config())
+        dtt = dttsel.algorithm()
         dtt.addBranches(line.branches)
         tuples.append(dtt)
         add_tools(dtt)
-        DaVinci().UserAlgorithms += [seq]
+        seq = SelectionSequence(line.name + 'Seq', TopSelection = dttsel)
+        DaVinci().UserAlgorithms += [seq.sequence()]
     DaVinci(**line.davinci_config(stream))
 
     if stream.endswith('.dst') :
@@ -112,9 +114,6 @@ def add_tools(dtt) :
     ttpid = TupleToolANNPID(dtt.name() + '_ttpid')
     ttpid.ANNPIDTunes = ['MC15TuneV1']
 
-    if '_R_' in dtt.name() :
-        dtt.Decay = dtt.Decay.replace('pi0', '( pi0 -> ^gamma ^gamma )')
-    dtt.addBranches({'lab0' : dtt.Decay.replace('^', '')})
     dtt.Dst.addTupleTool(tttistos)
     dtt.addTupleTool(tttime)
     # Still need TupleToolPid for the _ID branches.
@@ -133,9 +132,9 @@ def add_tools(dtt) :
         ttdtf = TupleToolDecayTreeFitter(name, **attrs)
         ttdtf.Verbose = True
         ttdtf.UseFullTreeInName = True
-        dtt.lab0.addTupleTool(ttdtf)
+        dtt.Dst.addTupleTool(ttdtf)
 
-    hybrid = dtt.lab0.addTupleTool('LoKi__Hybrid__TupleTool')
+    hybrid = dtt.Dst.addTupleTool('LoKi__Hybrid__TupleTool')
     # Real data
     if 'K*' in dtt.Decay :
         for i in 1, 2 :
@@ -154,8 +153,10 @@ def add_tools(dtt) :
 def mc_descriptors() :
     '''Get the MC decay descriptors.'''
     descs = []
+    aliases = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'piTag']
     for minus, plus in ('pi', 'pi'), ('K', 'K'), ('K', 'pi') :
         desc = parse_decay_descriptor('[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC'.format(minus = minus, plus = plus))
+        desc.set_aliases(aliases)
         descs.append(desc)
     return descs
 
@@ -169,7 +170,7 @@ def add_mc_tools(dtt) :
             'switch(mcMatch("[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC"), 1, 0)'.format(minus = minus, plus = plus)
     ttmctruth = TupleToolMCTruth(dtt.name() + '_ttmctruth')
     ttmctruth.addTupleTool(MCTupleToolPrompt(dtt.name() + '_ttmcprompt'))
-    dtt.lab0.addTupleTool(ttmcmatch)
+    dtt.Dst.addTupleTool(ttmcmatch)
     dtt.addTupleTool(ttmctruth)
     dtt.ToolList.append('TupleToolMCBackgroundInfo')
 
