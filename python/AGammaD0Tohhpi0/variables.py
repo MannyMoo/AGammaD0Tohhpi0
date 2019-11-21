@@ -98,19 +98,21 @@ variables = {'Dst_mass_DTF_vtx' : {'formula' : 'lab0_DTF_vtx_M[0]',
                                'unit' : 'MeV^{2}'},
              }
 
+deltammax = 155.
+deltammin = 140.
 variables['deltam_DTF_vtx'] = {'formula' : variables['Dst_mass_DTF_vtx']['formula'] + ' - ' + variables['D0_mass_DTF_vtx']['formula'],
-                               'xmin' : 140,
-                               'xmax' : 170,
+                               'xmin' : deltammin,
+                               'xmax' : deltammax,
                                'title' : '#Deltam',
                                'unit' : 'MeV'}
 variables['deltam_DTF'] = {'formula' : variables['Dst_mass_DTF']['formula'] + ' - ' + variables['D0_mass_DTF']['formula'],
-                           'xmin' : 140,
-                           'xmax' : 170,
+                           'xmin' : deltammin,
+                           'xmax' : deltammax,
                            'title' : '#Deltam',
                            'unit' : 'MeV'}
 variables['deltam_no_DTF'] = {'formula' : variables['Dst_mass']['formula'] + ' - ' + variables['D0_mass']['formula'],
-                              'xmin' : 140,
-                              'xmax' : 170,
+                              'xmin' : deltammin,
+                              'xmax' : deltammax,
                               'title' : '#Deltam',
                               'unit' : 'MeV'}
 variables['deltam'] = variables['deltam_DTF_vtx']
