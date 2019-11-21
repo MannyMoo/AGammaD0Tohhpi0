@@ -8,18 +8,21 @@ import sys
 if len(sys.argv) == 2 :
     mag = sys.argv[1]
 
-lo_dataset = datalib.get_dataset('Data_2015_pipipi0_Resolved_Mag'+mag+'_LowMass')
+print "Opening datasets..."
+#lo_dataset = datalib.get_dataset('Data_2015_pipipi0_Resolved_Mag'+mag+'_LowMass')
 mid_dataset_raw = datalib.get_dataset('Data_2015_pipipi0_Resolved_Mag'+mag)
-hi_dataset = datalib.get_dataset('Data_2015_pipipi0_Resolved_Mag'+mag+'_HighMass')
+#hi_dataset = datalib.get_dataset('Data_2015_pipipi0_Resolved_Mag'+mag+'_HighMass')
 dataset_sig = datalib.get_dataset('MC_2016_pipipi0')
+print "Datasets opened successfully!\n"
 
+print "Getting deltam..."
 #deltam = m_D* - m_D0
 deltam = lo_dataset.get(0)["deltam"]
-deltam.setMax(155)
+deltam.setMax(152)
 dm_min = deltam.getMin()
 dm_max = deltam.getMax()
 
-
+print "deltam accessed. \nBinning dataset..."
 ##### Dividing dataset based on D0 mass #####
 
 #Define allowed regionsi
@@ -31,8 +34,8 @@ regionIndex = RooCategory("regionIndex", "regionIndex")
 for i in range(n_regions) :
     regionIndex.defineType(regions[i])
 
-lo_mass_cut = 1830
-hi_mass_cut = 1900
+lo_mass_cut = 1845
+hi_mass_cut = 1885
 lo_mid_dataset = mid_dataset_raw.reduce("D0_mass < "+str(lo_mass_cut))
 mid_dataset = mid_dataset_raw.reduce("D0_mass >= "+str(lo_mass_cut)+" && D0_mass <= "+str(hi_mass_cut))
 hi_mid_dataset = mid_dataset_raw.reduce("D0_mass > "+str(hi_mass_cut))
@@ -42,7 +45,7 @@ dataset = RooDataSet("dataset_"+mag, "dataset_"+mag, RooArgSet(deltam), Index(re
 datahist = dataset.binnedClone()
 
 ##############################################
-
+print "Dataset binned successfully!\n"
 
 ########### Fitting Pure Signal ##############
 
@@ -136,10 +139,9 @@ for i in range(n_regions) :
     region = regions[i]
 
     #Setting up parameters to allow only single shift (means) and scale (sigmas)
-    #shiftedMeans, scaledWidths, sig, fracs  = [], [], [], []
-    shifts.append(RooRealVar("shift_"+region, "shift_"+region, 0.005, -1, 1))
+    shifts.append(RooRealVar("shift_"+region, "shift_"+region, 0., -1, 1))
     shifts[i].setError(0.01)
-    scales.append(RooRealVar("scale_"+region, "scale_"+region, 1.26, 0.001, 5))
+    scales.append(RooRealVar("scale_"+region, "scale_"+region, 1., 0.001, 5))
     scales[i].setError(0.01)
     for j in range(n_sig_pdf) :
         shiftedMeans[i].append(RooFormulaVar("shifted_mean_{}_".format(j)+region, "mean_{}+shift_".format(j)+region, RooArgList(means[j], shifts[i])))
