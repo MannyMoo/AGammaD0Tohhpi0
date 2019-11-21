@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="A8EC5D58-E0E5-E711-9BBC-7CD30AD09BA4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000177_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000177_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="CE7E0A72-E4E5-E711-BF34-7CD30ACE1E64">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000225_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000225_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="9049D0D2-D6E5-E711-8F56-0242AC110010">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000107_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000107_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="103FD051-D8E5-E711-944D-0242AC110006">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000137_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000137_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="8A4F0543-DCE5-E711-B9CD-0242AC110017">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000173_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000173_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="B8DA2B69-D6E5-E711-B2E9-008CFAFBFA7A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000101_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000101_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="F80054F1-DDE5-E711-B686-7CD30ACDE0CC">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000190_1.charm.mdst" se="IN2P3-DST"/>
+      <pfn filetype="ROOT_All" name="root://door01.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000190_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000190_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="FA5D1779-D9E5-E711-BC84-7CD30AD09D24">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000085_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000085_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="C248C81B-ECE5-E711-85AA-3CFDFE9E1E98">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://guppy12.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000124_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000124_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="C2BCE8D4-C6E5-E711-BDA5-0242AC11001B">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000026_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000026_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="8CA109F7-D9E5-E711-AE0D-7CD30AD0A66C">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000070_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000070_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="9C66027D-EFE5-E711-B399-B083FECEACB0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://guppy12.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000169_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000169_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="56A81ABD-E1E5-E711-8C50-0242AC110008">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000235_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000235_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="12A92032-BEE5-E711-BD2C-F8BC120CED80">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://mouse13.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000021_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000021_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="08258733-EEE5-E711-8F5D-901B0E0D0345">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lobster16.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000113_1.charm.mdst" se="SARA-DST"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000113_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000113_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="68490972-EFE5-E711-A16C-3CFDFE9E1E98">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://guppy12.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000045_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000045_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="1EC4F6BC-FEE5-E711-9B2D-00265521F300">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://shark9.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000232_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000232_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="24B863BB-02E6-E711-8BE6-001B21B993CC">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://mouse13.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000061_1.charm.mdst" se="SARA-DST"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000061_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000061_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="524291DB-D9E5-E711-9918-008CFAF71A38">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000140_1.charm.mdst" se="IN2P3-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000140_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="9AA157CF-E1E5-E711-BEB2-A4BF0112BDA8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000230_1.charm.mdst" se="IN2P3-DST"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000230_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision16/CHARM.MDST/00069527/0000/00069527_00000230_1.charm.mdst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>

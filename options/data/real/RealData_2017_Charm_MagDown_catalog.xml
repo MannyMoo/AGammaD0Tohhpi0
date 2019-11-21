@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="4C268C28-5319-E811-8736-008CFA051DA8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000213_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://door01.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000213_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000213_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="1E9BD134-4C19-E811-AE32-D8D385FF0B6A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door01.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000217_1.charm.mdst" se="PIC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000217_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000217_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="8688BD1C-4B19-E811-9A77-A4BF0112BC9E">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000085_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000085_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000085_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="58887809-2C19-E811-84B4-00266CFFBCDC">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000091_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://door02.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000091_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000091_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="80A79B17-3119-E811-98BF-A4BF0112BC80">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000066_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000066_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000066_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="FAE8059A-3819-E811-BBED-00266CFE6404">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door03.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000046_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000046_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="C2019838-4519-E811-8002-002590A80DA4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000142_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000142_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="469B0079-4219-E811-9744-C4346BB27620">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door07.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000139_1.charm.mdst" se="PIC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000139_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000139_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="2E6518D7-3819-E811-89E3-00266CFFC51C">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000154_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://door02.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000154_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000154_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="3298008A-2A19-E811-9E9A-A4BF0115A1B0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000071_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000071_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="C41975EB-4519-E811-A95E-A4BF0112BC84">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000171_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000171_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000171_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="6213DE54-0E19-E811-8AE5-001E6779251A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000041_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000041_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="BA87DB1D-2619-E811-ACDE-C4346BB28548">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door07.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000099_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000099_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="B24D5CCE-5419-E811-9C01-002590A80DFA">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000179_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000179_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="7EC9668A-5019-E811-A489-00266CFFBCE0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door02.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000189_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000189_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="12A5FA4C-0D19-E811-A07D-A4BF01125BE8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000032_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000032_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000032_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="56A39066-2F19-E811-9117-001E6779266A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000114_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000114_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="E41F2303-4B19-E811-9CDF-001E67E71412">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000160_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000160_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000160_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="F845520C-4719-E811-9A13-A0369F8362E2">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door06.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000133_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000133_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="6C6BF2C1-2A19-E811-9F5E-A4BF01125BA8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000088_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision17/CHARM.MDST/00071501/0000/00071501_00000088_1.charm.mdst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-DaVinciVersion=v44r10p1
+# Get the latest v4X version of DaVinci.
+DaVinciVersion=$(lb-run --list DaVinci | grep v4 | head -n 1 | awk '{print $1;}')
 github=0
 if [ $github = 0 ] ; then
     PackageUrl=ssh://git@gitlab.cern.ch:7999/malexand/AGammaD0Tohhpi0.git
@@ -16,4 +17,8 @@ cd DaVinciDev_$DaVinciVersion
 for url in $urls ; do
     git clone $url
 done
+# For StrippingData selection.
+git lb-use Phys
+git lb-checkout Phys/malexand-strippingdata PhysSel/PhysSelPython
+
 make

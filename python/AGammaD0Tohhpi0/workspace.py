@@ -1,6 +1,6 @@
 '''Instantiates the RooWorkspace for the current analysis.'''
 
-from AGammaD0Tohhpi0.data import datadir
+#from AGammaD0Tohhpi0.data import datadir
 from AnalysisUtils.workspace import *
 import os
 from AGammaD0Tohhpi0.variables import variables
