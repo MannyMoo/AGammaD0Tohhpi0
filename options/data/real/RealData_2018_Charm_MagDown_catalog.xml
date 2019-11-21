@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="D648211C-A96F-E811-935B-0090FAA57E54">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000455_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000455_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="4EE574E1-A86F-E811-B227-F8BC120CED80">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000436_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://guppy15.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000436_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000436_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="481D02A8-966F-E811-8EE0-AC1F6B1B2392">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000338_1.charm.mdst" se="GRIDKA-DST"/>
+      <pfn filetype="ROOT_All" name="root://door08.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000338_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000338_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="A6E2D94C-A66F-E811-A854-EC0D9A8B37E4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000405_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://shark1.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000405_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000405_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="46992D5B-896F-E811-AB16-EC0D9A8B37E4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000270_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://shark1.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000270_1.charm.mdst" se="SARA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000270_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="2C0E0CE9-A86F-E811-96C9-A0369FD0B228">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000416_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000416_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="BCF3D20F-A06F-E811-99DF-A0369FE2C17C">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000298_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000298_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="1845B100-9C6F-E811-BC1A-0242AC110006">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000345_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000345_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000345_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="560098C5-7E6F-E811-9D87-0242AC110014">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000259_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000259_1.charm.mdst" se="RAL-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000259_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="9AA6F02A-A96F-E811-BFB7-A0369FE2C19A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000454_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000454_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="6A2CD131-716F-E811-941D-A0369FE2C204">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000244_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000244_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="7E948091-A96F-E811-B6D9-A0369FD0B152">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://door01.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000489_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000489_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="6817B41E-A96F-E811-A5B1-A0369FD0B3A0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000453_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000453_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="B686D70B-546F-E811-BA94-0242AC11000E">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000171_1.charm.mdst" se="RAL-DST"/>
+      <pfn filetype="ROOT_All" name="root://door08.pic.es:1094/pnfs/pic.es/data/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000171_1.charm.mdst" se="PIC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000171_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="E69D7436-C26F-E811-90AF-A4BF0112BCB4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000473_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000473_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000473_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="C8B64398-C36F-E811-895E-A4BF0112BBE4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000476_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000476_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000476_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="4697F70D-A56F-E811-B76C-A0369FE2C044">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000390_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000390_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="F8F56899-A16F-E811-983F-A4BF0115A1B0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000362_1.charm.mdst" se="CERN-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000362_1.charm.mdst" se="GRIDKA-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000362_1.charm.mdst"/>
+   </logical>
+</File>
+<File ID="D8B8F163-7E6F-E811-B7DB-A0369FE2C228">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000267_1.charm.mdst" se="CERN-DST-EOS"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/LHCb/Collision18/CHARM.MDST/00075559/0000/00075559_00000267_1.charm.mdst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>

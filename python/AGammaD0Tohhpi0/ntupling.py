@@ -8,13 +8,41 @@ from Configurables import TupleToolMCTruth, MCTupleToolPrompt
 from AnalysisUtils.Selections.mcselections import make_mc_unbiased_seq
 from AnalysisUtils.ntupling import make_mc_tuple, make_tuple
 from AnalysisUtils.DecayDescriptors.DecayDescriptors import parse_decay_descriptor
+from collections import defaultdict
+from PhysSelPython.Wrappers import StrippingData, TupleSelection, SelectionSequence
 
+linedocs = None
 def get_line_docs() :
     '''Get the doc for the relevant stripping lines.'''
+    
+    # Make sure this is only called once.
+    global linedocs
+    if linedocs:
+        return linedocs
+
     doc = StrippingDoc('stripping28')
-    return doc.filter_lines(lambda line : (line.name.startswith('DstarD0ToHHPi0') 
+    linedocs = doc.filter_lines(lambda line : (line.name.startswith('DstarD0ToHHPi0') 
                                            and not 'KK' in line.name 
                                            and not 'WIDEMASS' in line.name))
+    aliases = {False : ['Dst', 'D0', 'Kst', 'h1', 'h2', 'pi0', 'piTag'],
+               True : ['Dst', 'D0', 'Kst', 'h1', 'h2', 'pi0', 'gamma1', 'gamma2', 'piTag']}
+
+    for linedoc in linedocs:
+        branches = defaultdict(list)
+        resolved = ('_R_' in linedoc.name)
+        if resolved:
+            for i, desc in enumerate(linedoc.decaydescriptors):
+                linedoc.decaydescriptors[i] = desc.replace('pi0', '( pi0 -> gamma gamma )')
+        parseddescs = []
+        for desc in linedoc.decaydescriptors:
+            parseddesc = parse_decay_descriptor(desc)
+            parseddesc.set_aliases(aliases[resolved])
+            for alias, brdesc in parseddesc.branches().items():
+                branches[alias].append(brdesc)
+            parseddescs.append(parseddesc)
+        linedoc.parseddecaydescriptors = parseddescs
+        linedoc.branches = {alias : '( ' + ' ) || ( '.join(descs) + ' )' for alias, descs in branches.items()}
+    return linedocs
 
 def add_tuples() :
     '''Make ntuples for the D0->hhpi0 stripping lines. Assumes the data settings have already
@@ -32,11 +60,14 @@ def add_tuples() :
     tuples = []
     seqs = []
     for line in get_line_docs() :
-        seq = stripping_tuple_sequence_from_doc(line, stream = stream)
-        seqs.append(seq)
-        tuples.append(seq.Members[-1])
-        add_tools(seq.Members[-1])
-        DaVinci().UserAlgorithms += [seq]
+        stripdata = StrippingData(line.name)
+        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **line.tuple_config())
+        dtt = dttsel.algorithm()
+        dtt.addBranches(line.branches)
+        tuples.append(dtt)
+        add_tools(dtt)
+        seq = SelectionSequence(line.name + 'Seq', TopSelection = dttsel)
+        DaVinci().UserAlgorithms += [seq.sequence()]
     DaVinci(**line.davinci_config(stream))
 
     if stream.endswith('.dst') :
@@ -83,10 +114,7 @@ def add_tools(dtt) :
     ttpid = TupleToolANNPID(dtt.name() + '_ttpid')
     ttpid.ANNPIDTunes = ['MC15TuneV1']
 
-    if '_R_' in dtt.name() :
-        dtt.Decay = dtt.Decay.replace('pi0', '( pi0 -> ^gamma ^gamma )')
-    dtt.addBranches({'lab0' : dtt.Decay.replace('^', '')})
-    dtt.lab0.addTupleTool(tttistos)
+    dtt.Dst.addTupleTool(tttistos)
     dtt.addTupleTool(tttime)
     # Still need TupleToolPid for the _ID branches.
     dtt.ToolList.remove('TupleToolANNPID')
@@ -103,15 +131,18 @@ def add_tools(dtt) :
                                         'daughtersToConstrain' : ['pi0', 'D0']}}.items() :
         ttdtf = TupleToolDecayTreeFitter(name, **attrs)
         ttdtf.Verbose = True
-        dtt.lab0.addTupleTool(ttdtf)
+        ttdtf.UseFullTreeInName = True
+        dtt.Dst.addTupleTool(ttdtf)
 
-    hybrid = dtt.lab0.addTupleTool('LoKi__Hybrid__TupleTool')
+    hybrid = dtt.Dst.addTupleTool('LoKi__Hybrid__TupleTool')
+    # Real data
     if 'K*' in dtt.Decay :
         for i in 1, 2 :
             form = ' - '.join(['(CHILD(E, 1, 1, {0}) + CHILD(E, 1, 2))**2'.format(i)]
                               + ['(CHILD(P{1}, 1, 1, {0}) + CHILD(P{1}, 1, 2))**2'.format(i, p) for p in 'XYZ'])
             form = 'DTF_FUN({0}, False, "D0", "pi0", -1., LoKi.Constants.NegativeInfinity)'.format(form)
             hybrid.Variables['S{0}3'.format(i)] = form
+    # MC
     else :
         for i in 1, 2 :
             form = ' - '.join(['(CHILD(E, 1, {0}) + CHILD(E, 1, 3))**2'.format(i)]
@@ -122,8 +153,10 @@ def add_tools(dtt) :
 def mc_descriptors() :
     '''Get the MC decay descriptors.'''
     descs = []
+    aliases = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'piTag']
     for minus, plus in ('pi', 'pi'), ('K', 'K'), ('K', 'pi') :
         desc = parse_decay_descriptor('[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC'.format(minus = minus, plus = plus))
+        desc.set_aliases(aliases)
         descs.append(desc)
     return descs
 
@@ -137,7 +170,7 @@ def add_mc_tools(dtt) :
             'switch(mcMatch("[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC"), 1, 0)'.format(minus = minus, plus = plus)
     ttmctruth = TupleToolMCTruth(dtt.name() + '_ttmctruth')
     ttmctruth.addTupleTool(MCTupleToolPrompt(dtt.name() + '_ttmcprompt'))
-    dtt.lab0.addTupleTool(ttmcmatch)
+    dtt.Dst.addTupleTool(ttmcmatch)
     dtt.addTupleTool(ttmctruth)
     dtt.ToolList.append('TupleToolMCBackgroundInfo')
 

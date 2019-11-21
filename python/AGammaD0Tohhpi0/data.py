@@ -1,9 +1,10 @@
 '''Functions to access all the relevant datasets for the analysis, both TTrees and RooDataSets.'''
 
 import os, ROOT, pprint, glob
-from AnalysisUtils.data import DataLibrary
+from AnalysisUtils.data import DataLibrary, BinnedFitData
 from AGammaD0Tohhpi0.variables import variables
-from AGammaD0Tohhpi0.selection import selection_R, selections
+from AGammaD0Tohhpi0.selection import selection_R, selections, masswindow_R
+from AGammaD0Tohhpi0.workspace import workspace
 
 datadir = os.environ.get('AGAMMAD0TOHHPI0DATADIR', 
                          '/nfs/lhcb/d2hh01/hhpi0/data/')
@@ -82,7 +83,7 @@ for mag in 'Up', 'Down' :
 # Filtered data.
 for dataset in os.listdir(filtereddatadir) :
     files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
-    files = filter(lambda f : not f.endswith('_Dataset.root'), files)
+    files = filter(lambda f : 'Dataset' not in f, files)
     datapaths[dataset] = {'files' : files,
                           'tree' : 'DecayTree'}
     if dataset.endswith('WrongPi'):
@@ -99,5 +100,32 @@ for name in os.listdir(mintdatadir) :
     datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
                                  'files' : glob.glob(os.path.join(mintdatadir, name, 'pipipi0*.root'))}
 
-datalib = DataLibrary(datapaths, variables, varnames = varnames, selection = selection_R, ignorecompilefails = True)
+class AGammaDataLibrary(DataLibrary):
+    '''Add some analysis specific functions to DataLibrary.'''
+
+    def get_deltam_in_mass_bins_dataset(self, dataset,
+                                        massbins = [masswindow_R[0], 1865-15, 1865+15, masswindow_R[1]],
+                                        update = False, nbinsDeltam = 100, name = None):
+        '''Get deltam RooDataHists in bins of D0_mass, in the form of a BinnedFitData instance for the given
+        dataset. Several datasets can be combined then binned by passing a list of names as 'dataset'.'''
+
+        if isinstance(dataset, (tuple,list)):
+            roodata = self.get_dataset(dataset[0])
+            for dataname in dataset[1:]:
+                _data = self.get_dataset(dataname)
+                roodata.append(_data)
+                del _data
+            outputdir = self.dataset_dir(dataset[0])
+            dataset = '_'.join(dataset)
+        else:
+            roodata = self.get_dataset(dataset)
+            outputdir = self.dataset_dir(dataset)
+        if not name:
+            name = dataset + '_DeltamInMassBinsDatasets'
+        variable = workspace.roovar('deltam')
+        binvariable = workspace.roovar('D0_mass')
+        return BinnedFitData(name, outputdir, workspace, roodata, variable, binvariable, massbins,
+                             nbinsx = nbinsDeltam, get = True, update = update)
+
+datalib = AGammaDataLibrary(datapaths, variables, varnames = varnames, selection = selection_R, ignorecompilefails = True)
 datalib.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')
