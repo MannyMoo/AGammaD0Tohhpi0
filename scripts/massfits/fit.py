@@ -16,5 +16,7 @@ frame = dm.frame()
 mcdata.plotOn(frame)
 g1.plotOn(frame)
 
-g2 = translate_scale_pdf(workspace, g1, 'g2', dm, workspace.roovar('trans', val = 0.5), workspace.roovar('scale', val = 1.5))
+g2 = translate_scale_pdf(workspace, g1, 'g2', dm, workspace.roovar('trans', val = 0.5), workspace.roovar('scale', val = 1.5), workspace.roovar('g1_mean'))
 g2.plotOn(frame, RooFit.LineColor(ROOT.kRed))
+
+frame.Draw()
