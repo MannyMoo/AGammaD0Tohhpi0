@@ -83,7 +83,7 @@ for mag in 'Up', 'Down' :
 # Filtered data.
 for dataset in os.listdir(filtereddatadir) :
     files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
-    files = filter(lambda f : not f.endswith('_Dataset.root'), files)
+    files = filter(lambda f : 'Dataset' not in f, files)
     datapaths[dataset] = {'files' : files,
                           'tree' : 'DecayTree'}
     if dataset.endswith('WrongPi'):
