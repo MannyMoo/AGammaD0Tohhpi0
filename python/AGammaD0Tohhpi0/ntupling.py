@@ -62,10 +62,12 @@ def add_tuples() :
     tuples = []
     seqs = []
     for line in get_line_docs() :
-        stripdata = StrippingData(line.name, stream = (stream if fulldst else None))
+        stripdata = StrippingData(line.name, stream = (streamname if fulldst else None))
         if not simulation:
             stripdata = MomentumScaling(stripdata)
-        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **line.tuple_config())
+        lineconfig = line.tuple_config()
+        del lineconfig['Inputs']
+        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **lineconfig)
         dtt = dttsel.algorithm()
         dtt.addBranches(line.branches)
         tuples.append(dtt)
@@ -152,12 +154,12 @@ def add_tools(dtt) :
 
 def mc_descriptors() :
     '''Get the MC decay descriptors.'''
-    descs = []
+    descs = {}
     aliases = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'piTag']
     for minus, plus in ('pi', 'pi'), ('K', 'K'), ('K', 'pi') :
         desc = parse_decay_descriptor('[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC'.format(minus = minus, plus = plus))
         desc.set_aliases(aliases)
-        descs.append(desc)
+        descs[minus + plus] = desc
     return descs
 
 def add_mc_tools(dtt) :
@@ -174,20 +176,21 @@ def add_mc_tools(dtt) :
     dtt.addTupleTool(ttmctruth)
     dtt.ToolList.append('TupleToolMCBackgroundInfo')
 
-def add_mc_tuples(desc = None) :
+def add_mc_tuples(desc = None, name = None) :
     '''Add MC tuples for the given DecayDescriptor.'''
     if not desc :
-        for desc in mc_descriptors() :
-            add_mc_tuples(desc)
+        for name, desc in mc_descriptors().items() :
+            add_mc_tuples(desc, name)
         return
 
     mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo',
                                               'MCTupleToolPrompt', 'MCTupleToolPID',
-                                              'MCTupleToolReconstructed'])
+                                              'MCTupleToolReconstructed'],
+                            suff = '_MCDecayTreeTuple_' + name)
     DaVinci().UserAlgorithms.append(mctuple)
     
     seq, selseq = make_mc_unbiased_seq(desc)
-    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple')
+    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple_' + name)
     add_tools(dtt)
     add_mc_tools(dtt)
     seq.Members.append(dtt)
