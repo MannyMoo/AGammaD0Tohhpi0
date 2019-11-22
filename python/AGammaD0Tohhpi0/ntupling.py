@@ -175,6 +175,8 @@ def add_mc_tools(dtt) :
     dtt.Dst.addTupleTool(ttmcmatch)
     dtt.addTupleTool(ttmctruth)
     dtt.ToolList.append('TupleToolMCBackgroundInfo')
+    dtt.D0.addTupleTool('TupleToolMCPVAssociation')
+    dtt.ToolList.append('TupleToolPV2MC')
 
 def add_mc_tuples(desc = None, name = None) :
     '''Add MC tuples for the given DecayDescriptor.'''
