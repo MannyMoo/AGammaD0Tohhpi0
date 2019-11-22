@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/cvmfs/lhcb.cern.ch/lib/lhcb/STRIPPING/STRIPPING_v11r5p1/Phys/StrippingSelections/tests/users/')
-from StrippingTuple import stripping_tuple_sequence_from_doc
 from Configurables import TupleToolTISTOS, LoKi__Hybrid__TupleTool, DaVinci, TupleToolDecayTreeFitter, \
     TupleToolPropertime, TupleToolANNPID
 from StrippingDoc import StrippingDoc
@@ -10,6 +7,7 @@ from AnalysisUtils.ntupling import make_mc_tuple, make_tuple
 from AnalysisUtils.DecayDescriptors.DecayDescriptors import parse_decay_descriptor
 from collections import defaultdict
 from PhysSelPython.Wrappers import StrippingData, TupleSelection, SelectionSequence
+from PhysSelPython.MomentumScaling import MomentumScaling
 
 linedocs = None
 def get_line_docs() :
@@ -50,17 +48,23 @@ def add_tuples() :
 
     # Normal data
     stream = 'Charm.mdst'
+    simulation = DaVinci().getProp('Simulation')
     # For restripping
     if DaVinci().getProp('ProductionType') == 'Stripping' :
         stream = 'CharmCompleteEvent.dst'
     # For MC.
-    elif DaVinci().getProp('Simulation') :
+    elif simulation :
         stream = 'AllStreams.dst'
+
+    fulldst = stream.endswith('.dst')
+    streamname = '.'.join(stream.split('.')[:-1])
 
     tuples = []
     seqs = []
     for line in get_line_docs() :
-        stripdata = StrippingData(line.name)
+        stripdata = StrippingData(line.name, stream = (stream if fulldst else None))
+        if not simulation:
+            stripdata = MomentumScaling(stripdata)
         dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **line.tuple_config())
         dtt = dttsel.algorithm()
         dtt.addBranches(line.branches)
@@ -69,10 +73,6 @@ def add_tuples() :
         seq = SelectionSequence(line.name + 'Seq', TopSelection = dttsel)
         DaVinci().UserAlgorithms += [seq.sequence()]
     DaVinci(**line.davinci_config(stream))
-
-    if stream.endswith('.dst') :
-        for dtt in tuples :
-            dtt.Inputs[0] = stream.split('.')[0] + '/' + dtt.Inputs[0]
 
     DaVinci().TupleFile = 'DaVinciTuples.root'
     if DaVinci().getProp('Simulation') :
@@ -183,13 +183,11 @@ def add_mc_tuples(desc = None) :
 
     mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo',
                                               'MCTupleToolPrompt', 'MCTupleToolPID',
-                                              'MCTupleToolReconstructed'],
-                            UseLabXSyntax = True, RevertToPositiveID = False)
+                                              'MCTupleToolReconstructed'])
     DaVinci().UserAlgorithms.append(mctuple)
     
     seq, selseq = make_mc_unbiased_seq(desc)
-    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple',
-                     UseLabXSyntax = True, RevertToPositiveID = False)
+    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple')
     add_tools(dtt)
     add_mc_tools(dtt)
     seq.Members.append(dtt)

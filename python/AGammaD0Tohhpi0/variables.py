@@ -30,31 +30,7 @@ def si3(i) :
     #return 'lab0_S{0}3'.format(i)
 
 
-variables = {'Dst_mass_DTF_vtx' : {'formula' : 'lab0_DTF_vtx_M[0]',
-                                   'xmin' : 2000,
-                                   'xmax' : 2200,
-                                   'title' : 'D* mass', 
-                                   'unit' : 'MeV',
-                                   },
-             'D0_mass_DTF_vtx' : {'formula' : 'lab0_DTF_vtx_D0_M[0]',
-                                  'xmin' : 1700,
-                                  'xmax' : 2010,
-                                  'title' : 'D^{0} mass',
-                                  'unit' : 'MeV',
-                                  },
-             'Dst_mass_DTF' : {'formula' : 'lab0_DTF_M',
-                               'xmin' : 2000,
-                               'xmax' : 2200,
-                               'title' : 'D* mass', 
-                               'unit' : 'MeV',
-                               },
-             'D0_mass_DTF' : {'formula' : 'lab0_DTF_D0_M',
-                              'xmin' : 1700,
-                              'xmax' : 2010,
-                              'title' : 'D^{0} mass',
-                              'unit' : 'MeV',
-                              },
-             'Dst_mass' : {'formula' : 'lab0_M',
+variables = {'Dst_mass' : {'formula' : 'lab0_M',
                            'xmin' : 2000,
                            'xmax' : 2200,
                            'title' : 'D* mass', 
@@ -98,21 +74,27 @@ variables = {'Dst_mass_DTF_vtx' : {'formula' : 'lab0_DTF_vtx_M[0]',
                                'unit' : 'MeV^{2}'},
              }
 
+# Deltam variables with various DTF configs.
 deltammax = 155.
 deltammin = 140.
-variables['deltam_DTF_vtx'] = {'formula' : variables['Dst_mass_DTF_vtx']['formula'] + ' - ' + variables['D0_mass_DTF_vtx']['formula'],
-                               'xmin' : deltammin,
-                               'xmax' : deltammax,
-                               'title' : '#Deltam',
-                               'unit' : 'MeV'}
-variables['deltam_DTF'] = {'formula' : variables['Dst_mass_DTF']['formula'] + ' - ' + variables['D0_mass_DTF']['formula'],
-                           'xmin' : deltammin,
-                           'xmax' : deltammax,
-                           'title' : '#Deltam',
-                           'unit' : 'MeV'}
-variables['deltam_no_DTF'] = {'formula' : variables['Dst_mass']['formula'] + ' - ' + variables['D0_mass']['formula'],
-                              'xmin' : deltammin,
-                              'xmax' : deltammax,
-                              'title' : '#Deltam',
-                              'unit' : 'MeV'}
+for suff in '', '_vtx', '_D0Mass', '_vtx_D0Mass':
+    if 'vtx' in suff:
+        ind = '[0]'
+    else:
+        ind = ''
+    variables['Dst_mass_DTF' + suff] = {'formula' : 'lab0_DTF{0}_M'.format(suff) + ind,
+                                        'xmin' : 2000,
+                                        'xmax' : 2200,
+                                        'title' : 'D* mass', 
+                                        'unit' : 'MeV'}
+    variables['D0_mass_DTF' + suff] = {'formula' : 'lab0_DTF{0}_D0_M'.format(suff) + ind,
+                                       'xmin' : 1700,
+                                       'xmax' : 2010,
+                                       'title' : 'D^{0} mass',
+                                       'unit' : 'MeV'}
+    variables['deltam_DTF' + suff] = {'formula' : 'Dst_mass_DTF{0} - D0_mass_DTF{0}'.format(suff),
+                                      'xmin' : deltammin,
+                                      'xmax' : deltammax,
+                                      'title' : '#Deltam',
+                                      'unit' : 'MeV'}
 variables['deltam'] = variables['deltam_DTF_vtx']
