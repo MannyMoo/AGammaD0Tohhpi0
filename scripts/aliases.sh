@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$ANALYSISUTILSROOT/scripts/aliases.sh
+. $ANALYSISUTILSROOT/scripts/aliases.sh
 echo "alias interactive='run interactive.sh'"
 echo "export AGAMMAD0TOHHPI0ROOT=$AGAMMAD0TOHHPI0ROOT"
 echo "export DAVINCIDEV_PROJECT_ROOT=$DAVINCIDEV_PROJECT_ROOT"

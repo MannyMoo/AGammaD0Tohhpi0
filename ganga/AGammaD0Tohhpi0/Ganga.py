@@ -1,21 +1,24 @@
-from AnalysisUtils.Ganga import gaudi_exec_job
-import glob, os, ROOT
+from AnalysisUtils.Ganga import gaudi_exec_job, OptionsFile
+from AnalysisUtils.Ganga import options_file as ana_options_file
+import glob, os
+from GangaCore.GPI import Dirac, SplitByFiles, DiracFile
+# This doesn't currently work?
+#import ROOT
 
 optsdir = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/options/')
-anaoptsdir = os.path.expandvars('$ANALYSISUTILSROOT/options/')
 
-def options_file(fname, optsdir = optsdir):
-    '''Get an options file path.'''
-    if not os.path.isabs(fname):
-        return os.path.join(optsdir, fname)
-    return fname
+# Options file getter.
+options_file = OptionsFile(optsdir)
 
-def ana_options_file(fname):
-    '''Get an options file path from AnalysisUtils.'''
-    return options_file(fname, anaoptsdir)
+# Real data options getter.
+real_data_options = OptionsFile(options_file('data/real'))
+
+# MC options dir
+mc_data_options = OptionsFile(options_file('data/mc'))
 
 def make_minibias():
     '''Make jobs on minibias data.'''
+    import ROOT
     seed = 894982
     rand = ROOT.TRandom3(seed)
     frac = 0.05
@@ -25,7 +28,7 @@ def make_minibias():
         if 'settings' in f :
             continue
         j = gaudi_exec_job(name = f.split(os.sep)[-1],
-                           options = [os.path.join(optsdir, 'ntupling/minibias.py')]
+                           options = [os.path.join(optsdir, 'ntupling/minibias.py')],
                            backend = Dirac(),
                            splitter = SplitByFiles(filesPerJob = 10, ignoremissing = True),
                            outputfiles = [LocalFile('DVTuples.root')])
@@ -39,7 +42,8 @@ def make_job(datafile):
     datafile = options_file(datafile)
     jobname = os.path.split(datafile)[1][:-3][:100]
     ismc = '_MC_' in datafile
-    options = [options_file('ntupling/tuples.py'), ana_options_file('MessageSvcWideNames.py')]
+    options = [options_file('ntupling/tuples.py'), ana_options_file('MessageSvcWideNames.py'),
+               ana_options_file('Lumi.py')]
     filesperjob = 50
     if ismc:
         filesperjob = 10
@@ -50,3 +54,13 @@ def make_job(datafile):
     return j
 
 
+def make_jobs(optsgetter = real_data_options):
+    '''Make jobs for data files in the directory of the given options getter.'''
+    js = []
+    for datafile in optsgetter.data_files():
+        j = make_job(datafile)
+        js.append(j)
+    return js
+
+def make_mc_jobs():
+    return make_jobs(mc_data_options)
