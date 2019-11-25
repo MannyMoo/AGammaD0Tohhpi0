@@ -54,13 +54,13 @@ def make_job(datafile):
     return j
 
 
-def make_jobs(optsgetter = real_data_options):
+def make_jobs(optsgetter = real_data_options, matchpatterns = ()):
     '''Make jobs for data files in the directory of the given options getter.'''
     js = []
-    for datafile in optsgetter.data_files():
+    for datafile in optsgetter.data_files(matchpatterns = matchpatterns):
         j = make_job(datafile)
         js.append(j)
     return js
 
-def make_mc_jobs():
-    return make_jobs(mc_data_options)
+def make_mc_jobs(matchpatterns = ()):
+    return make_jobs(mc_data_options, matchpatterns = matchpatterns)
