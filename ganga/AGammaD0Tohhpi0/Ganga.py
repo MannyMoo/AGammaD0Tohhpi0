@@ -1,13 +1,12 @@
-from AnalysisUtils.Ganga import gaudi_exec_job, OptionsFile
+from AnalysisUtils.Ganga import gaudi_exec_job, OptionsFile, get_output_lfns
 from AnalysisUtils.Ganga import options_file as ana_options_file
 import glob, os
 from GangaCore.GPI import Dirac, SplitByFiles, DiracFile
 # This doesn't currently work?
 #import ROOT
 
-optsdir = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/options/')
-
 # Options file getter.
+optsdir = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/options/')
 options_file = OptionsFile(optsdir)
 
 # Real data options getter.
@@ -15,6 +14,10 @@ real_data_options = OptionsFile(options_file('data/real'))
 
 # MC options dir
 mc_data_options = OptionsFile(options_file('data/mc'))
+
+# Python file getter.
+pythondir = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/python/AGammaD0Tohhpi0/')
+python_file = OptionsFile(pythondir)
 
 def make_minibias():
     '''Make jobs on minibias data.'''
@@ -63,4 +66,19 @@ def make_jobs(optsgetter = real_data_options, matchpatterns = ()):
     return js
 
 def make_mc_jobs(matchpatterns = ()):
+    '''Make jobs for MC data.'''
     return make_jobs(mc_data_options, matchpatterns = matchpatterns)
+
+def save_output_files(job):
+    '''Save output LFNs and access URLs for the output files of the given job.'''
+    name = job.name
+    if 'MC' in name:
+        mag = 'Up' if 'MagUp' in name else 'Down'
+        name = name[:name.index('MC')+2] + '_Mag' + mag
+    outputdir = python_file('Datasets')
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+    foutLFNs = os.path.join(outputdir, name + '_LFNs.py')
+    foutURLs = os.path.join(outputdir, name + '_URLs.py')
+    get_output_lfns(job, foutLFNs, foutURLs)
+    
