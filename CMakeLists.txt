@@ -17,7 +17,7 @@ find_package(ROOT COMPONENTS Core RIO Hist Graf Graf3d Postscript Gpad
 # override the genreflex call to wrap it in the right environment
 # set(ROOT_genreflex_CMD ${env_cmd} --xml ${env_xml} ${ROOT_genreflex_CMD})
 
-include_directories(${Boost_INCLUDE_DIRS} ${ROOT_INCLUDE_DIRS})
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS} ${ROOT_INCLUDE_DIRS})
 # gaudi_add_dictionary(AGammaD0Tohhpi0
 #                      dict/AGammaD0Tohhpi0Dict.h dict/AGammaD0Tohhpi0Dict.xml
 #                      SPLIT_CLASSDEF)
