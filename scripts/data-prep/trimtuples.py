@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import os, ROOT, shutil, glob
+import os, ROOT, shutil, glob, subprocess
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib, filtereddatadir
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selection_R, selection_R_low, selection_R_high
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selections, MC_sels, AND
+from time import sleep
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -170,4 +171,37 @@ if __name__ == '__main__' :
     #filter_2016_tuples()
     #filter_2015_tuples()
     #add_mvas_2015()
-    filter_2015_pipi()
+    #filter_2015_pipi()
+    # trigger_filter(datalib, 'pipipi0_DecProdCut_PHSP_2016_MC_MagUp_pipipi0_Resolved')
+    datasets = filter(lambda x : x.endswith('pipipi0_Resolved') or x.endswith('pipipi0_Merged'), datalib.datasets())
+    print 'Datasets:', datasets
+    # CopyTree or get_event_list (maybe both) somehow blocks the flow when using threads.
+    # for dataset in datasets:
+    #     print dataset
+    #     thread = threading.Thread(target = trigger_filter, args = (datalib, dataset))
+    #     print 'start'
+    #     thread.start()
+    #     print 'append'
+    #     threads.append(thread)
+    #     print 'sleep'
+    #     sleep(5)
+    #     print 'done'
+    # for thread in threads:
+    #     thread.join()
+    procs = []
+    datasets = datasets[-4:]
+    for dataset in datasets:
+        print 'Start', dataset
+        args = ('python', '-c', '''from AGammaD0Tohhpi0.selection import trigger_filter
+from AGammaD0Tohhpi0.data import datalib, filtereddatadir
+trigger_filter(filtereddatadir, datalib, {0!r})
+'''.format(dataset))
+        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        procs.append(proc)
+    for proc, dataset in zip(procs, datasets):
+        print dataset
+        stdout, stderr = proc.communicate()
+        print 'stdout:'
+        print stdout
+        print 'stderr:'
+        print stderr
