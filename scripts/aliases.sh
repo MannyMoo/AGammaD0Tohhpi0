@@ -13,3 +13,5 @@ print 'export AGAMMAD0TOHHPI0' + '$dname'.upper() + '=' + $dname
 done
 echo "export GANGADIR=$AGAMMAD0TOHHPI0DATADIR/gangadir"
 echo "export GANGASTARTUP='${GANGASTARTUP};from AGammaD0Tohhpi0.Ganga import *'"
+GANGAPYTHONPATH=$AGAMMADOTOHHPI0ROOT/ganga:$GANGAPYTHONPATH
+echo "export GANGAPYTHONPATH=$GANGAPYTHONPATH"
