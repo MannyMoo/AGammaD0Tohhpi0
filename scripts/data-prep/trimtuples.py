@@ -189,7 +189,7 @@ if __name__ == '__main__' :
     # for thread in threads:
     #     thread.join()
     procs = []
-    datasets = datasets[-4:]
+    #datasets = datasets[-4:]
     for dataset in datasets:
         print 'Start', dataset
         args = ('python', '-c', '''from AGammaD0Tohhpi0.selection import trigger_filter
@@ -199,7 +199,7 @@ trigger_filter(filtereddatadir, datalib, {0!r})
         proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         procs.append(proc)
     for proc, dataset in zip(procs, datasets):
-        print dataset
+        print 'Wait for', dataset
         stdout, stderr = proc.communicate()
         print 'stdout:'
         print stdout
