@@ -74,7 +74,7 @@ def save_output_files(job):
     name = job.name
     if 'MC' in name:
         mag = 'Up' if 'MagUp' in name else 'Down'
-        name = name[:name.index('MC')+2] + '_Mag' + mag
+        name = 'MC_' + name[:name.index('MC')] + 'Mag' + mag
     outputdir = python_file('Datasets')
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
