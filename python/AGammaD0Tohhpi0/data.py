@@ -3,7 +3,7 @@
 import os, ROOT, pprint, glob
 from AnalysisUtils.data import DataLibrary, BinnedFitData
 from AGammaD0Tohhpi0.variables import variables
-from AGammaD0Tohhpi0.selection import selections, masswindows
+from AGammaD0Tohhpi0.selection import selections, masswindows, bdtsel
 from AGammaD0Tohhpi0.workspace import workspace
 
 datadir = os.environ.get('AGAMMAD0TOHHPI0DATADIR', 
@@ -35,10 +35,7 @@ del oldaliases_M['lab8']
               
 
 # All the TTree datasets, the tree names and file names (any number of file names can be given).
-datapaths = {'MC_2016_pipipi0' : {'tree' : 'DecayTree', 
-                                  'files' : [os.path.join(datadir, 'mc/2016/DaVinciTuples_MC_S28_Matched_pipipi0.root')],
-                                  'aliases' : oldaliases_R},
-             'MiniBias_2015' : {'tree' : 'pions_tuple_sel/DecayTree',
+datapaths = {'MiniBias_2015' : {'tree' : 'pions_tuple_sel/DecayTree',
                                 'files' : glob.glob(os.path.join(datadir, 'minibias/2015/DVTuples*.root'))},
              }
 
@@ -139,12 +136,17 @@ for dataset in os.listdir(filtereddatadir) :
     if dataset.endswith('WrongPi'):
         datapaths[dataset]['variables'] = {'deltam' : dict(variables['deltam'], formula = 'deltam')}
         datapaths[dataset]['tree'] = 'wrongmasstree'
+    # Aliases for old datasets.
     elif '2015' in dataset:
         if 'Resolved' in dataset:
-            datapaths['aliases'] = oldaliases_R
+            datapaths[dataset]['aliases'] = oldaliases_R
         else:
-            datapaths['aliases'] = oldaliases_M
+            datapaths[dataset]['aliases'] = oldaliases_M
 
+datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['aliases'] = oldaliases_R
+datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['selection'] = bdtsel
+datapaths['MC_2016_pipipi0'] = datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']
+             
 # MINT data.
 for name in os.listdir(mintdatadir) :
     datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
