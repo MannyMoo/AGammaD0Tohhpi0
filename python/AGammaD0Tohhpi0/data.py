@@ -177,5 +177,8 @@ class AGammaDataLibrary(DataLibrary):
         return BinnedFitData(name, outputdir, workspace, roodata, variable, binvariable, massbins,
                              nbinsx = nbinsDeltam, get = True, update = update)
 
+    def add_magboth_datasets(self):
+        '''Add merged datasets of MagUp and MagDown.'''
+        self.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')       
+
 datalib = AGammaDataLibrary(datapaths, variables, varnames = varnames, ignorecompilefails = True)
-datalib.add_merged_datasets('MagBoth', 'MagUp', 'MagDown')
