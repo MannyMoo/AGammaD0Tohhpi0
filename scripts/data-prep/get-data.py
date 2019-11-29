@@ -23,13 +23,13 @@ def get_real_data():
 
 def get_mc_paths() :
     for evttype, name in evttypes.items() :
-        fname = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/python/AGammaD0Tohhpi0/MCBKPaths_{0}.py'.format(name))
+        fname = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/python/AGammaD0Tohhpi0/MCBKPaths/MCBKPaths_{0}.py'.format(name))
         get_bk_decay_paths(evttype, exclusions = ('GAUSSHIST', 'STRIP', 'LDST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]'),
                            outputfile = fname)
 
 def get_mc_data() :
     for evttype, name in evttypes.items() :
-        modname = 'AGammaD0Tohhpi0.MCBKPaths_{0}'.format(name)
+        modname = 'AGammaD0Tohhpi0.MCBKPaths.MCBKPaths_{0}'.format(name)
         mod = __import__(modname, fromlist = ['decaypaths'])
         for year, paths in mod.decaypaths.items() :
             if not year in ('2011', '2012', '2015', '2016', '2017', '2018') :
