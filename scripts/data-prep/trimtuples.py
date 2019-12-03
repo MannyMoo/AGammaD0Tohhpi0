@@ -173,7 +173,7 @@ if __name__ == '__main__' :
     #add_mvas_2015()
     #filter_2015_pipi()
     # trigger_filter(datalib, 'pipipi0_DecProdCut_PHSP_2016_MC_MagUp_pipipi0_Resolved')
-    datasets = filter(lambda x : x.startswith('RealData') and (x.endswith('pipipi0_Resolved') or x.endswith('pipipi0_Merged')), datalib.datasets())
+    datasets = datalib.get_matching_datasets('RealData_2015.*pipipi0_(Merged|Resolved)')
     print 'Datasets:', datasets
     # CopyTree or get_event_list (maybe both) somehow blocks the flow when using threads.
     # for dataset in datasets:
