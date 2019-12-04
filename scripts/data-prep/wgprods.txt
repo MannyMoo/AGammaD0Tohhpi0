@@ -1,0 +1,10 @@
+Status	Deprecated?	Responsible	Description	Request		Transformation IDs		Transformation Status  Transformation Progress  Files  Data Location
+	ID		Status	       Production	Merging	       Production	      Merging	Production  Merging N total % @ CERN 
+Done	No			       Run2_D02HHPi0-2018_MagUp	       61368		      Done	98452	    98453   Archived  Archived 0.00% 0.00% 241 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098453/*/*.root
+Done	No			       Run2_D02HHPi0-2018_MagDown	61367	    Done    98454     98455    Archived	   Archived    0.00% 0.00% 226 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision18/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098455/*/*.root
+Done	No	       		       Run2_D02HHPi0-2017_MagUp      61366    Done	   98456       98457 Archived  Archived 0.00% 0.00% 186 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision17/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098457/*/*.root
+Done	No			       Run2_D02HHPi0-2017_MagDown       61365 Done      98458	98459 Archived	Archived 0.00% 0.00% 193 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision17/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098459/*/*.root
+Done	No			       Run2_D02HHPi0-2016_MagUp	61364 Done	98460	 98461 Archived	 Archived 0.00% 0.00% 149 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision16/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098461/*/*.root
+Done	No			       Run2_D02HHPi0-2016_MagDown     61363	 Done	  98462	98463 Archived	  Archived 0.00% 0.00% 173 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision16/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098463/*/*.root
+Done	No			       Run2_D02HHPi0-2015_MagUp	61362 Done	  98464	   98465 Archived  Archived 0.00% 0.00% 27 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision15/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098465/*/*.root
+Done	No			       Run2_D02HHPi0-2015_MagDown 61361 Done	   98466    98467 Archived Archived 0.00% 0.00% 37 100.00% /eos/lhcb/grid/prod/lhcb/LHCb/Collision15/CHARM_D02HHPI0_DVNTUPLE.ROOT/00098467/*/*.root
