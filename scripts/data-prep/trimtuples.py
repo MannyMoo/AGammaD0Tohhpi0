@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
-import os, ROOT, shutil, glob
+import os, ROOT, shutil, glob, subprocess
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib, filtereddatadir
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selection_R, selection_R_low, selection_R_high
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selections, MC_sels, AND
+from time import sleep
+#from threading import Thread
+import multiprocessing
+from multiprocessing import Process, Pool
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -134,40 +138,73 @@ def filter_2015_pipi() :
                     treeout = copy_tree(tree, sel, write = True)
                     fout.Close()
 
-def filter_2015_tuples() :
-    for mag in 'Up', 'Down' :
-        print 'Filter Mag' + mag, 'files'
-        data = datalib.get_data('Data_2015_Kpipi0_Mag' + mag + '_full')
-        outputdir = os.path.join(datadir, 'data', '2015', 'mag' + mag.lower())
-        if not os.path.exists(outputdir) :
+def offline_filter(sel = bdtsel, match = '.*Resolved_TriggerFiltered', 
+                   rename = (lambda name : name.replace('TriggerFiltered', 'OfflineFiltered')),
+                   nthreads = multiprocessing.cpu_count()):
+    pool = Pool(processes = nthreads)
+    procs = []
+    datasets = datalib.get_matching_datasets(match)
+    for dataset in datasets:
+        newname = rename(dataset)
+        print dataset, '->', newname
+        outputdir = os.path.join(filtereddatadir, newname)
+        if not os.path.exists(outputdir):
             os.makedirs(outputdir)
-        evtlist = ROOT.TEventList('evtlist')
-        data.Draw('>>' + evtlist.GetName(), bdtsel)
-        data.SetEventList(evtlist)
-        data.RemoveFriend(data.GetFriend('BDTTree'))
-        fout = ROOT.TFile.Open(os.path.join(outputdir, 'Data_2015_Kpipi0_Mag' + mag + '.root'), 'recreate')
-        fitltereddata = data.CopyTree('')
-        fitltereddata.Write()
-        fout.Close()
+        fout = os.path.join(outputdir, newname + '.root')
+        tree = datalib.get_data(dataset)
+        #copy_tree(tree = tree, selection = sel, fname = fout, write = True)
+        proc = pool.apply_async(copy_tree, kwds = dict(tree = tree, selection = sel, fname = fout, write = True))
+        procs.append(proc)
+    for proc, dataset in zip(procs, datasets):
+        proc.wait()
+        print dataset, proc.successful()
 
-def remove_bdt_2015() :
-    for mag in 'Up', 'Down' :
-        info = datalib.get_data_info('Data_2015_Kpipi0_Mag' + mag)
-        f = ROOT.TFile.Open(info['files'][0], 'update')
-        t = f.Get(info['tree'])
-        # This doesn't work.
-        # b = t.GetBranch('BDT')
-        # t.GetListOfBranches().Remove(b)
-        # l = t.GetLeaf('BDT')
-        # t.GetListOfLeaves().Remove(l)
-        # This didn't work either? Need to write to a new file?
-        t.SetBranchStatus('BDT', 0)
-        t = t.CopyTree('')
-        t.Write(t.GetName(), ROOT.TObject.kWriteDelete)
-        f.Close()
+def add_kinematic_mva(match = '.*Resolved_TriggerFiltered'):
+    threads = []
+    for dataset in datalib.get_matching_datasets(match):
+        print dataset
+        args = (datalib, dataset)
+        thread = Process(target = add_bdt_kinematic, args = (datalib, dataset))
+        thread.start()
+        threads.append(thread)
+    for thread in threads:
+        thread.join()
+
+def filter_all_trigger():
+    # trigger_filter(datalib, 'pipipi0_DecProdCut_PHSP_2016_MC_MagUp_pipipi0_Resolved')
+    datasets = datalib.get_matching_datasets('RealData_2015.*pipipi0_(Merged|Resolved)')
+    print 'Datasets:', datasets
+    # CopyTree or get_event_list (maybe both) somehow blocks the flow when using threads.
+    # for dataset in datasets:
+    #     print dataset
+    #     thread = threading.Thread(target = trigger_filter, args = (datalib, dataset))
+    #     print 'start'
+    #     thread.start()
+    #     print 'append'
+    #     threads.append(thread)
+    #     print 'sleep'
+    #     sleep(5)
+    #     print 'done'
+    # for thread in threads:
+    #     thread.join()
+    procs = []
+    #datasets = datasets[-4:]
+    for dataset in datasets:
+        print 'Start', dataset
+        args = ('python', '-c', '''from AGammaD0Tohhpi0.selection import trigger_filter
+from AGammaD0Tohhpi0.data import datalib, filtereddatadir
+trigger_filter(filtereddatadir, datalib, {0!r})
+'''.format(dataset))
+        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        procs.append(proc)
+    for proc, dataset in zip(procs, datasets):
+        print 'Wait for', dataset
+        stdout, stderr = proc.communicate()
+        print 'stdout:'
+        print stdout
+        print 'stderr:'
+        print stderr
 
 if __name__ == '__main__' :
-    #filter_2016_tuples()
-    #filter_2015_tuples()
-    #add_mvas_2015()
-    filter_2015_pipi()
+    #add_kinematic_mva()
+    offline_filter()

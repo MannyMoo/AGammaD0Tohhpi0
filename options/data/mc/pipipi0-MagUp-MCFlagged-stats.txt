@@ -1,9 +1,0 @@
-Got 807 LFNs
-For 807 LFNs:
-Getting info from files...
-Nb of Files      : 806
-Nb of Events     : 2'000'074
-Total size       : 445.767 GB (222.9 kB per evt)
-Luminosity       : 0.000 
-Size  per /pb    : 0.0 GB
-

@@ -1,6 +1,16 @@
-# lb-run LHCbDirac/prod dirac-bookkeeping-get-files -B /MC/2012/Beam4000GeV-2012-MagUp-Nu2.5-Pythia8/Sim08c/Digi13/Trig0x409f0045/Reco14a/Stripping20NoPrescalingFlagged/27163401/ALLSTREAMS.DST
+'''
+lb-run LHCbDirac/prod dirac-bookkeeping-get-files -B /MC/2012/Beam4000GeV-2012-MagUp-Nu2.5-Pythia8/Sim08c/Digi13/Trig0x409f0045/Reco14a/Stripping20NoPrescalingFlagged/27163401/ALLSTREAMS.DST --DQFlags OK
 
-from Gaudi.Configuration import *
+For BK query: {'Visible': 'Yes', 'ConfigName': 'MC', 'ConditionDescription': 'Beam4000GeV-2012-MagUp-Nu2.5-Pythia8', 'DataQuality': ['OK'], 'EventType': '27163401', 'FileType': 'ALLSTREAMS.DST', 'ConfigVersion': '2012', 'ProcessingPass': '/Sim08c/Digi13/Trig0x409f0045/Reco14a/Stripping20NoPrescalingFlagged', 'SimulationConditions': 'Beam4000GeV-2012-MagUp-Nu2.5-Pythia8'}
+Nb of Files      : 89
+Nb of Events     : 1'512'996
+Total size       : 332.928 GB (220.0 kB per evt)
+Luminosity       : 0.000 
+Size  per /pb    : 0.0 GB
+
+
+'''
+
 from GaudiConf import IOHelper
 IOHelper('ROOT').inputFiles(
 ['LFN:/lhcb/MC/2012/ALLSTREAMS.DST/00031643/0000/00031643_00000001_1.allstreams.dst',

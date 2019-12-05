@@ -1,52 +1,53 @@
 '''Selections in TTree format.'''
 
 from AnalysisUtils.selection import AND, OR
-import os
+import os, ROOT
 from AnalysisUtils.addmva import make_mva_tree
+from AnalysisUtils.treeutils import copy_tree
 
-MC_sel_R = ' && '.join(['lab{0}_ID == lab{0}_TRUEID'.format(i) for i in (0, 1, 3, 4, 5, 6, 7, 8)])
-MC_sel_M = ' && '.join(['lab{0}_ID == lab{0}_TRUEID'.format(i) for i in (0, 1, 3, 4, 5, 6)])
+triggerform = ''
 
-MC_sel_pipi_R = AND(MC_sel_R, 'lab0_MCMatch_pipi')
-MC_sel_KK_R = AND(MC_sel_R, 'lab0_MCMatch_KK')
-MC_sel_Kpi_R = AND(MC_sel_R, 'lab0_MCMatch_Kpi')
+parts_R = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'gamma1', 'gamma2', 'piTag']
+parts_M = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'piTag']
+MC_sel_R = ' && '.join(['{0}_ID == {0}_TRUEID'.format(i) for i in parts_R])
+MC_sel_M = ' && '.join(['{0}_ID == {0}_TRUEID'.format(i) for i in parts_M])
 
-MC_sel_pipi_M = AND(MC_sel_M, 'lab0_MCMatch_pipi')
-MC_sel_KK_M = AND(MC_sel_M, 'lab0_MCMatch_KK')
-MC_sel_Kpi_M = AND(MC_sel_M, 'lab0_MCMatch_Kpi')
+MC_sels = {}
+for MR, sel in ('M', MC_sel_M), ('R', MC_sel_R):
+    for name in 'pipipi0', 'Kpipi0', 'KKpi0':
+        MC_sels[name + '_' + MR] = AND(sel, 'Dst_MCMatch_' + name[:-3])
 
-masswindow_R = (1825, 1905)
-masswindow_R_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R)
-masswindow_R_low = (masswindow_R[0]-50, masswindow_R[0])
-masswindow_R_low_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R_low)
-masswindow_R_high = (masswindow_R[1], masswindow_R[1]+50)
-masswindow_R_high_sel = '{0} < D0_mass && D0_mass < {1}'.format(*masswindow_R_high)
+masswindows = {'R' : (1825, 1905),
+               'M' : (1800, 1930)}
+sidebandwidth = 50
+masswindowsels = {}
+for MR, (low, high) in masswindows.items():
+    masswindowsels[MR] = '{0} < D0_mass && D0_mass < {1}'.format(low, high)
+    masswindowsels[MR + '_LowMass'] = '{0} < D0_mass && D0_mass < {1}'.format(low-sidebandwidth, low)
+    masswindowsels[MR + '_HighMass'] = '{0} < D0_mass && D0_mass < {1}'.format(high, high+sidebandwidth)
 
-masswindow_sels = {'Merged' : {},
-                   'Resolved' : {'' : masswindow_R_sel,
-                                 'LowMass' : masswindow_R_low_sel,
-                                 'HighMass' : masswindow_R_high_sel}}
+# Should add L0 selection (if we actually need them?).
+hlt1sel = OR('Dst_Hlt1TrackMVADecision_TOS', 'Dst_Hlt1TwoTrackMVADecision_TOS')
+hlt2sel = OR('Dst_Hlt2CharmHadDstp2D0Pip_D02{finalstate}Pi0_Pi0{MR}Decision_TOS',
+             'Dst_Hlt2CharmHadInclDst2PiD02HHXBDTDecision_TOS')
+finalstates = {'pipipi0' : 'PimPip',
+               'Kpipi0' : 'KmPip'}
+hlt2sels = {}
+for name, finalstate in finalstates.items():
+    for MR in 'MR':
+        hlt2sels[name + '_' + MR] = hlt2sel.format(**locals())
 
 bdtcut = -0.1
 bdtsel = 'BDT >= ' + str(bdtcut)
 
-selection_R = AND(masswindow_R_sel, bdtsel)
-selection_R_low = AND(masswindow_R_low_sel, bdtsel)
-selection_R_high = AND(masswindow_R_high_sel, bdtsel)
-
-selections = {'Merged' : {},
-              'Resolved' : {'' : selection_R,
-                            'LowMass' : selection_R_low,
-                            'HighMass' : selection_R_high}}
+selections = {}
+for MR in 'MR':
+    for finalstate in finalstates:
+        for masssel in '', '_LowMass', '_HighMass':
+            selections[finalstate + '_' + MR + masssel] = AND(hlt1sel, hlt2sels[name + '_' + MR],
+                                                             masswindowsels[MR + masssel])
 
 kin_allowed_sel = 'S13 != {0!r} && S23 != {0!r}'.format(-3.4028234663852886e+38)
-
-# Should add L0 selection (if we actually need them?).
-triggersel = OR('lab0_Hlt2CharmHadDstp2D0Pip_D02{finalstate}Pi0_Pi0MDecision_TOS',
-                'lab0_Hlt2CharmHadDstp2D0Pip_D02{finalstate}Pi0_Pi0RDecision_TOS',
-                'lab0_Hlt2CharmHadInclDst2PiD02HHXBDTDecision_TOS')
-triggersel_pipi = triggersel.format(finalstate = 'PimPip')
-triggersel_kpi = triggersel.format(finalstate = 'KmPip')
 
 bdt_kin_file = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/tmva/20180702-Lewis/TMVAClassification_BDT_kinematic.weights.xml')
 
@@ -56,3 +57,29 @@ def add_bdt_kinematic(datalib, dataset) :
     bdttreename = 'BDT_kin'
     friendfilename = datalib.friend_file_name(dataset, dataset + '_' + bdttreename, bdttreename, makedir = True)
     make_mva_tree(tree, bdt_kin_file, 'BDT', bdttreename, friendfilename)
+
+def trigger_filter(filtereddatadir, datalib, dataset, massrange = ''):
+    '''Filter the given dataset with the relevant HLT1, HLT2, and mass range requirements.'''
+    tree = datalib.get_data(dataset)
+    if massrange and not massrange.startswith('_'):
+        massrange = '_' + massrange
+    outputname = dataset + massrange + '_TriggerFiltered' 
+    outputdir = os.path.join(filtereddatadir, outputname)
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+    if '_pipipi0' in dataset:
+        finalstate = 'pipipi0'
+    else:
+        finalstate = 'Kpipi0'
+    if 'Resolved' in dataset:
+        MR = 'R'
+    else:
+        MR = 'M'
+    sel = selections[finalstate + '_' + MR + massrange]
+    if 'MC' in dataset:
+        sel = AND(sel, MC_sels[finalstate + '_' + MR])
+    fout = ROOT.TFile.Open(os.path.join(outputdir, outputname + '.root'), 'recreate')
+    print 'Copy dataset', dataset, 'with selection', repr(sel), 'to', fout.GetName()
+    cptree = copy_tree(tree, selection = sel, write = True)
+    print 'Selected', cptree.GetEntries(), '/', tree.GetEntries(), 'entries from dataset', dataset
+    fout.Close()

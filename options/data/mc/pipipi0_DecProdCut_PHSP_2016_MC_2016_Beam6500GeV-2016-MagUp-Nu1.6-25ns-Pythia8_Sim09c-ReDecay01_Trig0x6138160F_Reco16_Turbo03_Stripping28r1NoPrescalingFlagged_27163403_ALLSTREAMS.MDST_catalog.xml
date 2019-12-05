@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="B803E824-5F70-E811-945F-00259090781A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000002_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000002_7.AllStreams.mdst" se="RRCKI_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000002_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="2E16FCF0-5F70-E811-8510-0025909077C6">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000004_7.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://door03.pic.es:1094/pnfs/pic.es/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000004_7.AllStreams.mdst" se="PIC_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000004_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="384D49D7-6474-E811-9788-FA163E71A2C8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000013_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000013_7.AllStreams.mdst" se="RRCKI_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000013_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="16886A3B-7273-E811-A427-7CD30AD088A8">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000007_7.AllStreams.mdst" se="IN2P3_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000007_7.AllStreams.mdst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000007_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="EAA7EAC1-6170-E811-A975-0025909076AA">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000003_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000003_7.AllStreams.mdst" se="CNAF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000003_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="D2388681-6C73-E811-BCF3-FA163EAE3586">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000006_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000006_7.AllStreams.mdst" se="RRCKI_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000006_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="0A48019E-3175-E811-8114-FA163ECC0E8A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000015_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000015_7.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000015_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="2E2293E5-7973-E811-B64E-FA163E64A924">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000010_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000010_7.AllStreams.mdst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000010_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="EAE0FDC7-6B73-E811-8305-FA163EEECA99">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000008_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000008_7.AllStreams.mdst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000008_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="346C7FFB-7273-E811-AC08-FA163E152846">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000009_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000009_7.AllStreams.mdst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000009_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="3EDA19CA-9272-E811-A3D8-A4BF0112DE94">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000005_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000005_7.AllStreams.mdst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000005_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="AAF29350-A873-E811-B865-02163E015C73">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000012_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000012_7.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000012_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="DED70330-2075-E811-8CDC-0242AC110003">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000014_7.AllStreams.mdst" se="CNAF_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000014_7.AllStreams.mdst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000014_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="0EC375F8-6070-E811-B8EB-0025909082F6">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000001_7.AllStreams.mdst" se="RRCKI_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000001_7.AllStreams.mdst" se="CNAF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000001_7.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="002B9CAC-7E73-E811-B013-FA163E839219">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000011_7.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000011_7.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2016/ALLSTREAMS.MDST/00075634/0000/00075634_00000011_7.AllStreams.mdst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>

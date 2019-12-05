@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="7476C06E-BE47-E311-AE00-003048F0E184">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000019_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000019_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000019_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="404F3218-C747-E311-B50E-002481E0D5E2">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000010_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000010_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000010_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="FC9701FE-7147-E311-9607-003048F01116">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000007_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://heplnx230.pp.rl.ac.uk:1094/pnfs/pp.rl.ac.uk/data/lhcb/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000007_1.allstreams.dst" se="RAL-HEP_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000007_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="3AD7720C-8947-E311-9F02-20CF3027A5C9">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000020_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000020_1.allstreams.dst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000020_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="345178CA-7947-E311-89DE-90E6BA442F33">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000008_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000008_1.allstreams.dst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000008_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="AA3FDD53-8647-E311-BFCC-00266CF23E68">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000017_1.allstreams.dst" se="RAL_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000017_1.allstreams.dst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000017_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="3A21EFF7-6347-E311-A8A6-003048F23B8E">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000001_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://se0003.m45.ihep.su:1094/pnfs/m45.ihep.su/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000001_1.allstreams.dst" se="IHEP_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000001_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="28439A47-D647-E311-B24A-002481E0DC82">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000014_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000014_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000014_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="AC3B7ED8-8547-E311-BB11-00266CFBE43C">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://mouse9.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000018_1.allstreams.dst" se="SARA_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://door01.pic.es:1094/pnfs/pic.es/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000018_1.allstreams.dst" se="PIC_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000018_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="5C41BD6E-BE47-E311-9F20-00266CF332B4">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000015_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://shark12.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000015_1.allstreams.dst" se="SARA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000015_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="A2F60D50-8247-E311-A107-00259073E32A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://shark10.grid.surfsara.nl:1094/pnfs/grid.sara.nl/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000012_1.allstreams.dst" se="SARA_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000012_1.allstreams.dst" se="CNAF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000012_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="EC39F19F-D547-E311-8880-002590A52B4A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000009_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000009_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000009_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="3E6A5AC6-6E47-E311-8E09-90E6BA19A226">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000004_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://heplnx232.pp.rl.ac.uk:1094/pnfs/pp.rl.ac.uk/data/lhcb/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000004_1.allstreams.dst" se="RAL-HEP_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000004_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="50981FA2-8347-E311-96AF-02163E00C6C0">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000011_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000011_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000011_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="4A1CF060-E447-E311-A68C-0025904B144A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000006_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000006_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000006_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="38B4BCEE-8147-E311-800F-008CFA008C04">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000013_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000013_1.allstreams.dst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000013_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="F0B6BD27-6F47-E311-B484-90E6BA19A242">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000005_1.allstreams.dst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000005_1.allstreams.dst" se="CNAF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000005_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="3E7E3469-8847-E311-95D1-02163E00BD93">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000016_1.allstreams.dst" se="RAL_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://heplnx231.pp.rl.ac.uk:1094/pnfs/pp.rl.ac.uk/data/lhcb/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000016_1.allstreams.dst" se="RAL-HEP_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000016_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="F82DDED9-B347-E311-8D91-002481E0D696">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000003_1.allstreams.dst" se="RAL_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://se0003.m45.ihep.su:1094/pnfs/m45.ihep.su/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000003_1.allstreams.dst" se="IHEP_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000003_1.allstreams.dst"/>
+   </logical>
+</File>
+<File ID="7ED02495-BB47-E311-8046-0025901D490C">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000002_1.allstreams.dst" se="RAL_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000002_1.allstreams.dst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2012/ALLSTREAMS.DST/00031647/0000/00031647_00000002_1.allstreams.dst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>
