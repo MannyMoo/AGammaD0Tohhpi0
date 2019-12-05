@@ -157,9 +157,13 @@ class AGammaDataLibrary(DataLibrary):
 
     def get_deltam_in_mass_bins_dataset(self, dataset,
                                         massbins = [masswindows['R'][0], 1865-15, 1865+15, masswindows['R'][1]],
-                                        update = False, nbinsDeltam = 100, name = None):
+                                        update = False, nbinsDeltam = 100, name = None, regex = False):
         '''Get deltam RooDataHists in bins of D0_mass, in the form of a BinnedFitData instance for the given
-        dataset. Several datasets can be combined then binned by passing a list of names as 'dataset'.'''
+        dataset. Several datasets can be combined then binned by passing a list of names as 'dataset',
+        or by making it a regex and using regex = True.'''
+
+        if regex:
+            dataset = self.get_matching_datasets(dataset)
 
         if isinstance(dataset, (tuple,list)):
             roodata = self.get_dataset(dataset[0])

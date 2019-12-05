@@ -7,8 +7,10 @@ from AGammaD0Tohhpi0.workspace import workspace
 from AnalysisUtils.plot import plot_fit
 import ROOT
 
-mcdata = datalib.MC_2016_pipipi0_Dataset()
-mcmassbins = datalib.get_deltam_in_mass_bins_dataset('MC_2016_pipipi0')
+mcdataname = 'MC_pipipi0_DecProdCut_.*_2016_Mag(Up|Down)_pipipi0_Resolved_OfflineFiltered'
+mcdata = datalib.get_merged_dataset(mcdataname)
+mcmassbins = datalib.get_deltam_in_mass_bins_dataset(mcdataname, regex = True,
+                                                     name = 'MC_2016_pipipi0_Resolved_OfflineFiltered')
 
 dm = workspace.roovar('deltam')
 
