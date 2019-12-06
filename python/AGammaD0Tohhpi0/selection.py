@@ -27,7 +27,7 @@ for MR, (low, high) in masswindows.items():
     masswindowsels[MR + '_HighMass'] = '{0} < D0_mass && D0_mass < {1}'.format(high, high+sidebandwidth)
 
 # Should add L0 selection (if we actually need them?).
-hlt1sel = OR('Dst_Hlt1TrackMVADecision_TOS', 'Dst_Hlt1TwoTrackMVADecision_TOS')
+hlt1sel = OR('D0_Hlt1TrackMVADecision_TOS', 'D0_Hlt1TwoTrackMVADecision_TOS')
 hlt2sel = OR('Dst_Hlt2CharmHadDstp2D0Pip_D02{finalstate}Pi0_Pi0{MR}Decision_TOS',
              'Dst_Hlt2CharmHadInclDst2PiD02HHXBDTDecision_TOS')
 finalstates = {'pipipi0' : 'PimPip',
