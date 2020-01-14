@@ -84,4 +84,4 @@ for suff in '', '_vtx', '_D0Mass', '_vtx_D0Mass':
                                       'xmax' : deltammax,
                                       'title' : '#Deltam',
                                       'unit' : 'MeV'}
-variables['deltam'] = variables['deltam_DTF_vtx']
+variables['deltam'] = variables['deltam_DTF_vtx_D0Mass']

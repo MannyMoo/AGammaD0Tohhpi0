@@ -168,14 +168,17 @@ def add_kinematic_mva(match = '.*Resolved_TriggerFiltered'):
     for thread in threads:
         thread.join()
 
-def filter_all_trigger():
+def filter_all_trigger(overwrite = True):
     # trigger_filter(datalib, 'pipipi0_DecProdCut_PHSP_2016_MC_MagUp_pipipi0_Resolved')
     datasets = filter(lambda x : x.endswith('Merged') or x.endswith('Resolved'), datalib.get_matching_datasets('RealData_201.*pipipi0_(Merged|Resolved)'))
     print 'Datasets:', datasets
     for dataset in datasets:
-        trigger_filter(filtereddatadir, datalib, dataset)
+        # Still don't know why it's necessary to do this via subprocess, but otherwise it hangs.
+        subprocess.call(['python', '-c', '''from AGammaD0Tohhpi0.data import filtereddatadir, datalib
+from AGammaD0Tohhpi0.selection import trigger_filter
+trigger_filter(filtereddatadir, datalib, {0!r}, overwrite = {1!r})'''.format(dataset, overwrite)])
 
 if __name__ == '__main__' :
-    filter_all_trigger()
+    filter_all_trigger(False)
     #offline_filter()
     #add_kinematic_mva()

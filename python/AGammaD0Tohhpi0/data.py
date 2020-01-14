@@ -57,7 +57,11 @@ wgprodaliases = {'Dstr' : 'Dst',
                  'H1' : 'h1',
                  'H2' : 'h2',
                  'piSoft' : 'piTag',
-                 'D_' : 'D0_'}
+                 'D_' : 'D0_',
+                 'Dstr_FIT' : 'Dst_DTF_vtx_D0Mass',
+                 'Dstr_FIT_M' : 'Dst_DTF_vtx_D0Mass_M',
+                 'Dstr_FIT_DM' : 'Dst_DTF_vtx_D0Mass_D0_M'
+}
 
 for fname in glob.glob(os.path.join(pydatasetsdir, '*URLs.py')):
     modname = os.path.split(fname)[1][:-3]

@@ -58,7 +58,7 @@ def add_bdt_kinematic(datalib, dataset) :
     friendfilename = datalib.friend_file_name(dataset, dataset + '_' + bdttreename, bdttreename, makedir = True)
     make_mva_tree(tree, bdt_kin_file, 'BDT', bdttreename, friendfilename)
 
-def trigger_filter(filtereddatadir, datalib, dataset, massrange = '', nthreads = 16):
+def trigger_filter(filtereddatadir, datalib, dataset, massrange = '', nthreads = 16, overwrite = True):
     '''Filter the given dataset with the relevant HLT1, HLT2, and mass range requirements.'''
     if massrange and not massrange.startswith('_'):
         massrange = '_' + massrange
@@ -78,6 +78,7 @@ def trigger_filter(filtereddatadir, datalib, dataset, massrange = '', nthreads =
     if 'MC' in dataset:
         sel = AND(sel, MC_sels[finalstate + '_' + MR])
     print 'Copy dataset', dataset, 'with selection', repr(sel), 'to', outputdir
-    success = datalib.filter_data(dataset + massrange, sel, outputname, filtereddatadir, nthreads = nthreads)
+    success = datalib.parallel_filter_data(dataset + massrange, sel, filtereddatadir, outputname, nthreads = nthreads,
+                                           overwrite = overwrite)
     print 'Success?', success
     return success
