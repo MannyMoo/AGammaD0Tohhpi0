@@ -43,19 +43,41 @@ trees = {'pipipi0_Resolved' : 'DstarD0ToHHPi0_pipipi0_R_LineTuple/DecayTree',
          'pipipi0_Merged' : 'DstarD0ToHHPi0_pipipi0_M_LineTuple/DecayTree',
          'Kpipi0_Resolved' : 'DstarD0ToHHPi0_Kpipi0_R_LineTuple/DecayTree',
          'Kpipi0_Merged' : 'DstarD0ToHHPi0_Kpipi0_M_LineTuple/DecayTree'}
+wgprodtrees = {'pipipi0_Resolved' : 'Dstr2DPiPiPi0R/DecayTree',
+               'pipipi0_Merged' : 'Dstr2DPiPiPi0M/DecayTree',
+               'Kpipi0_Resolved' : 'Dstr2DKPiPi0R/DecayTree',
+               'Kpipi0_Merged' : 'Dstr2DKPiPi0M/DecayTree'}
 mctrees = {'pipipi0_Unbiased' : 'DstTo_D0Toh1h2pi0_piTag_MCUnbiasedTuple_pipi/DecayTree',
            'Kpipi0_Unbiased' : 'DstTo_D0Toh1h2pi0_piTag_MCUnbiasedTuple_Kpi/DecayTree',
            'pipipi0_Generator' : 'DstTo_D0Toh1h2pi0_piTag_MCDecayTreeTuple_pipi/MCDecayTree',
            'Kpipi0_Generator' : 'DstTo_D0Toh1h2pi0_piTag_MCDecayTreeTuple_Kpi/MCDecayTree'}
+
+wgprodaliases = {'Dstr' : 'Dst',
+                 'Kstr' : 'Kst',
+                 'H1' : 'h1',
+                 'H2' : 'h2',
+                 'piSoft' : 'piTag',
+                 'D_' : 'D0_',
+                 'Dstr_FIT' : 'Dst_DTF_vtx_D0Mass',
+                 'Dstr_FIT_M' : 'Dst_DTF_vtx_D0Mass_M',
+                 'Dstr_FIT_DM' : 'Dst_DTF_vtx_D0Mass_D0_M'
+}
 
 for fname in glob.glob(os.path.join(pydatasetsdir, '*URLs.py')):
     modname = os.path.split(fname)[1][:-3]
     mod = __import__('AGammaD0Tohhpi0.Datasets.' + modname, fromlist = ['urls'])
     files = [mod.urls[lfn][0] for lfn in mod.urls]
     dataname = modname[:-5]
-    for name, tree in trees.items():
+    if 'MC' in dataname:
+        _trees = trees
+        aliases = {}
+    else:
+        _trees = wgprodtrees
+        aliases = wgprodaliases
+    for name, tree in _trees.items():
         datapaths[dataname + '_' + name] = {'tree' : tree, 'files' : files,
-                                            'datasetdir' : datasetsdir}
+                                            'datasetdir' : datasetsdir,
+                                            'aliases' : aliases}
     if not 'MC' in dataname:
         datapaths[dataname + '_Lumi'] = {'tree' : 'GetIntegratedLuminosity/LumiTuple',
                                          'files' : files, 'datasetdir' : datasetsdir}
@@ -136,6 +158,8 @@ for dataset in os.listdir(filtereddatadir) :
     if dataset.endswith('WrongPi'):
         datapaths[dataset]['variables'] = {'deltam' : dict(variables['deltam'], formula = 'deltam')}
         datapaths[dataset]['tree'] = 'wrongmasstree'
+    elif dataset.startswith('RealData'):
+        datapaths[dataset]['aliases'] = wgprodaliases
     # Aliases for old datasets.
     elif '2015' in dataset:
         if 'Resolved' in dataset:

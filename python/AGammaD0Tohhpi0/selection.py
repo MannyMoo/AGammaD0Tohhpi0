@@ -27,7 +27,7 @@ for MR, (low, high) in masswindows.items():
     masswindowsels[MR + '_HighMass'] = '{0} < D0_mass && D0_mass < {1}'.format(high, high+sidebandwidth)
 
 # Should add L0 selection (if we actually need them?).
-hlt1sel = OR('Dst_Hlt1TrackMVADecision_TOS', 'Dst_Hlt1TwoTrackMVADecision_TOS')
+hlt1sel = OR('D0_Hlt1TrackMVADecision_TOS', 'D0_Hlt1TwoTrackMVADecision_TOS')
 hlt2sel = OR('Dst_Hlt2CharmHadDstp2D0Pip_D02{finalstate}Pi0_Pi0{MR}Decision_TOS',
              'Dst_Hlt2CharmHadInclDst2PiD02HHXBDTDecision_TOS')
 finalstates = {'pipipi0' : 'PimPip',
@@ -58,9 +58,8 @@ def add_bdt_kinematic(datalib, dataset) :
     friendfilename = datalib.friend_file_name(dataset, dataset + '_' + bdttreename, bdttreename, makedir = True)
     make_mva_tree(tree, bdt_kin_file, 'BDT', bdttreename, friendfilename)
 
-def trigger_filter(filtereddatadir, datalib, dataset, massrange = ''):
+def trigger_filter(filtereddatadir, datalib, dataset, massrange = '', nthreads = 16, overwrite = True):
     '''Filter the given dataset with the relevant HLT1, HLT2, and mass range requirements.'''
-    tree = datalib.get_data(dataset)
     if massrange and not massrange.startswith('_'):
         massrange = '_' + massrange
     outputname = dataset + massrange + '_TriggerFiltered' 
@@ -78,8 +77,8 @@ def trigger_filter(filtereddatadir, datalib, dataset, massrange = ''):
     sel = selections[finalstate + '_' + MR + massrange]
     if 'MC' in dataset:
         sel = AND(sel, MC_sels[finalstate + '_' + MR])
-    fout = ROOT.TFile.Open(os.path.join(outputdir, outputname + '.root'), 'recreate')
-    print 'Copy dataset', dataset, 'with selection', repr(sel), 'to', fout.GetName()
-    cptree = copy_tree(tree, selection = sel, write = True)
-    print 'Selected', cptree.GetEntries(), '/', tree.GetEntries(), 'entries from dataset', dataset
-    fout.Close()
+    print 'Copy dataset', dataset, 'with selection', repr(sel), 'to', outputdir
+    success = datalib.parallel_filter_data(dataset + massrange, sel, filtereddatadir, outputname, nthreads = nthreads,
+                                           overwrite = overwrite)
+    print 'Success?', success
+    return success

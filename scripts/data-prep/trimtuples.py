@@ -4,11 +4,9 @@ import os, ROOT, shutil, glob, subprocess
 from AnalysisUtils.treeutils import copy_tree, is_tfile_ok
 from AGammaD0Tohhpi0.data import datadir, datalib, filtereddatadir
 from AnalysisUtils.addmva import make_mva_tree
-from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selections, MC_sels, AND
+from AGammaD0Tohhpi0.selection import bdtcut, bdtsel, add_bdt_kinematic, selections, MC_sels, AND, trigger_filter
 from time import sleep
-#from threading import Thread
 import multiprocessing
-from multiprocessing import Process, Pool
 
 def trim_file(infile) :
     removebranches = ('lab[0-9]_MC12TuneV[0-9]_ProbNN',
@@ -170,41 +168,17 @@ def add_kinematic_mva(match = '.*Resolved_TriggerFiltered'):
     for thread in threads:
         thread.join()
 
-def filter_all_trigger():
+def filter_all_trigger(overwrite = True):
     # trigger_filter(datalib, 'pipipi0_DecProdCut_PHSP_2016_MC_MagUp_pipipi0_Resolved')
-    datasets = datalib.get_matching_datasets('RealData_2015.*pipipi0_(Merged|Resolved)')
+    datasets = filter(lambda x : x.endswith('Merged') or x.endswith('Resolved'), datalib.get_matching_datasets('RealData_201.*pipipi0_(Merged|Resolved)'))
     print 'Datasets:', datasets
-    # CopyTree or get_event_list (maybe both) somehow blocks the flow when using threads.
-    # for dataset in datasets:
-    #     print dataset
-    #     thread = threading.Thread(target = trigger_filter, args = (datalib, dataset))
-    #     print 'start'
-    #     thread.start()
-    #     print 'append'
-    #     threads.append(thread)
-    #     print 'sleep'
-    #     sleep(5)
-    #     print 'done'
-    # for thread in threads:
-    #     thread.join()
-    procs = []
-    #datasets = datasets[-4:]
     for dataset in datasets:
-        print 'Start', dataset
-        args = ('python', '-c', '''from AGammaD0Tohhpi0.selection import trigger_filter
-from AGammaD0Tohhpi0.data import datalib, filtereddatadir
-trigger_filter(filtereddatadir, datalib, {0!r})
-'''.format(dataset))
-        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-        procs.append(proc)
-    for proc, dataset in zip(procs, datasets):
-        print 'Wait for', dataset
-        stdout, stderr = proc.communicate()
-        print 'stdout:'
-        print stdout
-        print 'stderr:'
-        print stderr
+        # Still don't know why it's necessary to do this via subprocess, but otherwise it hangs.
+        subprocess.call(['python', '-c', '''from AGammaD0Tohhpi0.data import filtereddatadir, datalib
+from AGammaD0Tohhpi0.selection import trigger_filter
+trigger_filter(filtereddatadir, datalib, {0!r}, overwrite = {1!r})'''.format(dataset, overwrite)])
 
 if __name__ == '__main__' :
+    filter_all_trigger(False)
+    #offline_filter()
     #add_kinematic_mva()
-    offline_filter()
