@@ -160,6 +160,8 @@ for dataset in os.listdir(filtereddatadir) :
         datapaths[dataset]['tree'] = 'wrongmasstree'
     elif dataset.startswith('RealData'):
         datapaths[dataset]['aliases'] = wgprodaliases
+    elif dataset.endswith('TriggerFiltered'):
+        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30'
     # Aliases for old datasets.
     elif '2015' in dataset:
         if 'Resolved' in dataset:
