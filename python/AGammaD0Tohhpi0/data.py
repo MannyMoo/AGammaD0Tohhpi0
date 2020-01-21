@@ -151,7 +151,7 @@ for mag in 'Up', 'Down' :
 
 # Filtered data.
 for dataset in os.listdir(filtereddatadir) :
-    files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
+    files = sorted(glob.glob(os.path.join(filtereddatadir, dataset, '*.root')))
     files = filter(lambda f : 'Dataset' not in f, files)
     datapaths[dataset] = {'files' : files,
                           'tree' : 'DecayTree'}
@@ -160,14 +160,14 @@ for dataset in os.listdir(filtereddatadir) :
         datapaths[dataset]['tree'] = 'wrongmasstree'
     elif dataset.startswith('RealData'):
         datapaths[dataset]['aliases'] = wgprodaliases
-    elif dataset.endswith('TriggerFiltered'):
-        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30'
     # Aliases for old datasets.
     elif '2015' in dataset:
         if 'Resolved' in dataset:
             datapaths[dataset]['aliases'] = oldaliases_R
         else:
             datapaths[dataset]['aliases'] = oldaliases_M
+    if dataset.endswith('TriggerFiltered'):
+        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30'
 
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['aliases'] = oldaliases_R
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['selection'] = bdtsel
@@ -183,7 +183,8 @@ class AGammaDataLibrary(DataLibrary):
 
     def get_deltam_in_mass_bins_dataset(self, dataset,
                                         massbins = [masswindows['R'][0], 1865-15, 1865+15, masswindows['R'][1]],
-                                        update = False, nbinsDeltam = 100, name = None, regex = False):
+                                        update = False, nbinsDeltam = 100, name = None, regex = False,
+                                        updatedataset = False):
         '''Get deltam RooDataHists in bins of D0_mass, in the form of a BinnedFitData instance for the given
         dataset. Several datasets can be combined then binned by passing a list of names as 'dataset',
         or by making it a regex and using regex = True.'''
@@ -192,15 +193,11 @@ class AGammaDataLibrary(DataLibrary):
             dataset = self.get_matching_datasets(dataset)
 
         if isinstance(dataset, (tuple,list)):
-            roodata = self.get_dataset(dataset[0])
-            for dataname in dataset[1:]:
-                _data = self.get_dataset(dataname)
-                roodata.append(_data)
-                del _data
+            roodata = self.get_merged_dataset(*dataset, update = updatedataset)
             outputdir = self.dataset_dir(dataset[0])
             dataset = '_'.join(dataset)
         else:
-            roodata = self.get_dataset(dataset)
+            roodata = self.get_dataset(dataset, update = updatedataset)
             outputdir = self.dataset_dir(dataset)
         if not name:
             name = dataset + '_DeltamInMassBinsDatasets'
