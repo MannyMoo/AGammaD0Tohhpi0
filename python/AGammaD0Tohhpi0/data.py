@@ -151,7 +151,7 @@ for mag in 'Up', 'Down' :
 
 # Filtered data.
 for dataset in os.listdir(filtereddatadir) :
-    files = glob.glob(os.path.join(filtereddatadir, dataset, '*.root'))
+    files = sorted(glob.glob(os.path.join(filtereddatadir, dataset, '*.root')))
     files = filter(lambda f : 'Dataset' not in f, files)
     datapaths[dataset] = {'files' : files,
                           'tree' : 'DecayTree'}
@@ -160,14 +160,14 @@ for dataset in os.listdir(filtereddatadir) :
         datapaths[dataset]['tree'] = 'wrongmasstree'
     elif dataset.startswith('RealData'):
         datapaths[dataset]['aliases'] = wgprodaliases
-    elif dataset.endswith('TriggerFiltered'):
-        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30'
     # Aliases for old datasets.
     elif '2015' in dataset:
         if 'Resolved' in dataset:
             datapaths[dataset]['aliases'] = oldaliases_R
         else:
             datapaths[dataset]['aliases'] = oldaliases_M
+    if dataset.endswith('TriggerFiltered'):
+        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30'
 
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['aliases'] = oldaliases_R
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['selection'] = bdtsel
