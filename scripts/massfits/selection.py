@@ -49,6 +49,7 @@ else:
 
 #Reading in data
 dataset_name = 'RealData_2015_Charm_Mag'+mag+'_pipipi0_Resolved_TriggerFiltered'
+realdataset = datalib.get_dataset(dataset_name, update = True)
 realmassbins = datalib.get_deltam_in_mass_bins_dataset(dataset_name, update = True)
 realtree = datalib.get_data(dataset_name)
 
@@ -100,13 +101,13 @@ for cat, hist in realmassbins.datasets.items():
 
 
 ### Cleaning up data ###
-add_sideband_subtraction_weights(datalib, dataset_name, "weightTree", "weight", realpdfs[realcats[1]], dm, 143., 148., 150., dm.getMax())
+add_sideband_subtraction_weights(datalib, dataset_name, "weightTree", "weight", bg_pdf, dm, 143., 148., 150., dm.getMax())
 
 dataloader = TMVADataLoader(realtree, realtree, ["piSoft_PT", "Dstr_PT", "D_CosTheta"], spectators = ["Dstr_M-D_M"], 
-                            signalweight = "weight", backgroundweight = "weight<0.0", signalcut = "Dstr_FIT_CHI2 < 30. && D_M > 1850. && D_M < 1880.", 
-                            backgroundcut = "Dstr_FIT_CHI2 < 30. && D_M > 1850. && D_M < 1880.")
+                            signalweight = "weight", backgroundweight = "weight<0.0", signalcut = "inrange_all == 1 && selection_pass == 1", 
+                            backgroundcut = "inrange_all == 1 && selection_pass == 1")
 
 classifier = TMVAClassifier(dataloader, ['BDT'])
 outputfile = ROOT.TFile.Open('train_out.root', 'RECREATE')
-#classifier.train_factory(outputfile)
+classifier.train_factory(outputfile)
 
