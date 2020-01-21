@@ -1,9 +1,0 @@
-Got 793 LFNs
-For 793 LFNs:
-Getting info from files...
-Nb of Files      : 792
-Nb of Events     : 1'995'881
-Total size       : 445.082 GB (223.0 kB per evt)
-Luminosity       : 0.000 
-Size  per /pb    : 0.0 GB
-

@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(0, '/cvmfs/lhcb.cern.ch/lib/lhcb/STRIPPING/STRIPPING_v11r5p1/Phys/StrippingSelections/tests/users/')
-from StrippingTuple import stripping_tuple_sequence_from_doc
 from Configurables import TupleToolTISTOS, LoKi__Hybrid__TupleTool, DaVinci, TupleToolDecayTreeFitter, \
     TupleToolPropertime, TupleToolANNPID
 from StrippingDoc import StrippingDoc
@@ -10,6 +7,7 @@ from AnalysisUtils.ntupling import make_mc_tuple, make_tuple
 from AnalysisUtils.DecayDescriptors.DecayDescriptors import parse_decay_descriptor
 from collections import defaultdict
 from PhysSelPython.Wrappers import StrippingData, TupleSelection, SelectionSequence
+from PhysSelPython.MomentumScaling import MomentumScaling
 
 linedocs = None
 def get_line_docs() :
@@ -50,18 +48,26 @@ def add_tuples() :
 
     # Normal data
     stream = 'Charm.mdst'
+    simulation = DaVinci().getProp('Simulation')
     # For restripping
     if DaVinci().getProp('ProductionType') == 'Stripping' :
         stream = 'CharmCompleteEvent.dst'
     # For MC.
-    elif DaVinci().getProp('Simulation') :
+    elif simulation :
         stream = 'AllStreams.dst'
+
+    fulldst = stream.endswith('.dst')
+    streamname = '.'.join(stream.split('.')[:-1])
 
     tuples = []
     seqs = []
     for line in get_line_docs() :
-        stripdata = StrippingData(line.name)
-        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **line.tuple_config())
+        stripdata = StrippingData(line.name, stream = (streamname if fulldst else None))
+        if not simulation:
+            stripdata = MomentumScaling(stripdata)
+        lineconfig = line.tuple_config()
+        del lineconfig['Inputs']
+        dttsel = TupleSelection(line.name + 'Tuple', [stripdata], **lineconfig)
         dtt = dttsel.algorithm()
         dtt.addBranches(line.branches)
         tuples.append(dtt)
@@ -69,10 +75,6 @@ def add_tuples() :
         seq = SelectionSequence(line.name + 'Seq', TopSelection = dttsel)
         DaVinci().UserAlgorithms += [seq.sequence()]
     DaVinci(**line.davinci_config(stream))
-
-    if stream.endswith('.dst') :
-        for dtt in tuples :
-            dtt.Inputs[0] = stream.split('.')[0] + '/' + dtt.Inputs[0]
 
     DaVinci().TupleFile = 'DaVinciTuples.root'
     if DaVinci().getProp('Simulation') :
@@ -152,12 +154,12 @@ def add_tools(dtt) :
 
 def mc_descriptors() :
     '''Get the MC decay descriptors.'''
-    descs = []
+    descs = {}
     aliases = ['Dst', 'D0', 'h1', 'h2', 'pi0', 'piTag']
     for minus, plus in ('pi', 'pi'), ('K', 'K'), ('K', 'pi') :
         desc = parse_decay_descriptor('[ D*(2010)+ ==> ( D0 ==> {minus}-  {plus}+  pi0 )  pi+ ]CC'.format(minus = minus, plus = plus))
         desc.set_aliases(aliases)
-        descs.append(desc)
+        descs[minus + plus] = desc
     return descs
 
 def add_mc_tools(dtt) :
@@ -173,23 +175,24 @@ def add_mc_tools(dtt) :
     dtt.Dst.addTupleTool(ttmcmatch)
     dtt.addTupleTool(ttmctruth)
     dtt.ToolList.append('TupleToolMCBackgroundInfo')
+    dtt.D0.addTupleTool('TupleToolMCPVAssociation')
+    dtt.ToolList.append('TupleToolPV2MC')
 
-def add_mc_tuples(desc = None) :
+def add_mc_tuples(desc = None, name = None) :
     '''Add MC tuples for the given DecayDescriptor.'''
     if not desc :
-        for desc in mc_descriptors() :
-            add_mc_tuples(desc)
+        for name, desc in mc_descriptors().items() :
+            add_mc_tuples(desc, name)
         return
 
     mctuple = make_mc_tuple(desc, ToolList = ['MCTupleToolKinematic', 'TupleToolEventInfo',
                                               'MCTupleToolPrompt', 'MCTupleToolPID',
                                               'MCTupleToolReconstructed'],
-                            UseLabXSyntax = True, RevertToPositiveID = False)
+                            suff = '_MCDecayTreeTuple_' + name)
     DaVinci().UserAlgorithms.append(mctuple)
     
     seq, selseq = make_mc_unbiased_seq(desc)
-    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple',
-                     UseLabXSyntax = True, RevertToPositiveID = False)
+    dtt = make_tuple(desc, selseq.outputLocation(), suff = '_MCUnbiasedTuple_' + name)
     add_tools(dtt)
     add_mc_tools(dtt)
     seq.Members.append(dtt)

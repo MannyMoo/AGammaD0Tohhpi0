@@ -17,8 +17,12 @@ cd DaVinciDev_$DaVinciVersion
 for url in $urls ; do
     git clone $url
 done
+
 # For StrippingData selection.
 git lb-use Phys
 git lb-checkout Phys/malexand-strippingdata PhysSel/PhysSelPython
+# StrippingDoc
+git lb-use Stripping
+git lb-checkout Stripping/malexand-update-strippingdoc Phys/StrippingDoc
 
 make

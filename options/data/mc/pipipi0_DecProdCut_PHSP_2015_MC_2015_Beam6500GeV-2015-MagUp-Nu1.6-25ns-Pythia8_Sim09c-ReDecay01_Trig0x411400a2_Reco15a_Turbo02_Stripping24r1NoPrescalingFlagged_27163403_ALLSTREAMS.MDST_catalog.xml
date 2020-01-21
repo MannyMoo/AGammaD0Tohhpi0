@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+<File ID="E2AB4041-8977-E811-AF6C-3417EBE64C36">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000007_6.AllStreams.mdst" se="CNAF_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://ccxrootdlhcb.in2p3.fr//pnfs/in2p3.fr/data/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000007_6.AllStreams.mdst" se="IN2P3_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000007_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="4A502700-0176-E811-9FF8-002590908466">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000001_6.AllStreams.mdst" se="RRCKI_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000001_6.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000001_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="6A7B0FBB-1276-E811-921A-002590907752">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://lhcbsdrm.t1.grid.kiae.ru:1094/t1.grid.kiae.ru/data/lhcb/lhcbdisk/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000003_6.AllStreams.mdst" se="RRCKI_MC-DST"/>
+      <pfn filetype="ROOT_All" name="root://xrootd-lhcb.cr.cnaf.infn.it//storage/gpfs_lhcb/lhcb/disk/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000003_6.AllStreams.mdst" se="CNAF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000003_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="A4DA213E-6077-E811-8D99-FA163EC2BF6A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000006_6.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://lhcbxrootd-kit.gridka.de//pnfs/gridka.de/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000006_6.AllStreams.mdst" se="GRIDKA_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000006_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="8486A2EF-0C76-E811-A207-00259090781A">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000002_6.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000002_6.AllStreams.mdst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000002_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="9CAFC7D2-1876-E811-A197-002590907852">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000004_6.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://xrootd.echo.stfc.ac.uk/lhcb:prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000004_6.AllStreams.mdst" se="RAL_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000004_6.AllStreams.mdst"/>
+   </logical>
+</File>
+<File ID="D8F87CDC-3B78-E811-B19A-FA163E1E63F9">
+   <physical>
+      <pfn filetype="ROOT_All" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000008_6.AllStreams.mdst" se="CERN_MC-DST-EOS"/>
+      <pfn filetype="ROOT_All" name="root://se03.cat.cbpf.br//dpm/cat.cbpf.br/home/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000008_6.AllStreams.mdst" se="CBPF_MC-DST"/>
+   </physical>
+   <logical>
+      <lfn name="/lhcb/MC/2015/ALLSTREAMS.MDST/00075779/0000/00075779_00000008_6.AllStreams.mdst"/>
+   </logical>
+</File>
+
+</POOLFILECATALOG>
