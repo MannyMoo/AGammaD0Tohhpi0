@@ -109,8 +109,8 @@ realtree = datalib.get_data(dataset_name)
 cutstring = "inrange_all && selection_pass"
 
 #Reduced varlist from top variables from Manchester+momenta, and acos(D_DIRA_OWNPV)
-varlist = ["piSoft_P", "piSoft_PT", "D_P", "D_PT", "D_CosTheta", "log(Dstr_FDCHI2_OWNPV)", "log(D_IPCHI2_OWNPV)", "pi0_CosTheta", 
-           "pi0_PT",  "Dstr_PT", "acos(D_DIRA_OWNPV)"]
+#varlist = ["piSoft_P", "piSoft_PT", "D_P", "D_PT", "D_CosTheta", "log(Dstr_FDCHI2_OWNPV)", "log(D_IPCHI2_OWNPV)", "pi0_CosTheta", 
+#           "pi0_PT",  "Dstr_PT", "acos(D_DIRA_OWNPV)"]
 
 #Full Manchester varlist + extra momenta  
 #varlist = ["piSoft_PT", "Dstr_PT", "D_CosTheta", "log(Dstr_FDCHI2_OWNPV)", "log(D_IPCHI2_OWNPV)", 
@@ -118,7 +118,7 @@ varlist = ["piSoft_P", "piSoft_PT", "D_P", "D_PT", "D_CosTheta", "log(Dstr_FDCHI
 #          "D_P", "D_PT", "H1_PT", "H1_P", "H2_PT", "H2_P", "H1_PT + H2_PT"]
 
 #Testing list of variables
-#varlist = ["log(Dstr_FDCHI2_OWNPV)","pi0_PT", "D_CosTheta", "pi0_CosTheta"] 
+varlist = ["log(Dstr_FDCHI2_OWNPV)", "pi0_PT", "D_CosTheta", "pi0_CosTheta"] 
 
   
 dataloader = TMVADataLoader(realtree, realtree, varlist , signalweight = "weight", backgroundweight = "weight<0.", 
@@ -137,7 +137,7 @@ add_mva_friend(datalib, dataset_name, "dataset/weights/TMVAClassification_"+meth
 
 ###   Drawing signal peak after classifier cut   ###
 
-from bdt_cut import draw_bdt_cut, set_plot_opts
+from draw import draw_bdt_cut, set_plot_opts
 from ROOT.TMVA import TMVAGui
 
 #Refreshing to get classifier output branch
