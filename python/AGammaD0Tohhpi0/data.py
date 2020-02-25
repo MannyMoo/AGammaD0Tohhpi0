@@ -1,6 +1,6 @@
 '''Functions to access all the relevant datasets for the analysis, both TTrees and RooDataSets.'''
 
-import os, ROOT, pprint, glob
+import os, ROOT, pprint, glob, datetime
 from AnalysisUtils.data import DataLibrary, BinnedFitData
 from AGammaD0Tohhpi0.variables import variables
 from AGammaD0Tohhpi0.selection import selections, masswindows, bdtsel
@@ -183,7 +183,8 @@ class AGammaDataLibrary(DataLibrary):
 
     def get_deltam_in_mass_bins_dataset(self, dataset,
                                         massbins = [masswindows['R'][0], 1865-15, 1865+15, masswindows['R'][1]],
-                                        update = False, nbinsDeltam = 100, name = None, regex = False):
+                                        update = False, nbinsDeltam = 100, name = None, regex = False,
+                                        updatedataset = False, suffix = '', selection = ''):
         '''Get deltam RooDataHists in bins of D0_mass, in the form of a BinnedFitData instance for the given
         dataset. Several datasets can be combined then binned by passing a list of names as 'dataset',
         or by making it a regex and using regex = True.'''
@@ -191,19 +192,19 @@ class AGammaDataLibrary(DataLibrary):
         if regex:
             dataset = self.get_matching_datasets(dataset)
 
+        now = datetime.datetime.today()
         if isinstance(dataset, (tuple,list)):
-            roodata = self.get_dataset(dataset[0])
-            for dataname in dataset[1:]:
-                _data = self.get_dataset(dataname)
-                roodata.append(_data)
-                del _data
+            roodata = self.get_merged_dataset(*dataset, update = updatedataset, 
+                                              suffix = suffix, selection = selection)
             outputdir = self.dataset_dir(dataset[0])
             dataset = '_'.join(dataset)
+            update = update or any(datalib.get_dataset_update_time(ds, suffix) >= now for ds in dataset)
         else:
-            roodata = self.get_dataset(dataset)
+            roodata = self.get_dataset(dataset, update = updatedataset, suffix = suffix, selection = selection)
             outputdir = self.dataset_dir(dataset)
+            update = update or datalib.get_dataset_update_time(dataset, suffix) >= now
         if not name:
-            name = dataset + '_DeltamInMassBinsDatasets'
+            name = dataset + suffix + '_DeltamInMassBinsDatasets'
         variable = workspace.roovar('deltam')
         binvariable = workspace.roovar('D0_mass')
         return BinnedFitData(name, outputdir, workspace, roodata, variable, binvariable, massbins,
