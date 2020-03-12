@@ -139,24 +139,13 @@ def filter_2015_pipi() :
 def offline_filter(sel = bdtsel, match = '.*Resolved_TriggerFiltered', 
                    rename = (lambda name : name.replace('TriggerFiltered', 'OfflineFiltered')),
                    nthreads = multiprocessing.cpu_count()):
-    pool = Pool(processes = nthreads)
-    procs = []
     datasets = datalib.get_matching_datasets(match)
     for dataset in datasets:
         newname = rename(dataset)
         print dataset, '->', newname
-        outputdir = os.path.join(filtereddatadir, newname)
-        if not os.path.exists(outputdir):
-            os.makedirs(outputdir)
-        fout = os.path.join(outputdir, newname + '.root')
-        tree = datalib.get_data(dataset)
-        #copy_tree(tree = tree, selection = sel, fname = fout, write = True)
-        proc = pool.apply_async(copy_tree, kwds = dict(tree = tree, selection = sel, fname = fout, write = True))
-        procs.append(proc)
-    for proc, dataset in zip(procs, datasets):
-        proc.wait()
-        print dataset, proc.successful()
-
+        datalib.parallel_filter_data(dataset = dataset, selection = sel, outputdir = filtereddatadir,
+                                     outputname = newname)
+        
 def add_kinematic_mva(match = '.*Resolved_TriggerFiltered'):
     threads = []
     for dataset in datalib.get_matching_datasets(match):

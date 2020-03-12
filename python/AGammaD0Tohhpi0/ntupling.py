@@ -74,7 +74,8 @@ def add_tuples() :
         add_tools(dtt)
         seq = SelectionSequence(line.name + 'Seq', TopSelection = dttsel)
         DaVinci().UserAlgorithms += [seq.sequence()]
-    DaVinci(**line.davinci_config(stream))
+    #DaVinci(**line.davinci_config(stream))
+    DaVinci().StrippingStream = streamname
 
     DaVinci().TupleFile = 'DaVinciTuples.root'
     if DaVinci().getProp('Simulation') :
