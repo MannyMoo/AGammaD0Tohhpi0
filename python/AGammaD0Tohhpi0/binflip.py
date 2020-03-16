@@ -3,7 +3,7 @@
 import math, ROOT, os
 from Mint2.utils import three_body_event
 from Mint2.ConfigFile import ConfigFile
-from ROOT import PhaseDifferenceCalc, HadronicParameters
+from ROOT import PhaseDifferenceCalc, HadronicParameters, NamedParameterBase
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
 from AGammaD0Tohhpi0.variables import variables
@@ -656,4 +656,5 @@ def getHadronicPars(name, parsname = 'hadronicPars',
         conf = ConfigFile(os.path.join(name, 'hadronicParameters.txt'),
                           os.path.join(name, 'config.txt'))
         conf.write_file(fullconfname)
+    NamedParameterBase.setDefaultInputFile(fullconfname)
     return HadronicParameters(parsname, fullconfname)
