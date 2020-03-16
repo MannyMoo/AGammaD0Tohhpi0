@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
-import math, ROOT
+import math, ROOT, os
 from Mint2.utils import three_body_event
-from ROOT import PhaseDifferenceCalc
+from Mint2.ConfigFile import ConfigFile
+from ROOT import PhaseDifferenceCalc, HadronicParameters
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
 from AGammaD0Tohhpi0.variables import variables
@@ -645,3 +646,14 @@ def averageElements(nestList) :
         
     return avList
 
+def getHadronicPars(name, parsname = 'hadronicPars',
+                    dirname = os.path.expandvars('$AGAMMAD0TOHHPI0WORKINGDIR/hadronicParameters')):
+    '''Get the cached hadronic parameters of the given name.'''
+    
+    name = os.path.join(dirname, name)
+    fullconfname = os.path.join(name, 'hadronicPars_and_config.txt')
+    if not os.path.exists(fullconfname):
+        conf = ConfigFile(os.path.join(name, 'hadronicParameters.txt'),
+                          os.path.join(name, 'config.txt'))
+        conf.write_file(fullconfname)
+    return HadronicParameters(parsname, fullconfname)
