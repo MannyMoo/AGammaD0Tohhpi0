@@ -59,6 +59,16 @@ variables = {'Dst_mass' : {'formula' : 'Dst_M',
                            'xmax' : _si3Max,
                            'title' : 'True m^{2}(#pi^{-} #pi^{0})',
                            'unit' : 'MeV^{2}'},
+             'decaytime' : {'formula' : 'D_TAU * 1000.',
+                            'xmin' : 0.,
+                            'xmax' : 6.,
+                            'title' : 'Decay time',
+                            'unit' : 'ps'},
+             'tag' : {'formula' : '(piTag_ID > 0 ? 1 : -1)',
+                      'xmin' : -1,
+                      'xmax' : 1,
+                      'title' : 'Flavour tag',
+                      'discrete' : True},
              }
 
 # Deltam variables with various DTF configs.
