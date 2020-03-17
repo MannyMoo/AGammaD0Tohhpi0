@@ -60,7 +60,8 @@ wgprodaliases = {'Dstr' : 'Dst',
                  'D_' : 'D0_',
                  'Dstr_FIT' : 'Dst_DTF_vtx_D0Mass',
                  'Dstr_FIT_M' : 'Dst_DTF_vtx_D0Mass_M',
-                 'Dstr_FIT_DM' : 'Dst_DTF_vtx_D0Mass_D0_M'
+                 'Dstr_FIT_DM' : 'Dst_DTF_vtx_D0Mass_D0_M',
+                 'pi0' : 'Pi0'
 }
 
 for fname in glob.glob(os.path.join(pydatasetsdir, '*URLs.py')):
