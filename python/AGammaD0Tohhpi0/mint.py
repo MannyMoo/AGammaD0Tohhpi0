@@ -1,9 +1,10 @@
 from Mint2.utils import run_job, gen_time_dependent, gen_time_dependent_main
 from Mint2.ConfigFile import ConfigFile
-import os
+import os, ROOT
 from AGammaD0Tohhpi0.data import workingdir, datadir, mintdatadir
-from ROOT import DalitzEventPattern
+from ROOT import DalitzEventPattern, TVector3, DalitzEvent
 from ROOT.MINT import NamedParameterBase
+from AnalysisUtils.treeutils import TreePVector, TreeFormula
 
 integratorsdir = os.path.join(workingdir, 'integrators')
 config = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/scripts/mint/pipipi0.txt')
@@ -42,3 +43,43 @@ def get_config(name, number = None, zfill = 3) :
                                                                           str(number).zfill(zfill)))
     fname = get_config_file_name(name, number, zfill)
     return ConfigFile(fname)
+
+def momentum(tree, partname, form = 'Dstr_FIT_{partname}P{comp}'):
+    '''Get a TreeFormula for the 3-vector momentum for the given particle.'''
+    return TreePVector(tree, partname, pform = form, comps = 'XYZ', vectclass = TVector3)
+
+class TreeMomenta(object):
+    '''Get the 3-momenta of the D0, pi+, pi- and pi0, in that order, from a TTree as TVector3s.'''
+
+    def __init__(self, tree, parts = ['D', 'H1', 'H2', 'Pi0'], tagvar = 'piSoft_ID',
+                 minuspattern = pattern_D0barTopipipi0, pluspattern = pattern_D0Topipipi0):
+        '''Takes the TTree, the list of particle names, tag variable, and DalitzEventPatterns
+        for the plus & minus tags.'''
+        self._momenta = [momentum(tree, part) for part in parts]
+        self.ids = {part : TreeFormula(part + '_ID', part + '_ID', tree) for part in parts}
+        self._tag = TreeFormula(tagvar, tagvar, tree)
+        self.pluspattern = pluspattern
+        self.minuspattern = minuspattern
+        
+    def __call__(self):
+        '''Get the 3-momenta of the D0, pi+, pi- and pi0, in that order, as TVector3s.'''
+        momenta = [mom.vector() for mom in self._momenta]
+        # Make sure pi+ momentum comes first.
+        if self.ids['H1']() < 0:
+            momenta[1:3] = momenta[2:0:-1]
+        return momenta
+
+    def dalitz_event(self):
+        '''Make a DalitzEvent from the momenta and tag.'''
+        vect = ROOT.vector('TVector3')()
+        for mom in self():
+            vect.push_back(mom)
+        if self.tag() < 0:
+            return DalitzEvent(self.minuspattern, vect)
+        return DalitzEvent(self.pluspattern, vect)
+        
+    def tag(self):
+        '''Get the flavour tag.'''
+        if self._tag() > 0:
+            return 1
+        return -1
