@@ -50,9 +50,9 @@ def scanDalitzPlot(npoints,  pattern = pattern) :
             if evt :
                 yield evt
 
-def plotBinNumbers(config, nbinsPhase, npoints, pattern = pattern) :
+def plotBinNumbers(config, nbinsPhase, npoints, diffcalc, pattern = pattern) :
     '''Make a plot of the bin numbers across the Dalitz plot.'''
-    diffcalc = PhaseDifferenceCalc(pattern, config)
+    #diffcalc = PhaseDifferenceCalc(pattern, config)
     s13min = pattern.sijMin(1, 3)
     s13max = pattern.sijMax(1, 3)
     s23min = pattern.sijMin(2, 3)
@@ -223,7 +223,7 @@ def setPlotParameters(plot, tag, plotNo):
     """
 
     xAxis = plot.GetXaxis()
-    xAxis.SetTitle("Decay Time / D0 mean lifetime")
+    xAxis.SetTitle("Decay Time / #tau_{D0}")
     xAxis.SetLabelSize(0.06)
     xAxis.SetTitleSize(0.06)
     xAxis.SetTitleOffset(0.75)
@@ -231,9 +231,9 @@ def setPlotParameters(plot, tag, plotNo):
 
     yAxis = plot.GetYaxis()
     if (tag == 0) :
-        yAxis.SetTitle("N(D0,-{0}) / N(D0,{0})".format(plotNo))
+        yAxis.SetTitle("R^{+}_{%i}" % (plotNo))
     else :
-        yAxis.SetTitle("N(D0bar,-{0}) / N(D0bar,{0})".format(plotNo))
+        yAxis.SetTitle("R^{-}_{%i}" % (plotNo))
     yAxis.SetLabelSize(0.06)
     yAxis.SetTitleSize(0.06)
     yAxis.SetTitleOffset(0.4)
@@ -600,7 +600,7 @@ def setupPlots(nbinsPhase, binflipfitter, dataPlots, fileNo) :
         for b in range(nbinsPhase) :
             fits[i].append( binflipfitter.getFit(i,b) )
 
-    #RPlots are calculated using known Zcp, deltaZ used for simulation, hence reset paramaters here
+    #RPlots are calculated using known Zcp, deltaZ used for simulation, hence reset parameters here
     parset = binflipfitter.getParSet()
     for i in range(4) :
         par = parset.getParPtr(i)

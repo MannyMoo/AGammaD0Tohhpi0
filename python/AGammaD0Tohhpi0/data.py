@@ -167,7 +167,7 @@ for dataset in os.listdir(filtereddatadir) :
         else:
             datapaths[dataset]['aliases'] = oldaliases_M
     if dataset.endswith('TriggerFiltered'):
-        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30 && Dstr_FIT_CHI2 > 0 && H1_PIDK < -5 && H2_PIDK < -5'
+        datapaths[dataset]['selection'] = 'Dstr_FIT_CHI2 < 30 && Dstr_FIT_CHI2 > 0'
 
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['aliases'] = oldaliases_R
 datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagBoth_Resolved_TruthMatched']['selection'] = bdtsel
