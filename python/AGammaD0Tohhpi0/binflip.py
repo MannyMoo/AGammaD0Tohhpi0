@@ -686,7 +686,8 @@ class BinFlipFitter(object) :
         if isinstance(timebins, str):
             conf = ConfigFile(timebins, self.hadronicparsfile)
             if not os.path.exists(self.datafname):
-                conf.write(self.datafname)
+                conf['hadronicParsFile'] = [self.hadronicparsfile]
+                conf.write_file(self.datafname)
             self.timebins = map(float, conf[binningname + '_timeBins'])
             self.lifetime = float(conf[binningname + '_lifetime'][0])
         # It's the list of bin boundaries.
@@ -733,7 +734,7 @@ class BinFlipFitter(object) :
         os.chdir(pwd)
         return timeBinning, hadronicPars
 
-    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1) :
+    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
             raise ValueError('You must set the blindingseed to run on real data!')
         if not pars :
@@ -751,4 +752,5 @@ class BinFlipFitter(object) :
         ntuple.Write()
         chi2.savePlotsVsTime('time', fout)
         fout.Close()
+        os.chdir(pwd)
         return chi2, mini
