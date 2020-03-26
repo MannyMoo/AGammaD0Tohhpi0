@@ -3,7 +3,9 @@
 import math, ROOT, os
 from Mint2.utils import three_body_event
 from Mint2.ConfigFile import ConfigFile
-from ROOT import PhaseDifferenceCalc, HadronicParameters, NamedParameterBase
+from ROOT import PhaseDifferenceCalc, HadronicParameters, NamedParameterBase, TimeBinning, \
+    DalitzEvent, BinFlipChi2, BinFlipParSet
+from ROOT.MINT import Minimiser
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
 from AGammaD0Tohhpi0.variables import variables
@@ -658,3 +660,97 @@ def getHadronicPars(name, parsname = 'hadronicPars',
         conf.write_file(fullconfname)
     NamedParameterBase.setDefaultInputFile(fullconfname)
     return HadronicParameters(parsname, fullconfname)
+
+def make_vector_dbl(iterable) :
+    vec = ROOT.vector('double')()
+    for thing in iterable :
+        vec.push_back(thing)
+    return vec
+
+def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1) :
+    zcp, dz = BinFlipParSet.fromXY(0.0039, 0.0065, 0.969, -0.068)
+    step = 1e-3
+    return BinFlipParSet(zcp.real(), step, zcp.imag(), step, dz.real(), step, dz.imag(), step,
+                         blindingseed, zblindrange, dzblindrange)
+
+class BinFlipFitter(object) :
+    def __init__(self, datalib, dataname, timebins, hadronicparsfile, lifetime, binningname = 'timeBinning',
+                 update = False, nentries = -1) :
+        self.datalib = datalib
+        self.dataname = dataname
+        self.datadir = os.path.abspath(datalib.dataset_dir(dataname))
+        self.hadronicparsfile = os.path.abspath(hadronicparsfile)
+        self.binningname = binningname
+        self.datafname = os.path.join(self.datadir, dataname + '_' + binningname + '.txt')
+        # timebins is the name of a file containing a TimeBinning instance.
+        if isinstance(timebins, str):
+            conf = ConfigFile(timebins, self.hadronicparsfile)
+            if not os.path.exists(self.datafname):
+                conf['hadronicParsFile'] = [self.hadronicparsfile]
+                conf.write_file(self.datafname)
+            self.timebins = map(float, conf[binningname + '_timeBins'])
+            self.lifetime = float(conf[binningname + '_lifetime'][0])
+        # It's the list of bin boundaries.
+        else:
+            self.timebins = timebins
+            self.lifetime = lifetime
+        self.timebinning, self.hadronicpars = self.get_data(update, nentries)
+
+    def get_data(self, update = False, nentries = -1) :
+        pwd = os.getcwd()
+        os.chdir(self.datadir)
+        if not update and os.path.exists(self.datafname) :
+            config = ConfigFile(self.datafname)
+            if (config.get('hadronicParsFile', [''])[0] == self.hadronicparsfile
+                and map(float, config.get(self.binningname + '_timeBins', [])) == self.timebins) :
+                print 'Loading from file'
+                NamedParameterBase.setDefaultInputFile(self.datafname)
+                os.chdir(pwd)
+                return TimeBinning(self.binningname, self.datafname),\
+                    HadronicParameters('hadronicPars', self.datafname)
+
+        print 'Loading from TTree'
+        config = ConfigFile(self.hadronicparsfile, 
+                            os.path.join(os.path.dirname(self.hadronicparsfile), 'config.txt'))
+        config['hadronicParsFile'] = [self.hadronicparsfile]
+        config.write_file('config.txt')
+        NamedParameterBase.setDefaultInputFile('config.txt')
+        hadronicPars = HadronicParameters('hadronicPars', 'config.txt')
+        timeBinning = TimeBinning(make_vector_dbl(self.timebins), hadronicPars.binningPtr(), self.lifetime)
+        tree = self.datalib.get_data(self.dataname)
+        if nentries < 0 :
+            nentries = tree.GetEntries()
+        else :
+            nentries = min(nentries, tree.GetEntries())
+        for i in xrange(nentries) :
+            tree.GetEntry(i)
+            evt = DalitzEvent()
+            evt.fromTree(tree)
+            t = (tree.smeareddecaytime if tree.smeareddecaytime != -999. else tree.decaytime)
+            timeBinning.add(evt, tree.tag, t)
+        timeBinning.write(self.binningname, self.datafname)
+        config.add_config_file(self.datafname)
+        config.write_file(self.datafname)
+        os.chdir(pwd)
+        return timeBinning, hadronicPars
+
+    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
+        if self.dataname.startswith('RealData') and blindingseed == 0:
+            raise ValueError('You must set the blindingseed to run on real data!')
+        if not pars :
+            pars = default_pars(blindingseed, zblindrange, dzblindrange)
+        pwd = os.getcwd()
+        if not os.path.exists(outputdir) :
+            os.makedirs(outputdir)
+        os.chdir(outputdir)
+        chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
+        mini = Minimiser(chi2)
+        mini.doFit()
+        fout = ROOT.TFile('results.root', 'recreate')
+        ntuple = chi2.getParSet().makeNewNtpForOwner(fout)
+        chi2.getParSet().fillNtp(fout, ntuple)
+        ntuple.Write()
+        chi2.savePlotsVsTime('time', fout)
+        fout.Close()
+        os.chdir(pwd)
+        return chi2, mini
