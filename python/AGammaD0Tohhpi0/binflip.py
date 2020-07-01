@@ -754,3 +754,61 @@ class BinFlipFitter(object) :
         fout.Close()
         os.chdir(pwd)
         return chi2, mini
+
+def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname, lifetime,
+           update = False, nfiles = -1) :
+    '''Do a bin-flip fit on the given dataset, using the given hadronic parameters and time binning.'''
+    if not dataset in datalib.datasets():
+        dataset = 'MINT_' + dataset
+        if not dataset in datalib.datasets():
+            raise ValueError("Can't find dataset {0!r} or {1!r} in the DataLibrary!".format(dataset[5:], dataset))
+    datainfo = datalib.get_data_info(dataset)
+    files = list(datainfo['files'])
+    if nfiles > 0 :
+        files = files[:nfiles]
+    output = []
+    for f in files :
+        print '*** Data file:', f
+        info = dict(datainfo, files = [f])
+        f = os.path.split(f)[1]
+        dataname = dataset + '_' + f
+        datalib.make_getters({dataname : info})
+
+        fitter = BinFlipFitter(datalib, dataname, timebins,
+                               lifetime = lifetime,
+                               hadronicparsfile = hadronicparsfile,
+                               binningname = binningname,
+                               update = update, 
+                               )
+        outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f))
+        chi2, mini = fitter.do_fit(outputdir)
+        output.append((chi2, mini))
+        print '\n'*3
+    return output
+
+def do_fit_main():
+    from AGammaD0Tohhpi0.data import datalib
+    from argparse import ArgumentParser
+
+    timebins41 = [round(0.1*i, 10) for i in xrange(42)]
+    binningname41 = 'TimeBins41'
+    lifetime = 0.4101
+
+    argparser = ArgumentParser()
+    argparser.add_argument('dataset', help = 'Name of the dataset to fit')
+    argparser.add_argument('--outputdir', default = '$AGAMMAD0TOHHPI0WORKINGDIR/fits',
+                           help = 'Top output directory')
+    argparser.add_argument('--hadronicparsfile',
+                           default = os.path.expandvars('$AGAMMAD0TOHHPI0WORKINGDIR/hadronicParameters/pipipi0-8bins-10M/hadronicParameters.txt'),
+                           help = 'File containing the hadronic parameters.')
+    argparser.add_argument('--timebins', default = timebins41, nargs = '*', help = 'Time bin boundaries')
+    argparser.add_argument('--binningname', default = binningname41, help = 'Name of the time binning scheme')
+    argparser.add_argument('--lifetime', default = lifetime, type = float, 
+                           help = 'Lifetime of the D0 to use in the fits')
+    argparser.add_argument('--update', action = 'store_true',
+                           help = 'Whether to update the yields in time bins from the data file.''')
+    argparser.add_argument('--nfiles', default = -1, type = int, help = 'Number of data files to fit.')
+
+    args = argparser.parse_args()
+
+    return do_fit(outputdir = args.outputdir, datalib = datalib, dataset = args.dataset, hadronicparsfile = args.hadronicparsfile, timebins = map(float, args.timebins), binningname = args.binningname, lifetime = args.lifetime, update = args.update, nfiles = args.nfiles)
