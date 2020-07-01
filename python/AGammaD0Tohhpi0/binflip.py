@@ -780,8 +780,8 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
                                binningname = binningname,
                                update = update, 
                                )
-        outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f))
-        chi2, mini = fitter.do_fit(outputdir)
+        _outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f.replace('.root', '')))
+        chi2, mini = fitter.do_fit(_outputdir)
         output.append((chi2, mini))
         print '\n'*3
     return output
