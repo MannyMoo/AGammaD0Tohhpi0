@@ -667,8 +667,9 @@ def make_vector_dbl(iterable) :
         vec.push_back(thing)
     return vec
 
-def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1) :
-    zcp, dz = BinFlipParSet.fromXY(0.0039, 0.0065, 0.969, -0.068)
+def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1, x = 0.0039, y = 0.0065, qoverp = 0.969,
+                 phi = -0.068) :
+    zcp, dz = BinFlipParSet.fromXY(x, y, qoverp, phi)
     step = 1e-3
     return BinFlipParSet(zcp.real(), step, zcp.imag(), step, dz.real(), step, dz.imag(), step,
                          blindingseed, zblindrange, dzblindrange)
@@ -738,7 +739,13 @@ class BinFlipFitter(object) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
             raise ValueError('You must set the blindingseed to run on real data!')
         if not pars :
-            pars = default_pars(blindingseed, zblindrange, dzblindrange)
+            conf = ConfigFile(os.path.join(self.datadir, 'config.txt'))
+            try:
+                vals = dict(x = conf.float('x'), y = conf.float('y'),
+                            qoverp = conf.float('qoverp'), phi = conf.float('phi'))
+            except ValueError:
+                vals = {}
+            pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
         pwd = os.getcwd()
         if not os.path.exists(outputdir) :
             os.makedirs(outputdir)
