@@ -178,7 +178,7 @@ datapaths['MC_2016_pipipi0'] = datapaths['MC_pipipi0_DecProdCut_Dalitz_2016_MagB
 mintvariables = {}
 for name in os.listdir(mintdatadir) :
     datapaths['MINT_' + name] = {'tree' : 'DalitzEventList',
-                                 'files' : glob.glob(os.path.join(mintdatadir, name, 'pipipi0*.root')),
+                                 'files' : glob.glob(os.path.join(mintdatadir, name, '*pi0*.root')),
                                  'variables' : mintvariables}
 
 class AGammaDataLibrary(DataLibrary):
