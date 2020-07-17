@@ -735,7 +735,7 @@ class BinFlipFitter(object) :
         os.chdir(pwd)
         return timeBinning, hadronicPars
 
-    def get_deafult_pars(self, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05):
+    def get_default_pars(self, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05):
         '''Get the fit parameter set.'''
         conf = ConfigFile(os.path.join(self.datadir, 'config.txt'))
         try:
@@ -796,12 +796,15 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
                                update = update, 
                                )
         _outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f.replace('.root', '')))
-        pars = fitter.get_deafult_pars()
+        pars = fitter.get_default_pars()
         if fixpars:
             for i in xrange(4):
                 pars.getParPtr(i).fixToInitAndHide()
+        getattr(pars, 'print')()
+        print
         chi2, mini = fitter.do_fit(_outputdir, pars = pars)
         output.append((chi2, mini))
+        getattr(pars, 'print')()
         print '\n'*3
     return output
 
