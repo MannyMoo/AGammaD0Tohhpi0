@@ -775,7 +775,7 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
         if not dataset in datalib.datasets():
             raise ValueError("Can't find dataset {0!r} or {1!r} in the DataLibrary!".format(dataset[5:], dataset))
     datainfo = datalib.get_data_info(dataset)
-    files = list(datainfo['files'])
+    files = datalib.get_data(dataset).files
     if nfiles > 0 :
         files = files[:nfiles]
     files = [files[i:i+nfiles] for i in xrange(0, len(files), nfilesperjob)]
