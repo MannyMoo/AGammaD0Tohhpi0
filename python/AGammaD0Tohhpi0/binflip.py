@@ -744,7 +744,7 @@ class BinFlipFitter(object) :
         except ValueError:
             vals = {}
         pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
-        
+        return pars
 
     def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
