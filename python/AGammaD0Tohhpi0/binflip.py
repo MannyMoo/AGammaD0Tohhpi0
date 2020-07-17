@@ -735,17 +735,22 @@ class BinFlipFitter(object) :
         os.chdir(pwd)
         return timeBinning, hadronicPars
 
+    def get_deafult_pars(self, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05):
+        '''Get the fit parameter set.'''
+        conf = ConfigFile(os.path.join(self.datadir, 'config.txt'))
+        try:
+            vals = dict(x = conf.float('x'), y = conf.float('y'),
+                        qoverp = conf.float('qoverp'), phi = conf.float('phi'))
+        except ValueError:
+            vals = {}
+        pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
+        
+
     def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
             raise ValueError('You must set the blindingseed to run on real data!')
-        if not pars :
-            conf = ConfigFile(os.path.join(self.datadir, 'config.txt'))
-            try:
-                vals = dict(x = conf.float('x'), y = conf.float('y'),
-                            qoverp = conf.float('qoverp'), phi = conf.float('phi'))
-            except ValueError:
-                vals = {}
-            pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
+        if not pars:
+            pars = self.get_default_pars(blindingseed, zblindrange, dzblindrange)
         pwd = os.getcwd()
         if not os.path.exists(outputdir) :
             os.makedirs(outputdir)
@@ -763,7 +768,7 @@ class BinFlipFitter(object) :
         return chi2, mini
 
 def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname, lifetime,
-           update = False, nfiles = -1) :
+           update = False, nfiles = -1, nfilesperjob = 1, fixpars = False) :
     '''Do a bin-flip fit on the given dataset, using the given hadronic parameters and time binning.'''
     if not dataset in datalib.datasets():
         dataset = 'MINT_' + dataset
@@ -773,11 +778,14 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
     files = list(datainfo['files'])
     if nfiles > 0 :
         files = files[:nfiles]
+    files = [files[i:i+nfiles] for i in xrange(0, len(files), nfilesperjob)]
     output = []
-    for f in files :
-        print '*** Data file:', f
-        info = dict(datainfo, files = [f])
-        f = os.path.split(f)[1]
+    for _files in files :
+        print '*** Data file:', _files
+        info = dict(datainfo, files = _files)
+        f = os.path.split(_files[0])[1]
+        if len(_files) > 1:
+            f += '_' + os.path.split(_files[-1])[1]
         dataname = dataset + '_' + f
         datalib.make_getters({dataname : info})
 
@@ -788,7 +796,11 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
                                update = update, 
                                )
         _outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f.replace('.root', '')))
-        chi2, mini = fitter.do_fit(_outputdir)
+        pars = fitter.get_deafult_pars()
+        if fixpars:
+            for i in xrange(4):
+                pars.getParPtr(i).fixToInitAndHide()
+        chi2, mini = fitter.do_fit(_outputdir, pars = pars)
         output.append((chi2, mini))
         print '\n'*3
     return output
@@ -813,9 +825,11 @@ def do_fit_main():
     argparser.add_argument('--lifetime', default = lifetime, type = float, 
                            help = 'Lifetime of the D0 to use in the fits')
     argparser.add_argument('--update', action = 'store_true',
-                           help = 'Whether to update the yields in time bins from the data file.''')
+                           help = 'Whether to update the yields in time bins from the data file.')
     argparser.add_argument('--nfiles', default = -1, type = int, help = 'Number of data files to fit.')
-
+    argparser.add_argument('--nfilesperjob', default = 1, type = int, help = 'Number of files per fit.')
+    argparser.add_argument('--fixpars', default = False, action = 'store_true',
+                           help = 'Whether to fix the fit parameters to their expected values (for debugging).')
     args = argparser.parse_args()
 
-    return do_fit(outputdir = args.outputdir, datalib = datalib, dataset = args.dataset, hadronicparsfile = args.hadronicparsfile, timebins = map(float, args.timebins), binningname = args.binningname, lifetime = args.lifetime, update = args.update, nfiles = args.nfiles)
+    return do_fit(outputdir = args.outputdir, datalib = datalib, dataset = args.dataset, hadronicparsfile = args.hadronicparsfile, timebins = map(float, args.timebins), binningname = args.binningname, lifetime = args.lifetime, update = args.update, nfiles = args.nfiles, nfilesperjob = args.nfilesperjob, fixpars = args.fixpars)
