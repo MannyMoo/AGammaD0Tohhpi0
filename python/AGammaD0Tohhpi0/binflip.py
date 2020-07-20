@@ -778,7 +778,7 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
     files = datalib.get_data(dataset).files
     if nfiles > 0 :
         files = files[:nfiles]
-    files = [files[i:i+nfiles] for i in xrange(0, len(files), nfilesperjob)]
+    files = [files[i:i+nfilesperjob] for i in xrange(0, len(files), nfilesperjob)]
     output = []
     for _files in files :
         print '*** Data file:', _files
