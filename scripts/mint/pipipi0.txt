@@ -28,7 +28,12 @@ RandomSeed   5
 
 NormBF 1
 useAnalyticGradient 1
-"UseGlobalRadiusFor_rho(770)0" 0
+
+* Global radius, 1.5/GeV
+BW_radius		1	0.0015 0.
+* D0 radius, 5/GeV
+"UseGlobalRadiusFor_D0" 0
+radius_D0		1	0.005 0.
 
 "Phases given in"       "rad"
 "Event Pattern"         421 211 -211 111
