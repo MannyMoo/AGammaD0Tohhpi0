@@ -81,11 +81,14 @@ x 	   0.0039
 y 	   0.0065
 
 * No CPV
-*qoverp	   1.
-*phi	   0.
+* qoverp	   1.
+* phi	   0.
 * CPV at ~3 sigma of current bounds.
-qoverp 	   0.8
-phi        -0.7
+* qoverp 	   0.8
+* phi        -0.7
+* The current world average.
+qoverp      0.969
+phi         -0.068
 
 tmax		4.1
 * tmax = (sample interval) * (nTimePoints - 1), so this gives 0.1 ps intervals
