@@ -676,13 +676,14 @@ def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1, x = 0.
 
 class BinFlipFitter(object) :
     def __init__(self, datalib, dataname, timebins, hadronicparsfile, lifetime, binningname = 'timeBinning',
-                 update = False, nentries = -1) :
+                 update = False, nentries = -1, htimeeff = None) :
         self.datalib = datalib
         self.dataname = dataname
         self.datadir = os.path.abspath(datalib.dataset_dir(dataname))
         self.hadronicparsfile = os.path.abspath(hadronicparsfile)
         self.binningname = binningname
         self.datafname = os.path.join(self.datadir, dataname + '_' + binningname + '.txt')
+        self.htimeeff = htimeeff
         # timebins is the name of a file containing a TimeBinning instance.
         if isinstance(timebins, str):
             conf = ConfigFile(timebins, self.hadronicparsfile)
@@ -717,7 +718,7 @@ class BinFlipFitter(object) :
         config.write_file('config.txt')
         NamedParameterBase.setDefaultInputFile('config.txt')
         hadronicPars = HadronicParameters('hadronicPars', 'config.txt')
-        timeBinning = TimeBinning(make_vector_dbl(self.timebins), hadronicPars.binningPtr(), self.lifetime)
+        timeBinning = TimeBinning(make_vector_dbl(self.timebins), hadronicPars.binningPtr(), self.lifetime, self.htimeeff)
         tree = self.datalib.get_data(self.dataname)
         if nentries < 0 :
             nentries = tree.GetEntries()
@@ -758,6 +759,7 @@ class BinFlipFitter(object) :
         chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
         mini = Minimiser(chi2)
         mini.doFit()
+        chi2.getParSet().setCovMatrix(mini.covMatrix())
         fout = ROOT.TFile('results.root', 'recreate')
         ntuple = chi2.getParSet().makeNewNtpForOwner(fout)
         chi2.getParSet().fillNtp(fout, ntuple)
@@ -778,6 +780,13 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
     files = datalib.get_data(dataset).files
     if nfiles > 0 :
         files = files[:nfiles]
+    htimeeff = None
+    ftimeeff = os.path.join(os.path.dirname(files[0]), 'timeeff.root')
+    if os.path.exists(ftimeeff):
+        ftimeeff = ROOT.TFile(ftimeeff)
+        htimeeff = ftimeeff.Get(ftimeeff.GetListOfKeys()[0].GetName())
+        htimeeff.SetDirectory(None)
+        ftimeeff.Close()
     files = [files[i:i+nfilesperjob] for i in xrange(0, len(files), nfilesperjob)]
     output = []
     for _files in files :
@@ -794,6 +803,7 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
                                hadronicparsfile = hadronicparsfile,
                                binningname = binningname,
                                update = update, 
+                               htimeeff = htimeeff,
                                )
         _outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f.replace('.root', '')))
         pars = fitter.get_default_pars()
