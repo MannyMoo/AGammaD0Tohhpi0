@@ -4,7 +4,7 @@ import math, ROOT, os
 from Mint2.utils import three_body_event
 from Mint2.ConfigFile import ConfigFile
 from ROOT import PhaseDifferenceCalc, HadronicParameters, NamedParameterBase, TimeBinning, \
-    DalitzEvent, BinFlipChi2, BinFlipParSet
+    DalitzEvent, BinFlipChi2, BinFlipParSet, AsymmetryChi2
 from ROOT.MINT import Minimiser
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
@@ -747,7 +747,7 @@ class BinFlipFitter(object) :
         pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
         return pars
 
-    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
+    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05, acp = False) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
             raise ValueError('You must set the blindingseed to run on real data!')
         if not pars:
@@ -756,7 +756,10 @@ class BinFlipFitter(object) :
         if not os.path.exists(outputdir) :
             os.makedirs(outputdir)
         os.chdir(outputdir)
-        chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
+        if not acp:
+            chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
+        else:
+            chi2 = AsymmetryChi2(pars, self.hadronicpars, self.timebinning)
         mini = Minimiser(chi2)
         mini.doFit()
         chi2.getParSet().setCovMatrix(mini.covMatrix())
@@ -770,7 +773,7 @@ class BinFlipFitter(object) :
         return chi2, mini
 
 def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname, lifetime,
-           update = False, nfiles = -1, nfilesperjob = 1, fixpars = False) :
+           update = False, nfiles = -1, nfilesperjob = 1, fixpars = False, acp = False) :
     '''Do a bin-flip fit on the given dataset, using the given hadronic parameters and time binning.'''
     if not dataset in datalib.datasets():
         dataset = 'MINT_' + dataset
@@ -810,9 +813,11 @@ def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname,
         if fixpars:
             for i in xrange(4):
                 pars.getParPtr(i).fixToInitAndHide()
+        elif acp:
+            pars.floatOnlyDeltaY()
         getattr(pars, 'print')()
         print
-        chi2, mini = fitter.do_fit(_outputdir, pars = pars)
+        chi2, mini = fitter.do_fit(_outputdir, pars = pars, acp = acp)
         output.append((chi2, mini))
         getattr(pars, 'print')()
         print '\n'*3
