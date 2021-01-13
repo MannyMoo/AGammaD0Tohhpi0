@@ -4,7 +4,7 @@ import math, ROOT, os
 from Mint2.utils import three_body_event
 from Mint2.ConfigFile import ConfigFile
 from ROOT import PhaseDifferenceCalc, HadronicParameters, NamedParameterBase, TimeBinning, \
-    DalitzEvent, BinFlipChi2, BinFlipParSet
+    DalitzEvent, BinFlipChi2, BinFlipParSet, AsymmetryChi2
 from ROOT.MINT import Minimiser
 from AGammaD0Tohhpi0.mint import pattern_D0Topipipi0, set_default_config
 from AGammaD0Tohhpi0.mint import config
@@ -667,21 +667,23 @@ def make_vector_dbl(iterable) :
         vec.push_back(thing)
     return vec
 
-def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1) :
-    zcp, dz = BinFlipParSet.fromXY(0.0039, 0.0065, 0.969, -0.068)
+def default_pars(blindingseed = 0, zblindrange = 0.1, dzblindrange = 0.1, x = 0.0039, y = 0.0065, qoverp = 0.969,
+                 phi = -0.068) :
+    zcp, dz = BinFlipParSet.fromXY(x, y, qoverp, phi)
     step = 1e-3
     return BinFlipParSet(zcp.real(), step, zcp.imag(), step, dz.real(), step, dz.imag(), step,
                          blindingseed, zblindrange, dzblindrange)
 
 class BinFlipFitter(object) :
     def __init__(self, datalib, dataname, timebins, hadronicparsfile, lifetime, binningname = 'timeBinning',
-                 update = False, nentries = -1) :
+                 update = False, nentries = -1, htimeeff = None) :
         self.datalib = datalib
         self.dataname = dataname
         self.datadir = os.path.abspath(datalib.dataset_dir(dataname))
         self.hadronicparsfile = os.path.abspath(hadronicparsfile)
         self.binningname = binningname
         self.datafname = os.path.join(self.datadir, dataname + '_' + binningname + '.txt')
+        self.htimeeff = htimeeff
         # timebins is the name of a file containing a TimeBinning instance.
         if isinstance(timebins, str):
             conf = ConfigFile(timebins, self.hadronicparsfile)
@@ -716,7 +718,7 @@ class BinFlipFitter(object) :
         config.write_file('config.txt')
         NamedParameterBase.setDefaultInputFile('config.txt')
         hadronicPars = HadronicParameters('hadronicPars', 'config.txt')
-        timeBinning = TimeBinning(make_vector_dbl(self.timebins), hadronicPars.binningPtr(), self.lifetime)
+        timeBinning = TimeBinning(make_vector_dbl(self.timebins), hadronicPars.binningPtr(), self.lifetime, self.htimeeff)
         tree = self.datalib.get_data(self.dataname)
         if nentries < 0 :
             nentries = tree.GetEntries()
@@ -734,18 +736,33 @@ class BinFlipFitter(object) :
         os.chdir(pwd)
         return timeBinning, hadronicPars
 
-    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05) :
+    def get_default_pars(self, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05):
+        '''Get the fit parameter set.'''
+        conf = ConfigFile(os.path.join(self.datadir, 'config.txt'))
+        try:
+            vals = dict(x = conf.float('x'), y = conf.float('y'),
+                        qoverp = conf.float('qoverp'), phi = conf.float('phi'))
+        except ValueError:
+            vals = {}
+        pars = default_pars(blindingseed, zblindrange, dzblindrange, **vals)
+        return pars
+
+    def do_fit(self, outputdir, pars = None, blindingseed = 0, zblindrange = 0.05, dzblindrange = 0.05, acp = False) :
         if self.dataname.startswith('RealData') and blindingseed == 0:
             raise ValueError('You must set the blindingseed to run on real data!')
-        if not pars :
-            pars = default_pars(blindingseed, zblindrange, dzblindrange)
+        if not pars:
+            pars = self.get_default_pars(blindingseed, zblindrange, dzblindrange)
         pwd = os.getcwd()
         if not os.path.exists(outputdir) :
             os.makedirs(outputdir)
         os.chdir(outputdir)
-        chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
+        if not acp:
+            chi2 = BinFlipChi2(pars, self.hadronicpars, self.timebinning)
+        else:
+            chi2 = AsymmetryChi2(pars, self.hadronicpars, self.timebinning)
         mini = Minimiser(chi2)
         mini.doFit()
+        chi2.getParSet().setCovMatrix(mini.covMatrix())
         fout = ROOT.TFile('results.root', 'recreate')
         ntuple = chi2.getParSet().makeNewNtpForOwner(fout)
         chi2.getParSet().fillNtp(fout, ntuple)
@@ -754,3 +771,83 @@ class BinFlipFitter(object) :
         fout.Close()
         os.chdir(pwd)
         return chi2, mini
+
+def do_fit(outputdir, datalib, dataset, hadronicparsfile, timebins, binningname, lifetime,
+           update = False, nfiles = -1, nfilesperjob = 1, fixpars = False, acp = False) :
+    '''Do a bin-flip fit on the given dataset, using the given hadronic parameters and time binning.'''
+    if not dataset in datalib.datasets():
+        dataset = 'MINT_' + dataset
+        if not dataset in datalib.datasets():
+            raise ValueError("Can't find dataset {0!r} or {1!r} in the DataLibrary!".format(dataset[5:], dataset))
+    datainfo = datalib.get_data_info(dataset)
+    files = datalib.get_data(dataset).files
+    if nfiles > 0 :
+        files = files[:nfiles]
+    htimeeff = None
+    ftimeeff = os.path.join(os.path.dirname(files[0]), 'timeeff.root')
+    if os.path.exists(ftimeeff):
+        ftimeeff = ROOT.TFile(ftimeeff)
+        htimeeff = ftimeeff.Get(ftimeeff.GetListOfKeys()[0].GetName())
+        htimeeff.SetDirectory(None)
+        ftimeeff.Close()
+    files = [files[i:i+nfilesperjob] for i in xrange(0, len(files), nfilesperjob)]
+    output = []
+    for _files in files :
+        print '*** Data file:', _files
+        info = dict(datainfo, files = _files)
+        f = os.path.split(_files[0])[1]
+        if len(_files) > 1:
+            f += '_' + os.path.split(_files[-1])[1]
+        dataname = dataset + '_' + f
+        datalib.make_getters({dataname : info})
+
+        fitter = BinFlipFitter(datalib, dataname, timebins,
+                               lifetime = lifetime,
+                               hadronicparsfile = hadronicparsfile,
+                               binningname = binningname,
+                               update = update, 
+                               htimeeff = htimeeff,
+                               )
+        _outputdir = os.path.expandvars(os.path.join(outputdir, dataset + '_' + binningname, f.replace('.root', '')))
+        pars = fitter.get_default_pars()
+        if fixpars:
+            for i in xrange(4):
+                pars.getParPtr(i).fixToInitAndHide()
+        elif acp:
+            pars.floatOnlyDeltaY()
+        getattr(pars, 'print')()
+        print
+        chi2, mini = fitter.do_fit(_outputdir, pars = pars, acp = acp)
+        output.append((chi2, mini))
+        getattr(pars, 'print')()
+        print '\n'*3
+    return output
+
+def do_fit_main():
+    from AGammaD0Tohhpi0.data import datalib
+    from argparse import ArgumentParser
+
+    timebins41 = [round(0.1*i, 10) for i in xrange(42)]
+    binningname41 = 'TimeBins41'
+    lifetime = 0.4101
+
+    argparser = ArgumentParser()
+    argparser.add_argument('dataset', help = 'Name of the dataset to fit')
+    argparser.add_argument('--outputdir', default = '$AGAMMAD0TOHHPI0WORKINGDIR/fits',
+                           help = 'Top output directory')
+    argparser.add_argument('--hadronicparsfile',
+                           default = os.path.expandvars('$AGAMMAD0TOHHPI0WORKINGDIR/hadronicParameters/pipipi0-8bins-10M/hadronicParameters.txt'),
+                           help = 'File containing the hadronic parameters.')
+    argparser.add_argument('--timebins', default = timebins41, nargs = '*', help = 'Time bin boundaries')
+    argparser.add_argument('--binningname', default = binningname41, help = 'Name of the time binning scheme')
+    argparser.add_argument('--lifetime', default = lifetime, type = float, 
+                           help = 'Lifetime of the D0 to use in the fits')
+    argparser.add_argument('--update', action = 'store_true',
+                           help = 'Whether to update the yields in time bins from the data file.')
+    argparser.add_argument('--nfiles', default = -1, type = int, help = 'Number of data files to fit.')
+    argparser.add_argument('--nfilesperjob', default = 1, type = int, help = 'Number of files per fit.')
+    argparser.add_argument('--fixpars', default = False, action = 'store_true',
+                           help = 'Whether to fix the fit parameters to their expected values (for debugging).')
+    args = argparser.parse_args()
+
+    return do_fit(outputdir = args.outputdir, datalib = datalib, dataset = args.dataset, hadronicparsfile = args.hadronicparsfile, timebins = map(float, args.timebins), binningname = args.binningname, lifetime = args.lifetime, update = args.update, nfiles = args.nfiles, nfilesperjob = args.nfilesperjob, fixpars = args.fixpars)

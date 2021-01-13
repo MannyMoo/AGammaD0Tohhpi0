@@ -5,11 +5,12 @@ from AnalysisUtils.diracutils import get_bk_data, get_bk_decay_paths
 import os
 
 evttypes = {27163400 : 'Kpipi0_DecProdCut_PHSP',
-            27163401 : 'KKpi0_TightCut',
             27163403 : 'pipipi0_DecProdCut_PHSP',
             27163404 : 'pipipi0_DecProdCut_Dalitz',
             27163405 : 'Kpipi0_DecProdCut_Dalitz',
             27263400 : 'Kpipi0_cocktail_DecProdCut',
+            27163401 : 'KKpi0_phipi0_TightCut',
+            27163470 : 'KKpi0_phipi0_TighterCut',
             }
 
 def get_real_data():
@@ -21,10 +22,14 @@ def get_real_data():
             print fout
             get_bk_data(path, fout, rootvar = 'AGAMMAD0TOHHPI0ROOT', nfiles = 20, ignore = True)
 
-def get_mc_paths() :
+def get_mc_paths(namecheck = None, exclusions = ('GAUSSHIST', 'STRIP', 'LDST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]')) :
+    if not namecheck:
+        namecheck = lambda x : True
     for evttype, name in evttypes.items() :
+        if not namecheck(name):
+            continue
         fname = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/python/AGammaD0Tohhpi0/MCBKPaths/MCBKPaths_{0}.py'.format(name))
-        get_bk_decay_paths(evttype, exclusions = ('GAUSSHIST', 'STRIP', 'LDST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]'),
+        get_bk_decay_paths(evttype, exclusions = exclusions,
                            outputfile = fname)
 
 def get_mc_data() :
@@ -41,5 +46,6 @@ def get_mc_data() :
 
 if __name__ == '__main__' :
     #get_real_data()
-    #get_mc_paths()
-    get_mc_data()
+    get_mc_paths((lambda n : n.startswith('pipipi0')),
+                 exclusions = ('GAUSSHIST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]', 'D2HMUNU'))
+    #get_mc_data()

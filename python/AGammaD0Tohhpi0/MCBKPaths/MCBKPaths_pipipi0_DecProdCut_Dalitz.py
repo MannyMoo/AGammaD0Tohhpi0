@@ -1,5 +1,5 @@
 # Evttype : 27163404
-# Exclusions : ('GAUSSHIST', 'STRIP', 'LDST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]')
+# Exclusions : ('GAUSSHIST', 'XDIGI', 'Stripping24[^r]', 'Stripping28[^r]', 'D2HMUNU')
 decaypaths = \
 {'2016': [{'conddbtag': 'sim-20170721-2-vc-md100',
            'dddbtag': 'dddb-20170721-3',

@@ -1,0 +1,140 @@
+
+* FitAmpPairList::HistoOption can be set to either fast (no
+* histograms will be created or retrieved by the integrator) or slow
+* (histograms will be created or retrieved). The default option is
+* "default" and the default behaviour with FastAmplitudeIntegrator used
+* by DalitzPdfFastInteg is "slow", i.e. with histograms (the behaviour
+* is a bit more complex for the case of the
+* FlexiFastAmplitudeIntegrator, you're better off not using this option
+* there at all). Omitting the histograms saves a bit of time and
+* memory. Note that if you use this option when generating sgIntegrator
+* files (not recommended), you will also need to use it when reading
+* them. Recommended use is to use it with DalitzPdfFastInteg, when
+* reading in pre-saved integrator directories ("sgIntegrator"), in cases
+* where you don't make any plots.
+
+*FitAmpPairList::HistoOption "fast" 
+FitAmpPairList::HistoOption "default" 
+
+** The above option means that no histograms will
+** be generated. When you create your sgIntegrator files, it's strongly
+** recommended that you leave this commented out. But when reading in,
+** you can save some time by switching this feature on.
+
+* options:
+
+
+RandomSeed   5
+
+NormBF 1
+useAnalyticGradient 1
+"UseGlobalRadiusFor_rho(770)0" 0
+
+"Phases given in"       "rad"
+"Event Pattern"         421 321 -321 111
+
+doScan 			0
+
+genTimeDependent	1
+"Nevents"               100000
+outputFileName		KKpi0_1.root
+SaveEvents		1
+
+"IntegPrecision"        3.0e-3
+"IntegMethod"           "efficient"
+IntegratorSource        "file"
+* Whether to recalculate the integrals or not.
+overwriteIntegrators      1
+* Whether to save the events generated for the intergals.
+saveIntegEvents 	  0
+integratorsDirectory      /nfs/lhcb/malexander01/charm/hhpi0/integrators/integrators_3sigma
+
+*File containing efficiency histogram
+efficiencyFile    /home/ppe/n/nmchugh/SummerProject/DaVinciDev_v44r10p1/AGammaD0Tohhpi0/scripts/mint/h_efficiency.root
+*Name of efficiency histogram
+h_efficiencyName     h_efficiency
+
+*Width of decay time smearing guassian
+resWidth     0.05
+*Flag for adding smearing and efficiency effects
+addExpEffects     0
+
+
+* Mixing & CPV parameters.
+lifetime   0.4101
+
+* No mixing.
+*x 	   0
+* The current world average.
+x 	   0.0039
+* x = 2.5 means ~1 oscillation per ps.
+*x	   2.5
+
+* No mixing.
+*y 	   0
+* The current world average.
+y 	   0.0065
+
+* No CPV
+*qoverp	   1.
+*phi	   0.
+* CPV at ~3 sigma of current bounds.
+* qoverp 	   0.8
+* phi        -0.7
+* The current world average.
+qoverp      0.969
+phi         -0.068
+
+
+tmax		4.1
+* tmax = (sample interval) * (nTimePoints - 1), so this gives 0.1 ps intervals
+nTimePoints 	42
+
+* Lass parameters.
+Lass::a 1.95e-3
+Lass::r 1.76e-3
+
+** name									Fix?	init	step	min	max
+*
+SignalFraction								2      0.75    0.05      0        1
+*
+"D0->K*(892)+(->K+,pi0),K-_Re"                                          1      1.000   0.1
+"D0->K*(892)+(->K+,pi0),K-_Im"                                          1      0.000   0.1
+"LassD0->K(0)*(1430)+(->K+,pi0),K-_Re"             			0 -0.01396 0.1
+"LassD0->K(0)*(1430)+(->K+,pi0),K-_Im"             			0 -0.00005 0.1
+"D0->K*(1410)bar-(->K-,pi0),K+_Re"                 			0 -0.62405 0.1
+"D0->K*(1410)bar-(->K-,pi0),K+_Im"                 			0 -0.08770 0.1
+"D0->f(0)(980)0(->K+,K-),pi0_Re"                   			0 -0.86956 0.1
+"D0->f(0)(980)0(->K+,K-),pi0_Im"                   			0 -0.03750 0.1
+"LassD0->K(0)*(1430)bar-(->K-,pi0),K+_Re"          			0 -0.00390 0.1
+"LassD0->K(0)*(1430)bar-(->K-,pi0),K+_Im"          			0 0.00413 0.1
+"D0->K*(1410)+(->K+,pi0),K-_Re"                    			0 0.03194 0.1
+"D0->K*(1410)+(->K+,pi0),K-_Im"                    			0 0.55275 0.1
+"D0->phi(1020)0(->K+,K-),pi0_Re"                   			0 2.06966 0.1
+"D0->phi(1020)0(->K+,K-),pi0_Im"                   			0 -0.78297 0.1
+"D0->f(2)'(1525)0(->K+,K-),pi0_Re"                 			0 0.14967 0.1
+"D0->f(2)'(1525)0(->K+,K-),pi0_Im"                 			0 -0.05077 0.1
+"D0->K*(892)bar-(->K-,pi0),K+_Re"                  			0 0.47471 0.1
+"D0->K*(892)bar-(->K-,pi0),K+_Im"                  			0 -0.35801 0.1
+
+
+
+
+"Dbar0->K*(892)bar-(->K-,pi0),K+_Re"                                    1      1.000   0.1
+"Dbar0->K*(892)bar-(->K-,pi0),K+_Im"                                    1      0.000   0.1
+"LassDbar0->K(0)*(1430)bar-(->K-,pi0),K+_Re"           			0 -0.01396 0.1
+"LassDbar0->K(0)*(1430)bar-(->K-,pi0),K+_Im"           			0 -0.00005 0.1
+"Dbar0->K*(1410)+(->K+,pi0),K-_Re"                 			0 -0.62405 0.1
+"Dbar0->K*(1410)+(->K+,pi0),K-_Im"                 			0 -0.08770 0.1
+"Dbar0->f(0)(980)0(->K-,K+),pi0_Re"                   			0 -0.86956 0.1
+"Dbar0->f(0)(980)0(->K-,K+),pi0_Im"                   			0 -0.03750 0.1
+"LassDbar0->K(0)*(1430)+(->K+,pi0),K-_Re"          			0 -0.00390 0.1
+"LassDbar0->K(0)*(1430)+(->K+,pi0),K-_Im"          			0 0.00413 0.1
+"Dbar0->K*(1410)bar-(->K-,pi0),K+_Re"                  			0 0.03194 0.1
+"Dbar0->K*(1410)bar-(->K-,pi0),K+_Im"                  			0 0.55275 0.1
+"Dbar0->phi(1020)0(->K-,K+),pi0_Re"                   			0 2.06966 0.1
+"Dbar0->phi(1020)0(->K-,K+),pi0_Im"                   			0 -0.78297 0.1
+"Dbar0->f(2)'(1525)0(->K-,K+),pi0_Re"                 			0 0.14967 0.1
+"Dbar0->f(2)'(1525)0(->K-,K+),pi0_Im"                 			0 -0.05077 0.1
+"Dbar0->K*(892)+(->K+,pi0),K-_Re"                  			0 0.47471 0.1
+"Dbar0->K*(892)+(->K+,pi0),K-_Im"                  			0 -0.35801 0.1

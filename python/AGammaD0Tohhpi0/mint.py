@@ -1,9 +1,8 @@
 from Mint2.utils import run_job, gen_time_dependent, gen_time_dependent_main
-from Mint2.ConfigFile import ConfigFile
+from Mint2.ConfigFile import ConfigFile, set_default_config
 import os, ROOT
 from AGammaD0Tohhpi0.data import workingdir, datadir, mintdatadir
 from ROOT import DalitzEventPattern, TVector3, DalitzEvent
-from ROOT.MINT import NamedParameterBase
 from AnalysisUtils.treeutils import TreePVector, TreeFormula
 
 integratorsdir = os.path.join(workingdir, 'integrators')
@@ -11,6 +10,11 @@ config = os.path.expandvars('$AGAMMAD0TOHHPI0ROOT/scripts/mint/pipipi0.txt')
 
 pattern_D0Topipipi0 = DalitzEventPattern(421, 211, -211, 111)
 pattern_D0barTopipipi0 = DalitzEventPattern(-421, 211, -211, 111)
+
+_set_default_config = set_default_config
+def set_default_config(config = config):
+    '''Set the default config file.'''
+    _set_default_config(config)
 
 def gen_pipipi0(name, configs = config, integratorsdir = integratorsdir, 
                 mintdatadir = mintdatadir, **parameters) :
@@ -23,10 +27,6 @@ def gen_pipipi0(name, configs = config, integratorsdir = integratorsdir,
 def gen_pipipi0_main() :
     '''Main function to generate D0->pipipi0 MINT MC, parsing arguments from the commandline.'''
     gen_time_dependent_main([config], integratorsdir, mintdatadir)
-
-def set_default_config(config = config) :
-    '''Set the default MINT config file.'''
-    NamedParameterBase.setDefaultInputFile(config)
 
 def get_config_file_name(name, number = 0, zfill = 3) :
     '''Get the config file name for a generator job.'''
